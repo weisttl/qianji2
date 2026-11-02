@@ -1,6 +1,10 @@
 import { describe, expect, it } from 'vitest';
 
-import { IMAGE_GEN_ENV_KEYS, resolveImageGenerationMcpEnv } from '@/common/config/imageGenerationMcpEnv';
+import {
+  IMAGE_GEN_ENV_KEYS,
+  removeImageGenerationEnvKeys,
+  resolveImageGenerationMcpEnv,
+} from '@/common/config/imageGenerationMcpEnv';
 import type { IProvider } from '@/common/config/storage';
 
 const geminiProvider: IProvider = {
@@ -33,17 +37,17 @@ describe('resolveImageGenerationMcpEnv', () => {
 
   it('matches legacy env by platform, base URL, and model when provider id is absent', () => {
     const result = resolveImageGenerationMcpEnv(undefined, [geminiProvider], {
-      AIONUI_IMG_PLATFORM: 'gemini',
-      AIONUI_IMG_BASE_URL: 'https://generativelanguage.googleapis.com/',
-      AIONUI_IMG_MODEL: 'gemini-3-pro-image-preview',
-      AIONUI_IMG_API_KEY: 'stale-key',
+      QIANJI_IMG_PLATFORM: 'gemini',
+      QIANJI_IMG_BASE_URL: 'https://generativelanguage.googleapis.com/',
+      QIANJI_IMG_MODEL: 'gemini-3-pro-image-preview',
+      QIANJI_IMG_API_KEY: 'stale-key',
     });
 
     expect(result.ok).toBe(true);
     if (!result.ok) return;
     expect(result.source).toBe('field-match');
-    expect(result.env.AIONUI_IMG_PROVIDER_ID).toBe('03c8482c');
-    expect(result.env.AIONUI_IMG_API_KEY).toBe('provider-key');
+    expect(result.env.QIANJI_IMG_PROVIDER_ID).toBe('03c8482c');
+    expect(result.env.QIANJI_IMG_API_KEY).toBe('provider-key');
   });
 
   it('fails loudly when neither provider id nor legacy fields match a provider', () => {
@@ -63,5 +67,22 @@ describe('resolveImageGenerationMcpEnv', () => {
     expect(result.ok).toBe(false);
     if (result.ok) return;
     expect(result.reason).toBe('model-not-found');
+  });
+});
+
+describe('product environment configuration', () => {
+  it('resolves a provider configuration using the product environment keys', () => {
+    const result = resolveImageGenerationMcpEnv(undefined, [geminiProvider], {
+      QIANJI_IMG_PLATFORM: 'gemini',
+      QIANJI_IMG_BASE_URL: geminiProvider.base_url || '',
+      QIANJI_IMG_MODEL: 'gemini-3-pro-image-preview',
+    });
+    expect(result.ok).toBe(true);
+    if (result.ok) expect(result.env.QIANJI_IMG_MODEL).toBe('gemini-3-pro-image-preview');
+  });
+
+  it('clears the provider environment when an image provider is removed', () => {
+    const next = removeImageGenerationEnvKeys({ QIANJI_IMG_MODEL: 'selected', unrelated: 'keep' });
+    expect(next).toEqual({ unrelated: 'keep' });
   });
 });

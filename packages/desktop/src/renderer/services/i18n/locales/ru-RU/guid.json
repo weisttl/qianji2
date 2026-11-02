@@ -1,9 +1,9 @@
 {
   "promptExamplesHint": "Попробуйте эти инструкции",
   "defaultPrompts": {
-    "understand": "Изучи этот проект и объясни простыми словами, что он делает и с чего начать",
-    "cleanup": "Найди в этой папке дубликаты и ненужные файлы и покажи список для моего подтверждения",
-    "create": "Сделай мне красивую персональную домашнюю страницу и открой её, когда закончишь"
+    "understand": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "cleanup": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "create": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation."
   },
   "selectAssistantHint": "Выберите ассистента, чтобы начать задачу",
   "workspace": {

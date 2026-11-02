@@ -1,3 +1,4 @@
+import { PRODUCT_CONFIG } from '@/common/config/constants';
 import type { FeedbackDiagnosticsContextInput } from '@/common/types/feedbackDiagnostics';
 import { httpRequest } from '@/common/adapter/httpBridge';
 
@@ -238,6 +239,9 @@ function buildSummary(moduleLabel: string, description: string): string {
 }
 
 export async function submitFeedbackReport(input: SubmitFeedbackReportInput): Promise<void> {
+  if (!PRODUCT_CONFIG.upstreamServicesEnabled) {
+    throw new Error('Upstream feedback is disabled for this product distribution.');
+  }
   const attachments = [...(input.attachments ?? [])];
   let eventId: string | undefined;
   let logAttachmentStatus: FeedbackLogAttachmentStatus = input.collectLogs ? 'empty' : 'skipped';

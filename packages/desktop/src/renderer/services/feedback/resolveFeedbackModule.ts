@@ -25,9 +25,7 @@ const ROUTE_MODULE_MAP: ReadonlyArray<readonly [prefix: string, tag: FeedbackMod
   ['/settings/model', 'model-auth'],
   ['/settings/skills', 'skills-plugin'],
   ['/settings/tools', 'mcp-tools'],
-  ['/settings/appearance', 'display-desktop'],
-  ['/settings/pet', 'display-desktop'],
-  ['/settings/webui', 'webui-remote'],
+  ['/settings/channels', 'channel'],
   // Extension-contributed settings tabs are channel plugins (Telegram/Slack/
   // Feishu…) today, so route their reports to the channel module.
   ['/settings/ext', 'channel'],

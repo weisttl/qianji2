@@ -28,5 +28,26 @@
     "download_success": "Download concluído",
     "download_error": "Falha ao baixar",
     "generated_alt": "Imagem gerada"
+  },
+  "channelConflict": {
+    "title": "{{platform}} channel configuration conflict",
+    "active": "OpenClaw is handling {{platform}} messages.",
+    "description": "The {{platform}} bot credentials are also configured in OpenClaw.",
+    "switchUnavailable": "Switching assistants in Qianji will have no effect",
+    "processedByOpenClaw": "Messages are processed by OpenClaw",
+    "messagesAvailable": "Messages remain available through OpenClaw",
+    "instructions": "To manage this channel in Qianji, choose an option:",
+    "disableTitle": "Option 1: Disable OpenClaw {{platform}} (recommended)",
+    "edit": "Edit the configuration file",
+    "set": "Set",
+    "restart": "Then restart OpenClaw and Qianji.",
+    "newBotTitle": "Option 2: Use another bot",
+    "newBot": "Create a {{platform}} bot with different credentials for Qianji.",
+    "keepTitle": "Option 3: Keep OpenClaw",
+    "keep": "Disable the {{platform}} channel in Qianji and continue using OpenClaw.",
+    "disableAction": "Help disable OpenClaw {{platform}}",
+    "ignore": "Ignore for now",
+    "banner": "OpenClaw {{platform}} configuration conflict: assistant switching is unavailable.",
+    "learnMore": "Learn more"
   }
 }

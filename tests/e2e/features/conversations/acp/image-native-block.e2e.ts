@@ -21,7 +21,7 @@
  *    vision block can deliver the pixels (the upload lives in temp_dir,
  *    outside the workspace, so a Read-tool path cannot reach it either).
  *
- * The aioncore log lines are the backend-side witness (grepped after a run):
+ * The qianjicore log lines are the backend-side witness (grepped after a run):
  *   session prompt carries native media content blocks   (claude / codex)
  *   ACP prompt carries native media content blocks       (codebuddy)
  */
@@ -87,7 +87,7 @@ function writeProbePng(): string {
     chunk('IDAT', zlib.deflateSync(Buffer.concat(rows))),
     chunk('IEND', Buffer.alloc(0)),
   ]);
-  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'aionui-e2e-img-')), 'probe-red-square.png');
+  const file = path.join(fs.mkdtempSync(path.join(os.tmpdir(), 'qianji-e2e-img-')), 'probe-red-square.png');
   fs.writeFileSync(file, png);
   return file;
 }
@@ -149,7 +149,7 @@ test.describe('ACP multimodal prompt', () => {
       // 2. Attach the probe image through the REAL upload input (uploads to
       //    POST /api/fs/upload and lands in the uploadFile chip lane).
       const probePng = writeProbePng();
-      const fileInput = page.locator('[data-testid="aionrs-file-upload-input"]');
+      const fileInput = page.locator('[data-testid="qianjirs-file-upload-input"]');
       try {
         await fileInput.setInputFiles(probePng, { timeout: 60_000 });
       } catch (error) {

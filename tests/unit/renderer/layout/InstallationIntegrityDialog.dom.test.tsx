@@ -15,7 +15,7 @@ const RDC = 'common.backendStartup.recoverableDatabaseCorruption';
 const COPY: Record<string, string> = {
   [`${RDC}.title`]: 'Local data is corrupted',
   [`${RDC}.description`]:
-    'AionUi detected that the local database is corrupted and cannot continue startup. After confirmation, AionUi will back up the old database and create a new local database to continue startup. Past conversations will no longer be shown, and the old database will be kept as a backup file.',
+    'Qianji detected that the local database is corrupted and cannot continue startup. After confirmation, Qianji will back up the old database and create a new local database to continue startup. Past conversations will no longer be shown, and the old database will be kept as a backup file.',
   [`${RDC}.confirmRebuild`]: 'Back up old DB and rebuild new DB',
   [`${RDC}.sendDiagnostics`]: 'Send diagnostics',
   [`${RDC}.diagnosticsSent`]: 'Diagnostics sent',
@@ -26,6 +26,12 @@ const COPY: Record<string, string> = {
   [`${RDC}.confirmDialog.okText`]: 'Confirm rebuild',
   [`${RDC}.confirmDialog.cancelText`]: 'Cancel',
 };
+
+const productPolicy = vi.hoisted(() => ({ upstreamServicesEnabled: true }));
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: productPolicy,
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({
@@ -144,5 +150,22 @@ describe('InstallationIntegrityDialog — recoverable_database_corruption recove
     // misleading "for now" wording is gone. 13-language completeness is enforced
     // by scripts/check-i18n.js.
     expect(COPY[`${RDC}.description`].toLowerCase()).not.toContain('for now');
+  });
+});
+
+describe('internal installation support', () => {
+  it('offers internal support without public downloads or diagnostics upload', () => {
+    productPolicy.upstreamServicesEnabled = false;
+    const open = vi.spyOn(window, 'open');
+    try {
+      render(<InstallationIntegrityFooter diagnostics={{ source: 'backend_startup_failure' }} />);
+      expect(screen.getByRole('button', { name: 'common.product.contactSupport' })).toBeVisible();
+      expect(screen.queryByTestId('installation-integrity-report')).toBeNull();
+      expect(open).not.toHaveBeenCalled();
+    } finally {
+      productPolicy.upstreamServicesEnabled = true;
+      open.mockRestore();
+      cleanup();
+    }
   });
 });

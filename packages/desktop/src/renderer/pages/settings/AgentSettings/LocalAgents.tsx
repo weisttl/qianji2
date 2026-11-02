@@ -11,11 +11,10 @@ import {
   managedAgentSearchText,
   type ManagedAgent,
 } from '@/renderer/utils/model/agentTypes';
-import AionModal from '@/renderer/components/base/AionModal';
-import { AionSearchInput } from '@/renderer/components/base';
+import QianjiModal from '@/renderer/components/base/QianjiModal';
+import { QianjiSearchInput } from '@/renderer/components/base';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { useManagedAgents } from '@/renderer/hooks/agent/useManagedAgents';
-import { openExternalUrl } from '@/renderer/utils/platform';
 import { Button, Message, Typography } from '@arco-design/web-react';
 import TalkToButlerButton from '@/renderer/components/base/TalkToButlerButton';
 import React, { useCallback, useMemo, useState } from 'react';
@@ -31,8 +30,6 @@ import {
   getAgentAvailabilityFilterStats,
   type AgentAvailabilityFilter,
 } from './agentFilters';
-
-const LOCAL_AGENT_SETUP_GUIDE_URL = 'https://github.com/iOfficeAI/AionUi/wiki/ACP-Setup';
 
 const LocalAgents: React.FC = () => {
   const { t, i18n } = useTranslation();
@@ -126,12 +123,12 @@ const LocalAgents: React.FC = () => {
   const sortedOfficialAgents = useMemo(
     () =>
       officialAgents.toSorted((left, right) => {
-        const leftIsAionrs = left.agent_type === 'aionrs' || left.backend === 'aionrs';
-        const rightIsAionrs = right.agent_type === 'aionrs' || right.backend === 'aionrs';
-        if (leftIsAionrs !== rightIsAionrs) {
-          return leftIsAionrs ? -1 : 1;
+        const leftIsQianjirs = left.agent_type === 'qianjirs' || left.backend === 'qianjirs';
+        const rightIsQianjirs = right.agent_type === 'qianjirs' || right.backend === 'qianjirs';
+        if (leftIsQianjirs !== rightIsQianjirs) {
+          return leftIsQianjirs ? -1 : 1;
         }
-        // Strategic partner: pin Kimi right after the builtin aionrs agent.
+        // Strategic partner: pin Kimi right after the builtin qianjirs agent.
         const leftIsKimi = left.backend === 'kimi';
         const rightIsKimi = right.backend === 'kimi';
         if (leftIsKimi !== rightIsKimi) {
@@ -205,25 +202,11 @@ const LocalAgents: React.FC = () => {
       <SettingsPageHeader
         data-testid='agent-management-header'
         title={t('settings.agents', { defaultValue: 'Agents' })}
-        description={
-          <>
-            <span>{t('settings.agentManagement.localAgentsDescription')} </span>
-            <Button
-              type='text'
-              size='mini'
-              className='!h-auto !p-0 !align-baseline !text-13px !font-normal !text-primary-6 hover:!text-primary-7 hover:!underline underline-offset-2'
-              onClick={() => {
-                void openExternalUrl(LOCAL_AGENT_SETUP_GUIDE_URL).catch(console.error);
-              }}
-            >
-              {t('settings.agentManagement.localAgentsSetupLink')}
-            </Button>
-          </>
-        }
+        description={t('settings.agentManagement.localAgentsDescription')}
         actions={
           <>
             {!isMobile && (
-              <AionSearchInput
+              <QianjiSearchInput
                 className='shrink-0 w-[200px] hidden md:flex'
                 data-testid='input-search-agents'
                 placeholder={t('settings.agentManagement.searchPlaceholder', { defaultValue: 'Search agents...' })}
@@ -302,7 +285,7 @@ const LocalAgents: React.FC = () => {
         </Typography.Text>
       </div>
 
-      <AionModal
+      <QianjiModal
         visible={editorVisible}
         onCancel={() => {
           setEditorVisible(false);
@@ -339,7 +322,7 @@ const LocalAgents: React.FC = () => {
             }}
           />
         )}
-      </AionModal>
+      </QianjiModal>
 
       <div data-testid='agent-management-custom-section'>
         <div className='flex flex-col gap-8px rounded-12px border border-border-2 bg-2 p-8px md:rounded-16px md:p-10px'>

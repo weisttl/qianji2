@@ -1,14 +1,14 @@
 /**
  * prepareHubResources.js
  *
- * Downloads the AionHub index.json and all extension zip packages
+ * Downloads the QianjiHub index.json and all extension zip packages
  * into resources/hub/ so they are bundled with the app as local fallback.
  *
  * Called during the build pipeline before electron-builder runs.
  *
  * Environment variables:
- *   AIONUI_HUB_TAG    - Git tag to fetch from (default: 'dist-latest')
- *   AIONUI_HUB_SKIP   - Set to '1' to skip hub resource preparation
+ *   QIANJI_HUB_TAG    - Git tag to fetch from (default: 'dist-latest')
+ *   QIANJI_HUB_SKIP   - Set to '1' to skip hub resource preparation
  */
 
 const fs = require('fs');
@@ -18,12 +18,7 @@ const https = require('https');
 const PROJECT_ROOT = path.resolve(__dirname, '..');
 const HUB_DIR = path.join(PROJECT_ROOT, 'resources', 'hub');
 
-const DEFAULT_TAG = 'dist-latest';
-const BASE_URLS = [
-  `https://raw.githubusercontent.com/iOfficeAI/AionHub/${process.env.AIONUI_HUB_TAG || DEFAULT_TAG}/`,
-  `https://cdn.jsdelivr.net/gh/iOfficeAI/AionHub@${process.env.AIONUI_HUB_TAG || DEFAULT_TAG}/`,
-];
-
+const BASE_URLS = process.env.QIANJI_HUB_BASE_URL ? [process.env.QIANJI_HUB_BASE_URL] : [];
 // ---------------------------------------------------------------------------
 // Helpers
 // ---------------------------------------------------------------------------
@@ -94,12 +89,18 @@ function downloadUrl(url, destPath) {
 // ---------------------------------------------------------------------------
 
 async function prepareHubResources() {
-  if (process.env.AIONUI_HUB_SKIP === '1') {
-    console.log('[hub] Skipping hub resource preparation (AIONUI_HUB_SKIP=1)');
+  if (process.env.QIANJI_HUB_SKIP === '1') {
+    console.log('[hub] Skipping hub resource preparation (QIANJI_HUB_SKIP=1)');
     return { skipped: true };
   }
 
-  const tag = process.env.AIONUI_HUB_TAG || DEFAULT_TAG;
+  if (!BASE_URLS.length) {
+    ensureDir(HUB_DIR);
+    fs.writeFileSync(path.join(HUB_DIR, 'index.json'), JSON.stringify({ extensions: {} }) + '\n');
+    console.log('[hub] No internal hub configured; public hub download is disabled');
+    return { skipped: true };
+  }
+  const tag = process.env.QIANJI_HUB_TAG || 'internal';
   console.log(`[hub] Preparing hub resources from tag: ${tag}`);
 
   // Clean and create target directory

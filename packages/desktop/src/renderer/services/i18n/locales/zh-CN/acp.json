@@ -28,5 +28,26 @@
   "config": {
     "reasoning_effort": "推理深度",
     "default": "默认"
+  },
+  "channelConflict": {
+    "title": "{{platform}} 渠道配置冲突",
+    "active": "OpenClaw 正在处理 {{platform}} 消息。",
+    "description": "{{platform}} 机器人凭据同时配置在 OpenClaw 中。",
+    "switchUnavailable": "在千机中切换助手不会生效",
+    "processedByOpenClaw": "消息由 OpenClaw 的助手处理",
+    "messagesAvailable": "仍可通过 OpenClaw 收发消息",
+    "instructions": "如需在千机中管理此渠道，可选择：",
+    "disableTitle": "方案一：停用 OpenClaw 的 {{platform}} 渠道（推荐）",
+    "edit": "编辑配置文件",
+    "set": "设置",
+    "restart": "然后重启 OpenClaw 和千机。",
+    "newBotTitle": "方案二：使用其他机器人",
+    "newBot": "为千机创建一个使用不同凭据的 {{platform}} 机器人。",
+    "keepTitle": "方案三：继续使用 OpenClaw",
+    "keep": "在千机中停用 {{platform}} 渠道，继续使用 OpenClaw 的集成。",
+    "disableAction": "协助停用 OpenClaw {{platform}} 渠道",
+    "ignore": "暂时忽略",
+    "banner": "OpenClaw {{platform}} 配置冲突，助手切换暂不可用。",
+    "learnMore": "了解详情"
   }
 }

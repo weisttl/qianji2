@@ -1,17 +1,19 @@
 {
-  "name": "@aionui/shared-scripts",
+  "name": "@qianji/shared-scripts",
   "version": "0.0.0",
   "private": true,
-  "description": "Shared build scripts for AionUi packages",
+  "description": "Shared build scripts for Qianji packages",
   "type": "commonjs",
   "exports": {
-    "./prepare-aioncore": "./src/prepare-aioncore.js"
+    "./prepare-qianjicore": "./src/prepare-qianjicore.js"
   },
   "scripts": {
     "test": "vitest run",
     "test:watch": "vitest"
   },
-  "dependencies": {},
+  "dependencies": {
+    "tar": "^7.5.7"
+  },
   "devDependencies": {
     "@types/node": "^22.10.2",
     "vitest": "^4.1.0"

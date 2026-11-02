@@ -363,11 +363,9 @@ const PreviewContextMenu: React.FC<PreviewContextMenuProps> = ({
       />
 
       {/* 打开文件所在目录 / Show in folder */}
-      <MenuItem
-        label={t('preview.openLocation')}
-        disabled={!currentTab?.canRevealInFolder}
-        onSelect={select(() => onRevealInFolder(tabId))}
-      />
+      {currentTab?.canRevealInFolder && (
+        <MenuItem label={t('preview.openLocation')} onSelect={select(() => onRevealInFolder(tabId))} />
+      )}
     </div>,
     document.body
   );

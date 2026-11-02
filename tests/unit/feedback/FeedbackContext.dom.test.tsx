@@ -13,6 +13,12 @@ import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest';
 import { cleanup, render, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 
+const productPolicy = vi.hoisted(() => ({ upstreamServicesEnabled: true }));
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: productPolicy,
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: 'en' } }),
   Trans: ({ children }: { children?: React.ReactNode }) => <>{children}</>,
@@ -313,5 +319,24 @@ describe('FeedbackProvider / useFeedback', () => {
     await user.click(document.querySelector('button')!);
     // No modal rendered, no crash.
     expect(document.querySelector('[data-testid="modal-stub"]')).toBeNull();
+  });
+});
+
+describe('internal support policy', () => {
+  it('does not capture a screenshot for an internal support request', async () => {
+    productPolicy.upstreamServicesEnabled = false;
+    const capture = vi.fn(async () => ({ filename: 'screenshot.png', data: [1] }));
+    setElectronAPI(capture);
+    try {
+      const user = userEvent.setup();
+      const { getByText } = renderWithProvider(<Trigger autoScreenshot />);
+      await user.click(getByText('open'));
+      expect(capture).not.toHaveBeenCalled();
+      expect(modalSpy.mock.calls.at(-1)?.[0].prefilledScreenshots).toBeUndefined();
+    } finally {
+      productPolicy.upstreamServicesEnabled = true;
+      setElectronAPI(undefined);
+      cleanup();
+    }
   });
 });

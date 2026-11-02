@@ -67,10 +67,10 @@
   "more": "Більше",
   "refresh": "Оновити",
   "readOnly": "Лише читання",
-  "tray.showWindow": "Показати AionUi",
+  "tray.showWindow": "Показати 千机",
   "tray.newChat": "Новий чат",
   "tray.closeToTray": "Згорнути в трей",
-  "tray.about": "Про AionUi",
+  "tray.about": "Про 千机",
   "tray.restart": "Перезапустити програму",
   "tray.quit": "Вийти",
   "tray.runningTasks": "Запущені завдання",
@@ -81,39 +81,39 @@
   "backendStartup": {
     "incompatibleRuntime": {
       "title": "Ця система не підтримується вбудованим backend",
-      "description": "AionUi відкрився, але локальний backend AionCore не може працювати в цій версії Linux. Оновіться до підтримуваного дистрибутива Linux і перезапустіть AionUi.",
+      "description": "千机 відкрився, але локальний backend Qianji Engine не може працювати в цій версії Linux. Оновіться до підтримуваного дистрибутива Linux і перезапустіть 千机.",
       "requiredVersions": "Потрібні символи середовища виконання: {{versions}}"
     },
     "incompleteInstallation": {
-      "title": "Встановлення AionUi неповне",
-      "description": "У цьому встановленні бракує потрібних локальних ресурсів, тому AionCore не може запуститися. Завантажте та перевстановіть останню версію AionUi. Якщо проблема повториться після перевстановлення, перевірте, чи захисне або антивірусне ПЗ не помістило AionCore у карантин.",
+      "title": "Встановлення 千机 неповне",
+      "description": "У цьому встановленні бракує потрібних локальних ресурсів, тому Qianji Engine не може запуститися. Завантажте та перевстановіть останню версію 千机. Якщо проблема повториться після перевстановлення, перевірте, чи захисне або антивірусне ПЗ не помістило Qianji Engine у карантин.",
       "downloadLatest": "Завантажити останню версію",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsSent": "Діагностику надіслано",
       "diagnosticsReportSuccess": "Діагностичний звіт надіслано",
       "diagnosticsReportFailed": "Не вдалося надіслати діагностичний звіт",
-      "runtimeComponentDescription": "У цій інсталяції бракує потрібних вбудованих компонентів середовища виконання, тому {{resource}} не може запуститися. Перевстановіть найновіший пакет AionUi. Якщо проблема повториться після перевстановлення, перевірте, чи не помістило програмне забезпечення безпеки або антивірус компоненти AionUi у карантин."
+      "runtimeComponentDescription": "У цій інсталяції бракує потрібних вбудованих компонентів середовища виконання, тому {{resource}} не може запуститися. Перевстановіть найновіший пакет 千机. Якщо проблема повториться після перевстановлення, перевірте, чи не помістило програмне забезпечення безпеки або антивірус компоненти 千机 у карантин."
     },
     "packageArchitectureMismatch": {
-      "title": "AionUi package architecture mismatch",
-      "description": "This AionUi package is for {{packageArch}}, but this Mac is {{deviceArch}}. You may have downloaded the wrong package. Please download and install the {{expectedArch}} package."
+      "title": "千机 package architecture mismatch",
+      "description": "This 千机 package is for {{packageArch}}, but this Mac is {{deviceArch}}. You may have downloaded the wrong package. Please download and install the {{expectedArch}} package."
     },
     "dataMigration": {
       "title": "Local data migration failed",
-      "description": "AionUi opened, but AionCore stopped while initializing local data. Reinstalling AionUi may not fix this. Send a diagnostics report or contact support so the local database migration can be inspected.",
+      "description": "千机 opened, but Qianji Engine stopped while initializing local data. Reinstalling 千机 may not fix this. Send a diagnostics report or contact support so the local database migration can be inspected.",
       "sendDiagnostics": "Send diagnostics",
       "diagnosticsSent": "Diagnostics sent",
       "diagnosticsReportSuccess": "Diagnostics report sent",
       "diagnosticsReportFailed": "Failed to send diagnostics report"
     },
     "databaseNewerThanApp": {
-      "title": "Потрібна новіша версія AionUi",
-      "description": "Ваші локальні дані створено новішою версією AionUi, і ця версія не може їх відкрити. Оновіть AionUi до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні.",
-      "descriptionWithVersion": "Ваші локальні дані створено версією AionUi, новішою за встановлену зараз (v{{currentVersion}}), тому ця версія не може їх відкрити. Оновіть AionUi до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні."
+      "title": "Потрібна новіша версія 千机",
+      "description": "Ваші локальні дані створено новішою версією 千机, і ця версія не може їх відкрити. Оновіть 千机 до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні.",
+      "descriptionWithVersion": "Ваші локальні дані створено версією 千机, новішою за встановлену зараз (v{{currentVersion}}), тому ця версія не може їх відкрити. Оновіть 千机 до останньої версії, щоб продовжити — дані цілі, перевстановлення чи скидання не потрібні."
     },
     "localDataRepair": {
       "title": "Local data repair failed",
-      "description": "AionUi відкрився, але AionCore зупинився під час підготовки локальних даних запуску, як-от записи assistants або агентів. Повторне встановлення AionUi може не вирішити проблему. Надішліть діагностичний звіт або зверніться до підтримки, щоб можна було перевірити локальну базу даних.",
+      "description": "千机 відкрився, але Qianji Engine зупинився під час підготовки локальних даних запуску, як-от записи assistants або агентів. Повторне встановлення 千机 може не вирішити проблему. Надішліть діагностичний звіт або зверніться до підтримки, щоб можна було перевірити локальну базу даних.",
       "sendDiagnostics": "Send diagnostics",
       "diagnosticsSent": "Diagnostics sent",
       "diagnosticsReportSuccess": "Diagnostics report sent",
@@ -121,7 +121,7 @@
     },
     "startupDirectory": {
       "title": "Startup directory is unavailable",
-      "description": "AionUi opened, but AionCore could not start because the configured work or log directory is missing, unavailable, or blocked by permissions. Check that the configured directories exist and are writable, then restart AionUi.",
+      "description": "千机 opened, but Qianji Engine could not start because the configured work or log directory is missing, unavailable, or blocked by permissions. Check that the configured directories exist and are writable, then restart 千机.",
       "sendDiagnostics": "Send diagnostics",
       "diagnosticsSent": "Diagnostics sent",
       "diagnosticsReportSuccess": "Diagnostics report sent",
@@ -129,7 +129,7 @@
     },
     "recoverableDatabaseCorruption": {
       "title": "Локальні дані пошкоджено",
-      "description": "AionUi виявив пошкодження локальної бази даних і не може продовжити запуск. Після підтвердження стару базу даних буде збережено як резервну копію, а для продовження запуску буде створено нову локальну базу даних. Попередні розмови більше не відображатимуться, стара база даних збережеться як файл резервної копії.",
+      "description": "千机 виявив пошкодження локальної бази даних і не може продовжити запуск. Після підтвердження стару базу даних буде збережено як резервну копію, а для продовження запуску буде створено нову локальну базу даних. Попередні розмови більше не відображатимуться, стара база даних збережеться як файл резервної копії.",
       "confirmRebuild": "Зберегти стару БД і створити нову",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsHint": "Надсилання діагностики не змінить локальну базу даних.",
@@ -145,8 +145,8 @@
       }
     },
     "transientConcurrentStartup": {
-      "title": "AionUi запускається",
-      "description": "Коли це вікно відкрилося, інший процес запуску AionUi усе ще використовував локальні дані. Це тимчасово, і ваші дані в безпеці — перевстановлення не потрібне. Зачекайте трохи та повторіть спробу або перезапустіть AionUi.",
+      "title": "千机 запускається",
+      "description": "Коли це вікно відкрилося, інший процес запуску 千机 усе ще використовував локальні дані. Це тимчасово, і ваші дані в безпеці — перевстановлення не потрібне. Зачекайте трохи та повторіть спробу або перезапустіть 千机.",
       "sendDiagnostics": "Send diagnostics",
       "diagnosticsSent": "Diagnostics sent",
       "diagnosticsReportSuccess": "Diagnostics report sent",
@@ -155,11 +155,11 @@
     },
     "pendingSlow": {
       "title": "Запуск",
-      "description": "AionCore запускається, зачекайте. Якщо він довго не відповідає, закрийте застосунок і відкрийте його знову."
+      "description": "Qianji Engine запускається, зачекайте. Якщо він довго не відповідає, закрийте застосунок і відкрийте його знову."
     },
     "exited": {
       "title": "Запуск не завершено",
-      "description": "AionCore не зміг завершити запуск і закрився. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
+      "description": "Qianji Engine не зміг завершити запуск і закрився. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsSent": "Діагностику надіслано",
       "diagnosticsReportSuccess": "Діагностику надіслано",
@@ -167,7 +167,7 @@
     },
     "portReportTimeout": {
       "title": "Час запуску вичерпано",
-      "description": "AionCore не завершив запуск за очікуваний час. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
+      "description": "Qianji Engine не завершив запуск за очікуваний час. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsSent": "Діагностику надіслано",
       "diagnosticsReportSuccess": "Діагностику надіслано",
@@ -175,7 +175,7 @@
     },
     "startupFailed": {
       "title": "Не вдалося запустити",
-      "description": "AionCore не вдалося запустити. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
+      "description": "Qianji Engine не вдалося запустити. Перезапустіть застосунок; якщо це повторюється, надішліть діагностику.",
       "sendDiagnostics": "Надіслати діагностику",
       "diagnosticsSent": "Діагностику надіслано",
       "diagnosticsReportSuccess": "Діагностику надіслано",
@@ -205,5 +205,52 @@
   },
   "selectedCount": "Вибрано {{count}}",
   "selectedSkills": "Вибрані навички",
-  "aiAssistant": "ШІ-асистент"
+  "aiAssistant": "ШІ-асистент",
+  "product": {
+    "name": "千机",
+    "organization": "Guotai Haitong",
+    "edition": "Internal workspace",
+    "tagline": "Professional insight. Intelligent possibilities.",
+    "description": "An AI workspace for Guotai Haitong, supporting research, documents, data analysis, and everyday work.",
+    "internalOnly": "For internal use at Guotai Haitong",
+    "support": "For account or access issues, contact your internal system administrator.",
+    "usageNotice": "Follow company data policies. Verify AI-generated content before use.",
+    "upstreamNotice": "Містить програмне забезпечення з відкритим кодом. Див. додані ліцензії та відомості про джерела.",
+    "updatesNotice": "Product releases are managed by your internal administrator.",
+    "connectionNotice": "Model connections are configured by administrators or users. Verify service endpoints and permitted data use before proceeding.",
+    "capabilityResearch": "Research",
+    "capabilityResearchDesc": "Organize source material and extract key insights",
+    "capabilityDocuments": "Documents",
+    "capabilityDocumentsDesc": "Draft, review, and organize business documents",
+    "capabilityData": "Data insights",
+    "capabilityDataDesc": "Analyze data and communicate clear findings",
+    "loginEyebrow": "Professional focus · Connected work",
+    "loginHeadline": "More possibilities.\nFor every professional.",
+    "loginIntro": "Connect knowledge with action.\nBring a fresh perspective to everyday work.",
+    "loginTitle": "Sign in to your workspace",
+    "loginDescription": "Use your platform account to get started.",
+    "workspaceTitle": "What shall we work on today?",
+    "workspaceSubtitle": "Start with a document, a question, or a task.",
+    "scenariosTitle": "Start with a work scenario",
+    "scenariosHint": "Choose a scenario, then add your context",
+    "researchTitle": "Research review",
+    "researchDescription": "Key insights · Source references · Open questions",
+    "researchPrompt": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "documentTitle": "Business writing",
+    "documentDescription": "Clear structure · Accurate language · Ready to review",
+    "documentPrompt": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation.",
+    "dataTitle": "Spreadsheet analysis",
+    "dataDescription": "Define metrics · Compare trends · Identify signals",
+    "dataPrompt": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "meetingTitle": "Meeting notes",
+    "meetingDescription": "Capture decisions · Clarify actions · Track follow-up",
+    "meetingPrompt": "Organize my meeting notes into topics, discussion points, confirmed decisions, and action items. Only assign owners and deadlines explicitly recorded in the source; mark other details as unconfirmed.",
+    "modelSettings": "Model settings",
+    "assistantSettings": "Manage assistants",
+    "platformSettings": "Platform settings",
+    "contactSupport": "Contact internal support",
+    "componentShowcase": "Custom component styles",
+    "presentationPrompt": "Підготуйте ділову презентацію за наданими матеріалами. Виділіть висновки, підтверджувальні дані та подальші дії. Позначте відсутню інформацію як таку, що потребує підтвердження.",
+    "planningPrompt": "Складіть план виконання наданого робочого завдання: кроки, залежності, контрольні точки та відкриті питання. Указуйте відповідальних і строки лише за наявності явних відомостей у вихідних матеріалах."
+  }
 }

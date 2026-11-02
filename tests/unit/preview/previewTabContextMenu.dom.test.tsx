@@ -286,11 +286,10 @@ describe('preview tab context menu — show in folder', () => {
     expect(handlers.onRevealInFolder).toHaveBeenCalledWith('b');
   });
 
-  it('greys out for a tab with no file behind it', () => {
+  it('hides the file-manager action when unavailable in the current runtime', () => {
     // Browser tabs and address-less tabs land here: there is no folder to open.
     const handlers = renderMenu('c');
-    fireEvent.click(screen.getByText('preview.openLocation'));
-
+    expect(screen.queryByText('preview.openLocation')).not.toBeInTheDocument();
     expect(handlers.onRevealInFolder).not.toHaveBeenCalled();
   });
 

@@ -1,0 +1,99 @@
+/* Guotai Haitong website palette, verified 2026-11-01.
+ * Primary #004E97, secondary #0081CC, accent #54C3F1.
+ * Source: https://www.gtht.com/static/svg/logo-new-t7kdZAa7.svg
+ * Interface tint scales and dark surfaces are derived for readable contrast.
+ */
+:root,
+[data-color-scheme='default'] {
+  --qianji-ink: #16334d;
+  --qianji-action-bg: #004e97;
+  --qianji-action-hover: #003c75;
+  --qianji-action-text: #ffffff;
+  --qianji-paper: #f5f9fc;
+  --qianji-accent: #54c3f1;
+  --qianji-secondary: #0081cc;
+  --qianji-on-ink: #ffffff;
+  --qianji-muted-on-ink: #c8e1f4;
+  --qianji-hero-start: #004e97;
+  --qianji-hero-end: #002e59;
+  --qianji-shadow: 0 16px 60px rgb(0 48 90 / 8%);
+  --brand: #004e97;
+  --brand-hover: #003c75;
+  --brand-light: #edf6fc;
+  --primary: var(--brand);
+  --primary-1: 237, 246, 252;
+  --primary-2: 217, 237, 250;
+  --primary-3: 184, 219, 244;
+  --primary-4: 132, 193, 233;
+  --primary-5: 65, 143, 202;
+  --primary-6: 0, 78, 151;
+  --primary-7: 0, 60, 117;
+  --primary-8: 0, 46, 89;
+  --primary-9: 0, 36, 67;
+  --primary-10: 0, 26, 49;
+  --aou-1: #edf6fc;
+  --aou-2: #d9edfa;
+  --aou-3: #b8dbf4;
+  --aou-4: #84c1e9;
+  --aou-5: #418fca;
+  --aou-6: #004e97;
+  --aou-7: #003c75;
+  --aou-8: #002e59;
+  --aou-9: #002443;
+  --aou-10: #001a31;
+  --text-primary: #16334d;
+  --color-text-1: var(--text-primary);
+  --bg-1: #f8fbfe;
+  --bg-2: #f0f5fa;
+  --color-guid-agent-bar: var(--brand-light);
+  --message-user-bg: var(--brand-light);
+}
+
+[data-color-scheme='default'][data-theme='dark'] {
+  --brand: #73c6f4;
+  --brand-hover: #99d8fa;
+  --brand-light: #122d43;
+  --primary: var(--brand);
+  --primary-1: 18, 45, 67;
+  --primary-2: 22, 64, 93;
+  --primary-3: 29, 92, 132;
+  --primary-4: 44, 122, 168;
+  --primary-5: 68, 159, 218;
+  --primary-6: 115, 198, 244;
+  --primary-7: 153, 216, 250;
+  --primary-8: 188, 231, 252;
+  --primary-9: 218, 242, 253;
+  --primary-10: 239, 250, 255;
+  --aou-1: #102333;
+  --aou-2: #122d43;
+  --aou-3: #16405d;
+  --aou-4: #1d5c84;
+  --aou-5: #449fda;
+  --aou-6: #73c6f4;
+  --aou-7: #99d8fa;
+  --aou-8: #bce7fc;
+  --aou-9: #daf2fd;
+  --aou-10: #effaff;
+  --text-primary: #eeeef0;
+  --color-text-1: var(--text-primary);
+  --bg-1: #141d28;
+  --bg-2: #1a2735;
+  --qianji-paper: var(--bg-base);
+  --qianji-shadow: 0 16px 60px rgb(0 0 0 / 20%);
+  --color-guid-agent-bar: var(--brand-light);
+  --message-user-bg: var(--brand-light);
+}
+
+/* Arco declares its palette on body; inherit the product palette from html. */
+html[data-color-scheme='default'] body {
+  --primary-1: inherit;
+  --primary-2: inherit;
+  --primary-3: inherit;
+  --primary-4: inherit;
+  --primary-5: inherit;
+  --primary-6: inherit;
+  --primary-7: inherit;
+  --primary-8: inherit;
+  --primary-9: inherit;
+  --primary-10: inherit;
+}

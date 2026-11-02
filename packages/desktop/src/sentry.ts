@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PRODUCT_CONFIG } from './common/config/constants';
 import * as Sentry from '@sentry/electron/main';
 import { app, type BrowserWindow } from 'electron';
 import * as fs from 'node:fs';
@@ -97,11 +98,11 @@ function hasBackendStartupFailed(): boolean {
 }
 
 function isBackendStartupFailureEvent(event: { tags?: Record<string, unknown> }): boolean {
-  return event.tags?.['aionui.failure'] === 'backend_startup';
+  return event.tags?.['qianji.failure'] === 'backend_startup';
 }
 
 function isUserFeedbackEvent(event: { tags?: Record<string, unknown> }): boolean {
-  return event.tags?.type === 'user-feedback' || event.tags?.['aionui.installation_integrity.user_report'] === 'true';
+  return event.tags?.type === 'user-feedback' || event.tags?.['qianji.installation_integrity.user_report'] === 'true';
 }
 
 function isBackendStartupSecondaryEvent(event: { tags?: Record<string, unknown> }, haystacks: string[]): boolean {
@@ -114,6 +115,7 @@ function isBackendStartupSecondaryEvent(event: { tags?: Record<string, unknown> 
 }
 
 export function initSentry(): void {
+  if (!PRODUCT_CONFIG.upstreamServicesEnabled) return;
   Sentry.init({
     dsn: process.env.SENTRY_DSN,
     environment: app.isPackaged ? 'production' : 'development',
@@ -207,12 +209,12 @@ function getInstallPathKind(resourcesPath: unknown): string | undefined {
   if (!pathValue) return undefined;
 
   const normalized = pathValue.replace(/\//g, '\\').toLowerCase();
-  if (normalized.includes('\\appdata\\local\\programs\\aionui\\resources')) {
+  if (normalized.includes('\\appdata\\local\\programs\\qianji\\resources')) {
     return 'user_local_programs';
   }
   if (
-    normalized.includes('\\program files\\aionui\\resources') ||
-    normalized.includes('\\program files (x86)\\aionui\\resources')
+    normalized.includes('\\program files\\qianji\\resources') ||
+    normalized.includes('\\program files (x86)\\qianji\\resources')
   ) {
     return 'program_files';
   }
@@ -250,75 +252,75 @@ export async function captureBackendStartupFailure(error: unknown): Promise<void
   });
   const autoUpdateDiagnostics = readAutoUpdateDiagnostics(app.getPath('userData'));
   Sentry.withScope((scope) => {
-    scope.setTag('aionui.failure', 'backend_startup');
-    scope.setTag('aionui.backend_startup.reason', failureInfo.reason);
+    scope.setTag('qianji.failure', 'backend_startup');
+    scope.setTag('qianji.backend_startup.reason', failureInfo.reason);
     if (failureInfo.runtime) {
-      scope.setTag('aionui.backend_startup.runtime', failureInfo.runtime);
+      scope.setTag('qianji.backend_startup.runtime', failureInfo.runtime);
     }
     if (failureInfo.packageArch) {
-      scope.setTag('aionui.backend_startup.package_arch', failureInfo.packageArch);
+      scope.setTag('qianji.backend_startup.package_arch', failureInfo.packageArch);
     }
     if (failureInfo.deviceArch) {
-      scope.setTag('aionui.backend_startup.device_arch', failureInfo.deviceArch);
+      scope.setTag('qianji.backend_startup.device_arch', failureInfo.deviceArch);
     }
     if (failureInfo.expectedDownloadArch) {
-      scope.setTag('aionui.backend_startup.expected_download_arch', failureInfo.expectedDownloadArch);
+      scope.setTag('qianji.backend_startup.expected_download_arch', failureInfo.expectedDownloadArch);
     }
     if (typeof failureInfo.isRosettaTranslated === 'boolean') {
-      scope.setTag('aionui.backend_startup.rosetta_translated', getBooleanTagValue(failureInfo.isRosettaTranslated));
+      scope.setTag('qianji.backend_startup.rosetta_translated', getBooleanTagValue(failureInfo.isRosettaTranslated));
     }
     if (typeof details?.stage === 'string') {
-      scope.setTag('aionui.backend_startup.stage', details.stage);
+      scope.setTag('qianji.backend_startup.stage', details.stage);
     }
     if (failureInfo.backendBoundaryCode) {
-      scope.setTag('aionui.backend_startup.boundary_code', failureInfo.backendBoundaryCode);
+      scope.setTag('qianji.backend_startup.boundary_code', failureInfo.backendBoundaryCode);
     }
     if (failureInfo.backendBoundaryStage) {
-      scope.setTag('aionui.backend_startup.boundary_stage', failureInfo.backendBoundaryStage);
+      scope.setTag('qianji.backend_startup.boundary_stage', failureInfo.backendBoundaryStage);
     }
     if (failureInfo.localDataIssueKind) {
-      scope.setTag('aionui.backend_startup.local_data_issue_kind', failureInfo.localDataIssueKind);
+      scope.setTag('qianji.backend_startup.local_data_issue_kind', failureInfo.localDataIssueKind);
     }
     if (failureInfo.incompleteInstallationKind) {
-      scope.setTag('aionui.backend_startup.incomplete_installation_kind', failureInfo.incompleteInstallationKind);
+      scope.setTag('qianji.backend_startup.incomplete_installation_kind', failureInfo.incompleteInstallationKind);
     }
     for (const [tag, value] of [
-      ['aionui.backend_startup.missing_bundled_dir', getBooleanTagValue(failureInfo.missingBundledAioncoreDir)],
-      ['aionui.backend_startup.missing_runtime_dir', getBooleanTagValue(failureInfo.missingRuntimeDir)],
-      ['aionui.backend_startup.missing_binary', getBooleanTagValue(failureInfo.missingBackendBinary)],
-      ['aionui.backend_startup.missing_hub_dir', getBooleanTagValue(failureInfo.missingHubDir)],
-      ['aionui.backend_startup.missing_pet_states_dir', getBooleanTagValue(failureInfo.missingPetStatesDir)],
-      ['aionui.backend_startup.missing_pwa_dir', getBooleanTagValue(failureInfo.missingPwaDir)],
-      ['aionui.backend_startup.install_path_kind', getInstallPathKind(details?.resourcesPath)],
-      ['aionui.backend_startup.last_update_status', getString(autoUpdateDiagnostics?.lastEvent?.status)],
+      ['qianji.backend_startup.missing_bundled_dir', getBooleanTagValue(failureInfo.missingBundledQianjicoreDir)],
+      ['qianji.backend_startup.missing_runtime_dir', getBooleanTagValue(failureInfo.missingRuntimeDir)],
+      ['qianji.backend_startup.missing_binary', getBooleanTagValue(failureInfo.missingBackendBinary)],
+      ['qianji.backend_startup.missing_hub_dir', getBooleanTagValue(failureInfo.missingHubDir)],
+      ['qianji.backend_startup.missing_pet_states_dir', getBooleanTagValue(failureInfo.missingPetStatesDir)],
+      ['qianji.backend_startup.missing_pwa_dir', getBooleanTagValue(failureInfo.missingPwaDir)],
+      ['qianji.backend_startup.install_path_kind', getInstallPathKind(details?.resourcesPath)],
+      ['qianji.backend_startup.last_update_status', getString(autoUpdateDiagnostics?.lastEvent?.status)],
       [
-        'aionui.backend_startup.health_polling_delayed',
+        'qianji.backend_startup.health_polling_delayed',
         getBooleanTagValue(
           typeof details?.healthCheckPollingDelayed === 'boolean' ? details.healthCheckPollingDelayed : undefined
         ),
       ],
-      ['aionui.backend_startup.health_attempts_bucket', getHealthAttemptBucket(details?.healthCheckAttempts)],
+      ['qianji.backend_startup.health_attempts_bucket', getHealthAttemptBucket(details?.healthCheckAttempts)],
       [
-        'aionui.backend_startup.health_attempt_deficit_bucket',
+        'qianji.backend_startup.health_attempt_deficit_bucket',
         getHealthAttemptBucket(details?.healthCheckAttemptDeficit),
       ],
-      ['aionui.backend_startup.health_timeout_overrun_bucket', getDurationBucket(details?.healthCheckTimeoutOverrunMs)],
-      ['aionui.backend_startup.health_max_attempt_gap_bucket', getDurationBucket(details?.healthCheckMaxAttemptGapMs)],
+      ['qianji.backend_startup.health_timeout_overrun_bucket', getDurationBucket(details?.healthCheckTimeoutOverrunMs)],
+      ['qianji.backend_startup.health_max_attempt_gap_bucket', getDurationBucket(details?.healthCheckMaxAttemptGapMs)],
       [
-        'aionui.backend_startup.seconds_since_quit_and_install',
+        'qianji.backend_startup.seconds_since_quit_and_install',
         getSecondsSince(autoUpdateDiagnostics?.lastQuitAndInstallAt),
       ],
     ] as const) {
       if (value) scope.setTag(tag, value);
     }
     if (details) {
-      scope.setContext('aioncore_startup', details);
-      scope.setExtra('aioncore_startup', details);
+      scope.setContext('qianjicore_startup', details);
+      scope.setExtra('qianjicore_startup', details);
     }
-    scope.setContext('aioncore_startup_classification', { ...failureInfo });
-    scope.setExtra('aioncore_startup_classification', failureInfo);
-    scope.setContext('aioncore_install_diagnostics', installDiagnostics);
-    scope.setExtra('aioncore_install_diagnostics', installDiagnostics);
+    scope.setContext('qianjicore_startup_classification', { ...failureInfo });
+    scope.setExtra('qianjicore_startup_classification', failureInfo);
+    scope.setContext('qianjicore_install_diagnostics', installDiagnostics);
+    scope.setExtra('qianjicore_install_diagnostics', installDiagnostics);
     if (autoUpdateDiagnostics) {
       scope.setContext('auto_update_diagnostics', autoUpdateDiagnostics);
       scope.setExtra('auto_update_diagnostics', autoUpdateDiagnostics);
@@ -522,7 +524,7 @@ async function runStartupLogReport(): Promise<void> {
 
   Sentry.withScope((scope) => {
     scope.addAttachment({
-      filename: 'aionui-logs.log.gz',
+      filename: 'qianji-logs.log.gz',
       data: pack.gzipped,
       contentType: 'application/gzip',
     });
@@ -549,6 +551,7 @@ async function runStartupLogReport(): Promise<void> {
  * retries.
  */
 export function scheduleStartupLogReport(window: BrowserWindow): void {
+  if (!PRODUCT_CONFIG.upstreamServicesEnabled) return;
   const trigger = () => {
     setTimeout(() => {
       runStartupLogReport().catch((err) => {

@@ -58,20 +58,20 @@ describe('buildAssistantEditorBackends', () => {
   it('uses localized management names and falls back to agent_type when backend is empty', () => {
     const agents: ManagedAgent[] = [
       managedAgent({
-        id: 'agent-aionrs',
+        id: 'agent-qianjirs',
         backend: undefined,
-        agent_type: 'aionrs',
-        name: 'Aion CLI',
-        name_i18n: { 'zh-CN': 'Aion 命令行' },
+        agent_type: 'qianjirs',
+        name: 'Qianji CLI',
+        name_i18n: { 'zh-CN': 'Qianji 命令行' },
         status: 'online',
       }),
     ];
 
     expect(buildAssistantEditorBackends(agents, 'zh-CN')).toEqual([
       {
-        id: 'agent-aionrs',
-        name: 'Aion 命令行',
-        runtimeKey: 'aionrs',
+        id: 'agent-qianjirs',
+        name: 'Qianji 命令行',
+        runtimeKey: 'qianjirs',
         modelOptions: [],
       },
     ]);

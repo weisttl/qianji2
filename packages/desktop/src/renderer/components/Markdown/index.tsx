@@ -12,7 +12,7 @@ import rehypeRaw from 'rehype-raw';
 // Import KaTeX CSS to make it available in the document
 import 'katex/dist/katex.min.css';
 
-import { openExternalUrl } from '@/renderer/utils/platform';
+import { isElectronDesktop, openExternalUrl } from '@/renderer/utils/platform';
 import { parseHttpUrl } from '@/renderer/utils/url';
 import { useOptionalPreviewContext } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
 import classNames from 'classnames';
@@ -67,7 +67,7 @@ const MarkdownView: React.FC<MarkdownViewProps> = React.memo(
         // Prefer the built-in browser tab for http(s) links; fall back to the
         // system browser for other schemes or when no Preview panel is available.
         const httpUrl = parseHttpUrl(href);
-        if (httpUrl && preview) {
+        if (httpUrl && preview && isElectronDesktop()) {
           preview.openBrowserTab(httpUrl);
           return;
         }

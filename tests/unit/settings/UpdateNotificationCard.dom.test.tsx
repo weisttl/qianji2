@@ -111,14 +111,14 @@ describe('UpdateNotificationCard', () => {
           version: '2.1.14',
           name: 'v2.1.14',
           body: 'notes',
-          htmlUrl: 'https://github.com/iOfficeAI/AionUi/releases/tag/v2.1.14',
+          htmlUrl: 'https://github.com/iOfficeAI/Qianji/releases/tag/v2.1.14',
           prerelease: false,
           draft: false,
           assets: [],
           recommendedAsset: {
-            name: 'AionUi-2.1.14-mac-arm64.dmg',
-            url: 'https://static.aionui.com/releases/2.1.14/AionUi-2.1.14-mac-arm64.dmg',
-            fallbackUrl: 'https://github.com/iOfficeAI/AionUi/releases/download/v2.1.14/AionUi-2.1.14-mac-arm64.dmg',
+            name: 'Qianji-2.1.14-mac-arm64.dmg',
+            url: 'https://static.qianji.com/releases/2.1.14/Qianji-2.1.14-mac-arm64.dmg',
+            fallbackUrl: 'https://github.com/iOfficeAI/Qianji/releases/download/v2.1.14/Qianji-2.1.14-mac-arm64.dmg',
             size: 123,
           },
         },
@@ -128,7 +128,7 @@ describe('UpdateNotificationCard', () => {
       success: true,
       data: {
         downloadId: request.downloadId ?? 'manual-download',
-        file_path: '/tmp/AionUi-2.1.14-mac-arm64.dmg',
+        file_path: '/tmp/Qianji-2.1.14-mac-arm64.dmg',
       },
     }));
   });
@@ -178,7 +178,7 @@ describe('UpdateNotificationCard', () => {
       data: {
         ready: true,
         version: '2.1.14',
-        filePath: '/cache/pending/AionUi-2.1.14-mac.zip',
+        filePath: '/cache/pending/Qianji-2.1.14-mac.zip',
       },
     });
 
@@ -382,7 +382,7 @@ describe('UpdateNotificationCard', () => {
 
     fireEvent.click(await screen.findByText('update.releaseLog'));
     expect(await screen.findByText('update.releaseNotesFailed')).toBeInTheDocument();
-    expect(screen.getByText('update.viewRelease')).toBeInTheDocument();
+    expect(screen.queryByText('update.viewRelease')).not.toBeInTheDocument();
   });
 
   it('keeps the cancel action available while downloading and cancel restores the initial state', async () => {
@@ -609,8 +609,8 @@ describe('UpdateNotificationCard', () => {
       silent: true,
       updated: true,
       retryCount: 3,
-      instDir: 'D:\\AionUi',
-      logPath: 'C:\\Users\\me\\AppData\\Local\\Temp\\aionui-installer-2.1.27-20260702-151830-ab12cd34ef56.log',
+      instDir: 'D:\\Qianji',
+      logPath: 'C:\\Users\\me\\AppData\\Local\\Temp\\qianji-installer-2.1.27-20260702-151830-ab12cd34ef56.log',
       at: '2026-07-01T00:00:00.000Z',
     };
     mocks.consumeInstallerLastFailureMock.mockResolvedValue({ success: true, data: marker });

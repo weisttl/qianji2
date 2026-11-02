@@ -133,10 +133,10 @@ describe('resolveDefaultTeamAgentModel', () => {
     ).resolves.toBe('');
   });
 
-  it('keeps the default placeholder for aionrs assistants', async () => {
+  it('keeps the default placeholder for qianjirs assistants', async () => {
     await expect(
       resolveDefaultTeamAgentModel({
-        assistant_backend: 'aionrs',
+        assistant_backend: 'qianjirs',
       })
     ).resolves.toBe('default');
   });

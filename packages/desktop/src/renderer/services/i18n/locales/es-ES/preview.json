@@ -61,13 +61,13 @@
   "wavedromTitle": "Diagrama WaveDrom",
   "oversized": {
     "title": "El archivo es demasiado grande para previsualizarlo",
-    "detail": "El tamaño del archivo {{size}} supera el límite de {{threshold}}. Ábrelo en un editor del sistema.",
-    "downloadUnavailable": "Este archivo es demasiado grande para descargarlo aquí. Usa “Abrir en el sistema”."
+    "detail": "El tamaño {{size}} supera el límite de {{threshold}}. Descarga el archivo para verlo.",
+    "downloadUnavailable": "No se puede descargar este archivo aquí. Contacta con tu administrador para obtenerlo."
   },
   "unsupported": {
     "title": "La vista previa no admite este formato",
-    "detail": "Los archivos {{format}} no se pueden previsualizar aquí. Ábrelos en una aplicación del sistema.",
-    "downloadUnavailable": "Este archivo no se puede descargar aquí. Usa “Abrir en el sistema”."
+    "detail": "Los archivos {{format}} no se pueden previsualizar en línea. Descarga el archivo para verlo.",
+    "downloadUnavailable": "No se puede descargar este archivo aquí. Contacta con tu administrador para obtenerlo."
   },
   "aiWriting": "La IA está escribiendo...",
   "errors": {
@@ -85,7 +85,7 @@
       "outsideSandbox": "Este archivo está fuera del sandbox del proyecto actual."
     },
     "serverInstall": {
-      "hint": "AionUi se está ejecutando en un servidor. Instala el componente de vista previa en ese servidor y reintenta:",
+      "hint": "千机 se está ejecutando en un servidor. Instala el componente de vista previa en ese servidor y reintenta:",
       "icuNote": "Si sigue sin iniciar, instala la biblioteca ICU en el servidor (Debian/Ubuntu: apt-get install -y libicu-dev)."
     }
   },

@@ -65,10 +65,10 @@
   "more": "更多",
   "refresh": "重新整理",
   "readOnly": "唯讀",
-  "tray.showWindow": "顯示 AionUi",
+  "tray.showWindow": "顯示 千机",
   "tray.newChat": "新建對話",
   "tray.closeToTray": "隱藏到托盤",
-  "tray.about": "關於 AionUi",
+  "tray.about": "關於 千机",
   "tray.restart": "重啟應用",
   "tray.quit": "結束",
   "tray.runningTasks": "運行中的任務",
@@ -79,39 +79,39 @@
   "backendStartup": {
     "incompatibleRuntime": {
       "title": "目前系統不支援內建後端",
-      "description": "AionUi 已開啟，但本機 AionCore 後端無法在目前 Linux 版本上執行。請升級到受支援的 Linux 發行版後重新啟動 AionUi。",
+      "description": "千机 已開啟，但本機 千机引擎 後端無法在目前 Linux 版本上執行。請升級到受支援的 Linux 發行版後重新啟動 千机。",
       "requiredVersions": "需要的執行階段符號：{{versions}}"
     },
     "incompleteInstallation": {
-      "title": "AionUi 安裝不完整",
-      "description": "目前安裝缺少必要的本機資源，AionCore 無法啟動。請下載並重新安裝最新版 AionUi；如果重新安裝後仍然出現，請檢查系統安全軟體或防毒軟體是否隔離了 AionCore。",
+      "title": "千机 安裝不完整",
+      "description": "目前安裝缺少必要的本機資源，千机引擎 無法啟動。請下載並重新安裝最新版 千机；如果重新安裝後仍然出現，請檢查系統安全軟體或防毒軟體是否隔離了 千机引擎。",
       "downloadLatest": "下載最新版",
       "sendDiagnostics": "傳送診斷報告",
       "diagnosticsSent": "診斷報告已傳送",
       "diagnosticsReportSuccess": "診斷報告已傳送",
       "diagnosticsReportFailed": "診斷報告傳送失敗",
-      "runtimeComponentDescription": "目前安裝缺少必要的內建執行元件，{{resource}} 無法啟動。請重新安裝最新版 AionUi；如果重新安裝後仍然出現，請檢查系統安全軟體或防毒軟體是否隔離了 AionUi 元件。"
+      "runtimeComponentDescription": "目前安裝缺少必要的內建執行元件，{{resource}} 無法啟動。請重新安裝最新版 千机；如果重新安裝後仍然出現，請檢查系統安全軟體或防毒軟體是否隔離了 千机 元件。"
     },
     "packageArchitectureMismatch": {
-      "title": "AionUi 安裝包架構不相符",
-      "description": "目前 AionUi 安裝包是 {{packageArch}}，但這台 Mac 是 {{deviceArch}}。你可能下載了錯誤的安裝包，請重新下載並安裝 {{expectedArch}} 版本。"
+      "title": "千机 安裝包架構不相符",
+      "description": "目前 千机 安裝包是 {{packageArch}}，但這台 Mac 是 {{deviceArch}}。你可能下載了錯誤的安裝包，請重新下載並安裝 {{expectedArch}} 版本。"
     },
     "dataMigration": {
       "title": "本地資料遷移失敗",
-      "description": "AionUi 已開啟，但 AionCore 在初始化本地資料時停止。重新安裝 AionUi 未必能解決此問題。請傳送診斷報告或聯絡支援，以便檢查本地資料庫遷移狀態。",
+      "description": "千机 已開啟，但 千机引擎 在初始化本地資料時停止。重新安裝 千机 未必能解決此問題。請傳送診斷報告或聯絡支援，以便檢查本地資料庫遷移狀態。",
       "sendDiagnostics": "傳送診斷報告",
       "diagnosticsSent": "診斷報告已傳送",
       "diagnosticsReportSuccess": "診斷報告已傳送",
       "diagnosticsReportFailed": "診斷報告傳送失敗"
     },
     "databaseNewerThanApp": {
-      "title": "需要更新 AionUi",
-      "description": "本機資料由較新版本的 AionUi 建立，目前版本無法開啟。請將 AionUi 更新至最新版本即可繼續使用，資料完好無損，無需重新安裝或重設資料。",
-      "descriptionWithVersion": "本機資料由比目前版本 v{{currentVersion}} 更新的 AionUi 建立，目前版本無法開啟。請將 AionUi 更新至最新版本即可繼續使用，資料完好無損，無需重新安裝或重設資料。"
+      "title": "需要更新 千机",
+      "description": "本機資料由較新版本的 千机 建立，目前版本無法開啟。請將 千机 更新至最新版本即可繼續使用，資料完好無損，無需重新安裝或重設資料。",
+      "descriptionWithVersion": "本機資料由比目前版本 v{{currentVersion}} 更新的 千机 建立，目前版本無法開啟。請將 千机 更新至最新版本即可繼續使用，資料完好無損，無需重新安裝或重設資料。"
     },
     "localDataRepair": {
       "title": "本機資料修復失敗",
-      "description": "AionUi 已開啟，但 AionCore 在準備本機啟動資料時停止，例如 assistant 或代理記錄。重新安裝 AionUi 可能無法解決此問題。請傳送診斷報告或聯絡支援，以便檢查本機資料庫。",
+      "description": "千机 已開啟，但 千机引擎 在準備本機啟動資料時停止，例如 assistant 或代理記錄。重新安裝 千机 可能無法解決此問題。請傳送診斷報告或聯絡支援，以便檢查本機資料庫。",
       "sendDiagnostics": "傳送診斷",
       "diagnosticsSent": "診斷已傳送",
       "diagnosticsReportSuccess": "診斷報告已傳送",
@@ -119,7 +119,7 @@
     },
     "startupDirectory": {
       "title": "啟動目錄無法使用",
-      "description": "AionUi 已開啟，但因為設定的工作目錄或日誌目錄不存在、無法存取或權限受限，AionCore 無法啟動。請確認這些目錄存在且可寫入，然後重新啟動 AionUi。",
+      "description": "千机 已開啟，但因為設定的工作目錄或日誌目錄不存在、無法存取或權限受限，千机引擎 無法啟動。請確認這些目錄存在且可寫入，然後重新啟動 千机。",
       "sendDiagnostics": "傳送診斷報告",
       "diagnosticsSent": "診斷報告已傳送",
       "diagnosticsReportSuccess": "診斷報告已傳送",
@@ -127,7 +127,7 @@
     },
     "recoverableDatabaseCorruption": {
       "title": "本機資料已損壞",
-      "description": "偵測到本機資料庫損壞，AionUi 無法繼續啟動。確認後將備份舊資料庫，並建立新的本機資料庫繼續啟動。歷史對話將不再顯示，舊資料庫會保留為備份檔案。",
+      "description": "偵測到本機資料庫損壞，千机 無法繼續啟動。確認後將備份舊資料庫，並建立新的本機資料庫繼續啟動。歷史對話將不再顯示，舊資料庫會保留為備份檔案。",
       "confirmRebuild": "備份舊資料庫並重建新資料庫",
       "sendDiagnostics": "傳送診斷報告",
       "diagnosticsHint": "傳送診斷報告不會修改本機資料庫。",
@@ -143,8 +143,8 @@
       }
     },
     "transientConcurrentStartup": {
-      "title": "AionUi 正在啟動",
-      "description": "此視窗開啟時，另一個 AionUi 啟動程序仍在使用本機資料。這是暫時的，您的資料是安全的——無需重新安裝。請稍候片刻後重試，或重新啟動 AionUi。",
+      "title": "千机 正在啟動",
+      "description": "此視窗開啟時，另一個 千机 啟動程序仍在使用本機資料。這是暫時的，您的資料是安全的——無需重新安裝。請稍候片刻後重試，或重新啟動 千机。",
       "sendDiagnostics": "傳送診斷",
       "diagnosticsSent": "診斷已傳送",
       "diagnosticsReportSuccess": "診斷報告已傳送",
@@ -153,11 +153,11 @@
     },
     "pendingSlow": {
       "title": "正在啟動",
-      "description": "AionCore 正在啟動，請稍候。若長時間無回應，可結束應用程式後再試。"
+      "description": "千机引擎 正在啟動，請稍候。若長時間無回應，可結束應用程式後再試。"
     },
     "exited": {
       "title": "啟動未完成",
-      "description": "AionCore 未能完成啟動並已結束。請重新啟動應用程式；若反覆出現，請回報診斷資訊。",
+      "description": "千机引擎 未能完成啟動並已結束。請重新啟動應用程式；若反覆出現，請回報診斷資訊。",
       "sendDiagnostics": "傳送診斷",
       "diagnosticsSent": "診斷已傳送",
       "diagnosticsReportSuccess": "診斷資訊已回報",
@@ -165,7 +165,7 @@
     },
     "portReportTimeout": {
       "title": "啟動逾時",
-      "description": "AionCore 未在預期時間內完成啟動。請重新啟動應用程式；若反覆出現，請傳送診斷。",
+      "description": "千机引擎 未在預期時間內完成啟動。請重新啟動應用程式；若反覆出現，請傳送診斷。",
       "sendDiagnostics": "傳送診斷",
       "diagnosticsSent": "診斷已傳送",
       "diagnosticsReportSuccess": "診斷資訊已回報",
@@ -173,7 +173,7 @@
     },
     "startupFailed": {
       "title": "啟動失敗",
-      "description": "AionCore 啟動失敗。請重新啟動應用程式；若反覆出現，請傳送診斷。",
+      "description": "千机引擎 啟動失敗。請重新啟動應用程式；若反覆出現，請傳送診斷。",
       "sendDiagnostics": "傳送診斷",
       "diagnosticsSent": "診斷已傳送",
       "diagnosticsReportSuccess": "診斷資訊已回報",
@@ -202,5 +202,52 @@
   },
   "selectedCount": "已選 {{count}}",
   "selectedSkills": "已選技能",
-  "aiAssistant": "AI 助手"
+  "aiAssistant": "AI 助手",
+  "product": {
+    "name": "千机",
+    "organization": "國泰海通",
+    "edition": "內部工作平台",
+    "tagline": "专业所向，智启千机",
+    "description": "面向国泰海通的 AI 工作平台，连接投研、文档、数据与日常办公。",
+    "internalOnly": "僅供國泰海通內部使用",
+    "support": "帳號或存取遇到問題，請聯繫內部系統管理員。",
+    "usageNotice": "請按公司資料管理要求使用；AI 生成內容需經人工核驗。",
+    "upstreamNotice": "本產品包含開源軟體，版權與授權條款請參閱隨附來源聲明。",
+    "updatesNotice": "本产品版本由内部管理员统一维护。",
+    "connectionNotice": "模型服务由管理员或用户配置，请在使用前确认服务地址与数据使用范围。",
+    "capabilityResearch": "投研提效",
+    "capabilityResearchDesc": "梳理研究材料，提炼核心观点",
+    "capabilityDocuments": "文档协作",
+    "capabilityDocumentsDesc": "起草、校对与整理业务文档",
+    "capabilityData": "数据洞察",
+    "capabilityDataDesc": "辅助分析数据，呈现清晰结论",
+    "loginEyebrow": "专业有序 · 高效协同",
+    "loginHeadline": "让每一份专业，\n释放更多可能。",
+    "loginIntro": "以智能连接知识与行动，\n为每一天的专业工作，打开新的思路。",
+    "loginTitle": "登入工作平台",
+    "loginDescription": "使用平台帳號，開始今天的工作。",
+    "workspaceTitle": "今天，有什麼需要一起完成？",
+    "workspaceSubtitle": "從一份材料、一個問題，或一項任務開始。",
+    "scenariosTitle": "从业务场景开始",
+    "scenariosHint": "选择场景，补充材料后开始对话",
+    "researchTitle": "研究材料梳理",
+    "researchDescription": "提炼观点 · 整理依据 · 标注待核验项",
+    "researchPrompt": "请根据我提供的研究材料，梳理核心观点、关键数据与主要风险。逐项注明材料来源，对缺失或无法核验的信息明确标注，不补造数据。",
+    "documentTitle": "业务文稿起草",
+    "documentDescription": "结构清晰 · 表达准确 · 便于审阅",
+    "documentPrompt": "请协助我起草一份业务文稿。先向我确认受众、用途、要点与格式，再生成结构清晰的初稿；涉及数据、事实和承诺的内容请标注待确认。",
+    "dataTitle": "表格与数据分析",
+    "dataDescription": "梳理口径 · 对比变化 · 发现线索",
+    "dataPrompt": "请分析我提供的表格。先确认字段、时间范围与统计口径，再总结主要变化、异常项及可能原因，区分事实与推测，列出需要进一步核验的问题。",
+    "meetingTitle": "会议纪要整理",
+    "meetingDescription": "提取决议 · 明确事项 · 跟进执行",
+    "meetingPrompt": "请将我提供的会议记录整理为纪要，包括议题、讨论要点、已确认决议和待办事项。仅在原文有明确记录时填写负责人和截止时间，未确定的信息标注待确认。",
+    "modelSettings": "模型配置",
+    "assistantSettings": "助手管理",
+    "platformSettings": "平台设置",
+    "contactSupport": "聯繫內部管理員",
+    "componentShowcase": "自訂元件樣式展示",
+    "presentationPrompt": "請根據我提供的業務資料製作一份報告簡報，突出核心結論、數據依據和後續行動，缺漏資訊標註待確認。",
+    "planningPrompt": "請將我提供的業務任務拆解為執行計畫，列出步驟、相依關係、里程碑和待確認事項，僅依資料中明確記載的資訊填寫負責人和截止時間。"
+  }
 }

@@ -4,15 +4,15 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import AionModal from '@/renderer/components/base/AionModal';
-import AionScrollArea from '@/renderer/components/base/AionScrollArea';
+import QianjiModal from '@/renderer/components/base/QianjiModal';
+import QianjiScrollArea from '@/renderer/components/base/QianjiScrollArea';
 import { iconColors } from '@/renderer/styles/colors';
-import { isElectronDesktop, resolveExtensionAssetUrl } from '@/renderer/utils/platform';
+import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
 import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
 import { Tabs } from '@arco-design/web-react';
-import { Computer, Earth, Info, LinkCloud, Puzzle, Toolkit } from '@icon-park/react';
+import { Communication, Computer, Info, LinkCloud, Puzzle, Toolkit } from '@icon-park/react';
 import classNames from 'classnames';
 import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -22,7 +22,7 @@ import ExtensionSettingsTabContent from './contents/ExtensionSettingsTabContent'
 import ModelModalContent from './contents/ModelModalContent';
 import SystemModalContent from './contents/SystemModalContent';
 import ToolsModalContent from './contents/ToolsModalContent';
-import WebuiModalContent from './contents/WebuiModalContent';
+import ChannelsModalContent from './contents/ChannelsModalContent';
 import { SettingsTabNavigateProvider, SettingsViewModeProvider } from './settingsViewContext';
 import { LEGACY_ANCHOR_REMAP } from '@/renderer/pages/settings/components/SettingsSider';
 
@@ -55,7 +55,7 @@ const RESIZE_DEBOUNCE_DELAY = 150;
 /**
  * 内置设置标签页类型 / Built-in settings tab type
  */
-export type BuiltinSettingTab = 'model' | 'agent' | 'tools' | 'webui' | 'system' | 'about';
+export type BuiltinSettingTab = 'model' | 'agent' | 'tools' | 'channels' | 'system' | 'about';
 
 /**
  * 设置标签页类型（内置 + 扩展）/ Settings tab type (built-in + extension)
@@ -101,7 +101,7 @@ interface SubModalProps {
  */
 export const SubModal: React.FC<SubModalProps> = ({ visible, onCancel, title, children }) => {
   return (
-    <AionModal
+    <QianjiModal
       visible={visible}
       onCancel={onCancel}
       footer={null}
@@ -109,8 +109,8 @@ export const SubModal: React.FC<SubModalProps> = ({ visible, onCancel, title, ch
       size='medium'
       title={title}
     >
-      <AionScrollArea className='h-full px-20px pb-16px text-14px text-t-primary'>{children}</AionScrollArea>
-    </AionModal>
+      <QianjiScrollArea className='h-full px-20px pb-16px text-14px text-t-primary'>{children}</QianjiScrollArea>
+    </QianjiModal>
   );
 };
 
@@ -138,6 +138,10 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
   const [isMobile, setIsMobile] = useState(false);
   const resizeTimerRef = useRef<number | undefined>(undefined);
   const extensionTabs = useExtensionSettingsTabs();
+
+  useEffect(() => {
+    if (visible) setActiveTab(defaultTab);
+  }, [visible, defaultTab]);
 
   /**
    * 处理窗口尺寸变化，更新移动端状态
@@ -169,9 +173,6 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
     };
   }, [handleResize]);
 
-  // 检测是否在 Electron 桌面环境 / Check if running in Electron desktop environment
-  const isDesktop = isElectronDesktop();
-
   const { resolveExtTabName } = useExtI18n();
 
   // Extension tab lookup map for renderContent
@@ -202,13 +203,11 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
       },
     ];
 
-    if (isDesktop) {
-      builtinItems.push({
-        key: 'webui',
-        label: t('settings.webui'),
-        icon: <Earth theme='outline' size='20' fill={iconColors.secondary} />,
-      });
-    }
+    builtinItems.push({
+      key: 'channels',
+      label: t('settings.channels'),
+      icon: <Communication theme='outline' size='20' fill={iconColors.secondary} />,
+    });
 
     builtinItems.push(
       {
@@ -274,7 +273,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
     }
 
     return builtinItems;
-  }, [t, isDesktop, extensionTabs, resolveExtTabName]);
+  }, [t, extensionTabs, resolveExtTabName]);
 
   // Track which extension tabs have been visited (lazy mount + keep-alive)
   const [mountedExtTabs, setMountedExtTabs] = useState<Set<string>>(new Set());
@@ -306,15 +305,15 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
         return <AgentModalContent />;
       case 'tools':
         return <ToolsModalContent />;
-      case 'webui':
-        return <WebuiModalContent />;
+      case 'channels':
+        return <ChannelsModalContent />;
       case 'system':
         return <SystemModalContent />;
       case 'about':
         return <AboutModalContent />;
       default:
-        // If no built-in match and not an extension tab, return null
-        if (!extensionTabMap.has(activeTab)) return null;
+        // Unknown or removed tabs fall back to an available Web settings page.
+        if (!extensionTabMap.has(activeTab)) return <ModelModalContent />;
         return null;
     }
   };
@@ -360,7 +359,7 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
 
   // 桌面端菜单（侧边栏）/ Desktop menu (sidebar)
   const desktopMenu = (
-    <AionScrollArea className='flex-shrink-0 b-color-border-2 scrollbar-hide' style={{ width: `${SIDEBAR_WIDTH}px` }}>
+    <QianjiScrollArea className='flex-shrink-0 b-color-border-2 scrollbar-hide' style={{ width: `${SIDEBAR_WIDTH}px` }}>
       <div className='flex flex-col gap-2px'>
         {menuItems.map((item) => (
           <div
@@ -379,13 +378,13 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
           </div>
         ))}
       </div>
-    </AionScrollArea>
+    </QianjiScrollArea>
   );
 
   return (
     <SettingsViewModeProvider value='modal'>
       <SettingsTabNavigateProvider value={handleTabChange}>
-        <AionModal
+        <QianjiModal
           visible={visible}
           onCancel={onCancel}
           footer={null}
@@ -408,14 +407,14 @@ const SettingsModal: React.FC<SettingsModalProps> = ({ visible, onCancel, defaul
           >
             {isMobile ? mobileMenu : desktopMenu}
 
-            <AionScrollArea
+            <QianjiScrollArea
               className={classNames('flex-1 min-h-0', isMobile ? 'overflow-y-auto' : 'flex flex-col ps-24px gap-16px')}
             >
               {renderBuiltinContent()}
               {renderExtensionTabs()}
-            </AionScrollArea>
+            </QianjiScrollArea>
           </div>
-        </AionModal>
+        </QianjiModal>
       </SettingsTabNavigateProvider>
     </SettingsViewModeProvider>
   );

@@ -1,3 +1,4 @@
+import '../config/constants';
 import path from 'path';
 import type { IPlatformServices } from './IPlatformServices';
 import { NodePlatformServices } from './NodePlatformServices';
@@ -9,8 +10,8 @@ let _services: IPlatformServices | null = null;
  * Centralised so that every call-site stays in sync.
  */
 export function getDevAppName(): string {
-  const isMultiInstance = process.env.AIONUI_MULTI_INSTANCE === '1';
-  return isMultiInstance ? 'AionUi-Dev-2' : 'AionUi-Dev';
+  const isMultiInstance = process.env.QIANJI_MULTI_INSTANCE === '1';
+  return isMultiInstance ? 'Qianji-Dev-2' : 'Qianji-Dev';
 }
 
 export function registerPlatformServices(services: IPlatformServices): void {
@@ -42,7 +43,8 @@ export function getPlatformServices(): IPlatformServices {
         if (!app.isPackaged) {
           const devAppName = getDevAppName();
           app.setName(devAppName);
-          app.setPath('userData', path.join(path.dirname(app.getPath('userData')), devAppName));
+          const parentDir = path.dirname(app.getPath('userData'));
+          app.setPath('userData', path.join(parentDir, devAppName));
         }
         // Typed as IPlatformPaths so tsc enforces completeness: any new method
         // added to the interface will cause a compile error here if omitted below.

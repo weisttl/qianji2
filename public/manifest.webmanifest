@@ -1,13 +1,13 @@
 {
-  "name": "AionUi",
-  "short_name": "AionUi",
-  "description": "AionUi WebUI for mobile and desktop browsers.",
+  "name": "千机 · 国泰海通",
+  "short_name": "千机",
+  "description": "国泰海通内部 AI 工作平台",
   "start_url": "./",
   "scope": "./",
   "display": "standalone",
   "orientation": "portrait",
   "background_color": "#ffffff",
-  "theme_color": "#4E5969",
+  "theme_color": "#004E97",
   "icons": [
     {
       "src": "./pwa/icon-192.png",

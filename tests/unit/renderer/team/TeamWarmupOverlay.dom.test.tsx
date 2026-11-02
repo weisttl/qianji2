@@ -50,19 +50,19 @@ describe('TeamWarmupOverlay failure states', () => {
     render(
       <TeamWarmupOverlay
         phase='error'
-        assistants={[assistant('l', 'leader', 'Codex'), assistant('m', 'teammate', 'Aion CLI')]}
+        assistants={[assistant('l', 'leader', 'Codex'), assistant('m', 'teammate', 'Qianji CLI')]}
         runtimeStatus={runtime([
           ['l', 'ready'],
-          ['m', 'failed', "Invalid request: Bad request: Provider 'aionrs' not found"],
+          ['m', 'failed', "Invalid request: Bad request: Provider 'qianjirs' not found"],
         ])}
         colorOf={colorOf}
         onRetry={() => {}}
       />
     );
     // single failure → title names the member
-    expect(screen.getByText('Member Aion CLI failed to start')).toBeInTheDocument();
+    expect(screen.getByText('Member Qianji CLI failed to start')).toBeInTheDocument();
     // error is simplified (wrapper prefixes stripped)
-    expect(screen.getByTestId('team-warmup-error')).toHaveTextContent("Provider 'aionrs' not found");
+    expect(screen.getByTestId('team-warmup-error')).toHaveTextContent("Provider 'qianjirs' not found");
     // teammate is removable → hint mentions removal
     expect(screen.getByText(/remove the member/i)).toBeInTheDocument();
   });
@@ -73,12 +73,12 @@ describe('TeamWarmupOverlay failure states', () => {
         phase='error'
         assistants={[
           assistant('l', 'leader', 'Gemini'),
-          assistant('a', 'teammate', 'Aion CLI'),
+          assistant('a', 'teammate', 'Qianji CLI'),
           assistant('c', 'teammate', 'CodeBuddy'),
         ]}
         runtimeStatus={runtime([
           ['l', 'failed', 'ACP error'],
-          ['a', 'failed', "Bad request: Provider 'aionrs' not found"],
+          ['a', 'failed', "Bad request: Provider 'qianjirs' not found"],
           ['c', 'ready'],
         ])}
         colorOf={colorOf}
@@ -91,8 +91,8 @@ describe('TeamWarmupOverlay failure states', () => {
     const box = screen.getByTestId('team-warmup-error');
     expect(box).toHaveTextContent('Gemini');
     expect(box).toHaveTextContent('ACP error');
-    expect(box).toHaveTextContent('Aion CLI');
-    expect(box).toHaveTextContent("Provider 'aionrs' not found");
+    expect(box).toHaveTextContent('Qianji CLI');
+    expect(box).toHaveTextContent("Provider 'qianjirs' not found");
     // a teammate is among the failures → removal is offered
     expect(screen.getByText(/remove the member/i)).toBeInTheDocument();
   });

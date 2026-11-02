@@ -79,70 +79,70 @@ function main() {
 
   const compileOnly = process.argv.includes('--compile-only');
   const makensis = findMakensis();
-  const root = mkdtempSync(path.join(tmpdir(), 'aionui-rm-ui-'));
+  const root = mkdtempSync(path.join(tmpdir(), 'qianji-rm-ui-'));
   const installDir = path.join(root, 'install-dir');
   mkdirSync(installDir, { recursive: true });
   const lockedFile = path.join(installDir, 'locked-by-smoke.txt');
-  writeFileSync(lockedFile, 'AionUi Restart Manager UI smoke lock\n', 'utf8');
+  writeFileSync(lockedFile, 'Qianji Restart Manager UI smoke lock\n', 'utf8');
 
   let locker = null;
-  const nsiPath = path.join(root, 'aionui-rstrtmgr-ui-smoke.nsi');
-  const exePath = path.join(root, 'aionui-rstrtmgr-ui-smoke.exe');
+  const nsiPath = path.join(root, 'qianji-rstrtmgr-ui-smoke.nsi');
+  const exePath = path.join(root, 'qianji-rstrtmgr-ui-smoke.exe');
   const logPath = path.join(
     process.env.TEMP || tmpdir(),
-    `aionui-installer-smoke-${new Date().toISOString().replace(/[-:]/g, '').replace(/\..+$/, '').replace('T', '-')}.log`
+    `qianji-installer-smoke-${new Date().toISOString().replace(/[-:]/g, '').replace(/\..+$/, '').replace('T', '-')}.log`
   );
   const processControlPath = path.join(repoRoot, 'resources', 'windows', 'installer-process-control.nsh');
   const messagesPath = path.join(repoRoot, 'resources', 'windows', 'installer-messages.nsh');
 
   const nsi = `
 Unicode true
-Name "AionUi Restart Manager UI Smoke"
+Name "Qianji Restart Manager UI Smoke"
 OutFile "${nsisQuote(exePath)}"
 RequestExecutionLevel user
 SilentInstall normal
-!define AIONUI_FALLBACK_LOG "aionui-installer-smoke-fallback.log"
+!define QIANJI_FALLBACK_LOG "qianji-installer-smoke-fallback.log"
 !define VERSION "rstrtmgr-ui-smoke"
-!define AIONUI_TARGET_ARCH "x64"
-!define AIONUI_APP_EXECUTABLE_FILENAME "AionUi.exe"
-!define UNINSTALL_FILENAME "Uninstall AionUi.exe"
+!define QIANJI_TARGET_ARCH "x64"
+!define QIANJI_APP_EXECUTABLE_FILENAME "Qianji.exe"
+!define UNINSTALL_FILENAME "Uninstall Qianji.exe"
 !define PROJECT_DIR "${nsisQuote(repoRoot)}"
 !include LogicLib.nsh
 !include "${nsisQuote(messagesPath)}"
 !include "${nsisQuote(processControlPath)}"
 
-Var AionUiSessionLogPath
-Var AionUiSessionId
-Var AionUiIsUpdated
+Var QianjiSessionLogPath
+Var QianjiSessionId
+Var QianjiIsUpdated
 
 Section
   StrCpy $INSTDIR "${nsisQuote(installDir)}"
-  StrCpy $AionUiSessionLogPath "${nsisQuote(logPath)}"
-  StrCpy $AionUiSessionId "rstrtmgrui"
-  StrCpy $AionUiIsUpdated "1"
+  StrCpy $QianjiSessionLogPath "${nsisQuote(logPath)}"
+  StrCpy $QianjiSessionId "rstrtmgrui"
+  StrCpy $QianjiIsUpdated "1"
   InitPluginsDir
   BringToFront
 
-  aionui_query_lockers:
-    !insertmacro AIONUI_QUERY_LOCKERS "${nsisQuote(lockedFile)}" $AionUiLockerResult
-    StrCpy $AionUiLockerList ""
+  qianji_query_lockers:
+    !insertmacro QIANJI_QUERY_LOCKERS "${nsisQuote(lockedFile)}" $QianjiLockerResult
+    StrCpy $QianjiLockerList ""
     ClearErrors
     SetDetailsPrint none
-    FileOpen $AionUiLockerListFile "$PLUGINSDIR\\aionui-rm-lockers.txt" r
+    FileOpen $QianjiLockerListFile "$PLUGINSDIR\\qianji-rm-lockers.txt" r
     \${IfNot} \${Errors}
-      FileRead $AionUiLockerListFile $AionUiLockerList
-      FileClose $AionUiLockerListFile
+      FileRead $QianjiLockerListFile $QianjiLockerList
+      FileClose $QianjiLockerListFile
     \${EndIf}
     SetDetailsPrint lastused
-    \${If} $AionUiLockerList == ""
-      StrCpy $AionUiLockerList "\${AIONUI_MSG_UNKNOWN_PROCESS_EN}"
-      StrCpy $AionUiLockerListZh "\${AIONUI_MSG_UNKNOWN_PROCESS_ZH}"
-      StrCpy $AionUiLockerListEn "\${AIONUI_MSG_UNKNOWN_PROCESS_EN}"
+    \${If} $QianjiLockerList == ""
+      StrCpy $QianjiLockerList "\${QIANJI_MSG_UNKNOWN_PROCESS_EN}"
+      StrCpy $QianjiLockerListZh "\${QIANJI_MSG_UNKNOWN_PROCESS_ZH}"
+      StrCpy $QianjiLockerListEn "\${QIANJI_MSG_UNKNOWN_PROCESS_EN}"
     \${Else}
-      StrCpy $AionUiLockerListZh "$AionUiLockerList"
-      StrCpy $AionUiLockerListEn "$AionUiLockerList"
+      StrCpy $QianjiLockerListZh "$QianjiLockerList"
+      StrCpy $QianjiLockerListEn "$QianjiLockerList"
     \${EndIf}
-    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "\${AIONUI_MSG_FILE_OR_FOLDER_IN_USE_ZH}$\\r$\\n${nsisQuote(lockedFile)}$\\r$\\n$\\r$\\n\${AIONUI_MSG_APPLICATION_USING_IT_ZH}$\\r$\\n$AionUiLockerListZh$\\r$\\n$\\r$\\n\${AIONUI_MSG_CLOSE_LISTED_RETRY_ZH}$\\r$\\n$\\r$\\n\${AIONUI_MSG_INSTALLER_LOG_ZH}:$\\r$\\n$AionUiSessionLogPath$\\r$\\n$\\r$\\n\${AIONUI_MSG_BLOCK_SEPARATOR}$\\r$\\n$\\r$\\n\${AIONUI_MSG_FILE_OR_FOLDER_IN_USE_EN}$\\r$\\n${nsisQuote(lockedFile)}$\\r$\\n$\\r$\\n\${AIONUI_MSG_APPLICATION_USING_IT_EN}$\\r$\\n$AionUiLockerListEn$\\r$\\n$\\r$\\n\${AIONUI_MSG_CLOSE_LISTED_RETRY_EN}$\\r$\\n$\\r$\\n\${AIONUI_MSG_INSTALLER_LOG_EN}:$\\r$\\n$AionUiSessionLogPath" /SD IDCANCEL IDRETRY aionui_query_lockers
+    MessageBox MB_RETRYCANCEL|MB_ICONEXCLAMATION "\${QIANJI_MSG_FILE_OR_FOLDER_IN_USE_ZH}$\\r$\\n${nsisQuote(lockedFile)}$\\r$\\n$\\r$\\n\${QIANJI_MSG_APPLICATION_USING_IT_ZH}$\\r$\\n$QianjiLockerListZh$\\r$\\n$\\r$\\n\${QIANJI_MSG_CLOSE_LISTED_RETRY_ZH}$\\r$\\n$\\r$\\n\${QIANJI_MSG_INSTALLER_LOG_ZH}:$\\r$\\n$QianjiSessionLogPath$\\r$\\n$\\r$\\n\${QIANJI_MSG_BLOCK_SEPARATOR}$\\r$\\n$\\r$\\n\${QIANJI_MSG_FILE_OR_FOLDER_IN_USE_EN}$\\r$\\n${nsisQuote(lockedFile)}$\\r$\\n$\\r$\\n\${QIANJI_MSG_APPLICATION_USING_IT_EN}$\\r$\\n$QianjiLockerListEn$\\r$\\n$\\r$\\n\${QIANJI_MSG_CLOSE_LISTED_RETRY_EN}$\\r$\\n$\\r$\\n\${QIANJI_MSG_INSTALLER_LOG_EN}:$\\r$\\n$QianjiSessionLogPath" /SD IDCANCEL IDRETRY qianji_query_lockers
 SectionEnd
 `;
 

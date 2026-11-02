@@ -1,50 +1,50 @@
-!ifndef AIONUI_INSTALLER_REMOVE_REGISTRY_NSH
-!define AIONUI_INSTALLER_REMOVE_REGISTRY_NSH
+!ifndef QIANJI_INSTALLER_REMOVE_REGISTRY_NSH
+!define QIANJI_INSTALLER_REMOVE_REGISTRY_NSH
 
-!macro AIONUI_CLEAR_INSTALL_REGISTRY _REASON
+!macro QIANJI_CLEAR_INSTALL_REGISTRY _REASON
   DeleteRegKey SHCTX "${UNINSTALL_REGISTRY_KEY}"
   DeleteRegKey SHCTX "${INSTALL_REGISTRY_KEY}"
-  !insertmacro AIONUI_LOG_EVENT "event=registry-clear reason=${_REASON} uninstallKey=${UNINSTALL_REGISTRY_KEY} installKey=${INSTALL_REGISTRY_KEY}"
+  !insertmacro QIANJI_LOG_EVENT "event=registry-clear reason=${_REASON} uninstallKey=${UNINSTALL_REGISTRY_KEY} installKey=${INSTALL_REGISTRY_KEY}"
 !macroend
 
-!macro AIONUI_LOG_ATOMIC_REMOVE_FAILURE
+!macro QIANJI_LOG_ATOMIC_REMOVE_FAILURE
   Push $9
   nsExec::Exec `"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -Command "& { \
     $$ErrorActionPreference = 'SilentlyContinue'; \
-    $$log = '$AionUiSessionLogPath'; \
-    if (-not $$log) { $$log = Join-Path $$env:TEMP '${AIONUI_FALLBACK_LOG}' }; \
-    $$failed = '$AionUiAtomicFailedPath'; \
+    $$log = '$QianjiSessionLogPath'; \
+    if (-not $$log) { $$log = Join-Path $$env:TEMP '${QIANJI_FALLBACK_LOG}' }; \
+    $$failed = '$QianjiAtomicFailedPath'; \
     $$instDir = '$INSTDIR'; \
-    $$oldInstallDir = '$AionUiAtomicStagingDir'; \
+    $$oldInstallDir = '$QianjiAtomicStagingDir'; \
     $$relative = $$failed; \
     if ($$failed.StartsWith($$instDir, [System.StringComparison]::CurrentCultureIgnoreCase)) { $$relative = $$failed.Substring($$instDir.Length).TrimStart('\') }; \
     $$tempCandidate = if ($$relative -and $$relative -ne $$failed) { Join-Path $$oldInstallDir $$relative } else { '' }; \
     $$kind = if ($$tempCandidate.Length -ge 260) { 'likely-long-path' } else { 'unknown' }; \
-    $$payload = [ordered]@{ schemaVersion = 1; ts = (Get-Date -Format o); session = '$AionUiSessionId'; version = '${VERSION}'; arch = '${AIONUI_TARGET_ARCH}'; updated = ('$AionUiIsUpdated' -eq '1'); instDir = '$INSTDIR'; event = 'remove-atomic-failed'; kind = $$kind; pathLength = $$failed.Length; tempCandidateLength = $$tempCandidate.Length; atomicFailedPath = $$failed; tempCandidate = $$tempCandidate }; \
+    $$payload = [ordered]@{ schemaVersion = 1; ts = (Get-Date -Format o); session = '$QianjiSessionId'; version = '${VERSION}'; arch = '${QIANJI_TARGET_ARCH}'; updated = ('$QianjiIsUpdated' -eq '1'); instDir = '$INSTDIR'; event = 'remove-atomic-failed'; kind = $$kind; pathLength = $$failed.Length; tempCandidateLength = $$tempCandidate.Length; atomicFailedPath = $$failed; tempCandidate = $$tempCandidate }; \
     Add-Content -LiteralPath $$log -Encoding UTF8 -Value ($$payload | ConvertTo-Json -Compress -Depth 8) \
   }"`
   Pop $9
   Pop $9
 !macroend
 
-!macro AIONUI_LOG_REMOVE_FAILURE_JSON _PHASE _FATAL _FAILED_PATH _EXTRA_FIELDS
-  !insertmacro AIONUI_LOG_JSON_EVENT "failure" "$$lockerText = '$AionUiLockerList'; $$processes = @(); if ($$lockerText -and $$lockerText -notlike 'Windows did not identify*' -and $$lockerText -ne 'unknown process') { $$processes = @($$lockerText -split ',\s*' | Where-Object { $$_ } | ForEach-Object { if ($$_ -match '^(.*)\(([0-9]+)\)$$') { [ordered]@{ name = $$Matches[1]; pid = [int]$$Matches[2] } } else { [ordered]@{ name = $$_; pid = $$null } } }) }; $$payload.code = '${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED}'; $$payload.phase = '${_PHASE}'; $$payload.failedPath = '${_FAILED_PATH}'; $$payload.blockingProcesses = @($$processes); if ($$lockerText -like 'AionUi installer(*)') { $$payload.fallbackReason = 'installer-self-lock'; $$payload.message = 'The installer process is using the install directory as its current output directory.' } elseif ($$processes.Count -eq 0) { $$payload.fallbackReason = 'restart-manager-no-process'; $$payload.message = 'Windows did not identify a specific locking process. Close terminals, editors, and file managers opened in the install folder.' } else { $$payload.fallbackReason = ''; $$payload.message = '' }; $$payload.fatal = ('${_FATAL}' -eq '1'); ${_EXTRA_FIELDS}"
+!macro QIANJI_LOG_REMOVE_FAILURE_JSON _PHASE _FATAL _FAILED_PATH _EXTRA_FIELDS
+  !insertmacro QIANJI_LOG_JSON_EVENT "failure" "$$lockerText = '$QianjiLockerList'; $$processes = @(); if ($$lockerText -and $$lockerText -notlike 'Windows did not identify*' -and $$lockerText -ne 'unknown process') { $$processes = @($$lockerText -split ',\s*' | Where-Object { $$_ } | ForEach-Object { if ($$_ -match '^(.*)\(([0-9]+)\)$$') { [ordered]@{ name = $$Matches[1]; pid = [int]$$Matches[2] } } else { [ordered]@{ name = $$_; pid = $$null } } }) }; $$payload.code = '${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED}'; $$payload.phase = '${_PHASE}'; $$payload.failedPath = '${_FAILED_PATH}'; $$payload.blockingProcesses = @($$processes); if ($$lockerText -like 'Qianji installer(*)') { $$payload.fallbackReason = 'installer-self-lock'; $$payload.message = 'The installer process is using the install directory as its current output directory.' } elseif ($$processes.Count -eq 0) { $$payload.fallbackReason = 'restart-manager-no-process'; $$payload.message = 'Windows did not identify a specific locking process. Close terminals, editors, and file managers opened in the install folder.' } else { $$payload.fallbackReason = ''; $$payload.message = '' }; $$payload.fatal = ('${_FATAL}' -eq '1'); ${_EXTRA_FIELDS}"
 !macroend
 
-!macro AIONUI_REMOVE_INSTALL_DIR
-  StrCpy $AionUiRemoveResidueCount "0"
-  ${If} $AionUiRemoveResidueRoot == ""
-    StrCpy $AionUiRemoveResidueRoot "$INSTDIR"
+!macro QIANJI_REMOVE_INSTALL_DIR
+  StrCpy $QianjiRemoveResidueCount "0"
+  ${If} $QianjiRemoveResidueRoot == ""
+    StrCpy $QianjiRemoveResidueRoot "$INSTDIR"
   ${EndIf}
-  StrCpy $AionUiRemoveFirstFailedPath ""
+  StrCpy $QianjiRemoveFirstFailedPath ""
   nsExec::Exec `"$SYSDIR\WindowsPowerShell\v1.0\powershell.exe" -NoProfile -ExecutionPolicy Bypass -Command "& { \
     $$ErrorActionPreference = 'Continue'; \
-    $$log = '$AionUiSessionLogPath'; \
-    if (-not $$log) { $$log = Join-Path $$env:TEMP '${AIONUI_FALLBACK_LOG}' }; \
-    $$path = [System.IO.Path]::GetFullPath('$AionUiRemoveResidueRoot'); \
-    $$firstFailedFile = '$PLUGINSDIR\aionui-remove-first-failed.txt'; \
+    $$log = '$QianjiSessionLogPath'; \
+    if (-not $$log) { $$log = Join-Path $$env:TEMP '${QIANJI_FALLBACK_LOG}' }; \
+    $$path = [System.IO.Path]::GetFullPath('$QianjiRemoveResidueRoot'); \
+    $$firstFailedFile = '$PLUGINSDIR\qianji-remove-first-failed.txt'; \
     Set-Content -LiteralPath $$firstFailedFile -Encoding UTF8 -NoNewline -Value ''; \
-    function Write-InstallerLog($$message) { $$payload = [ordered]@{ schemaVersion = 1; ts = (Get-Date -Format o); session = '$AionUiSessionId'; version = '${VERSION}'; arch = '${AIONUI_TARGET_ARCH}'; updated = ('$AionUiIsUpdated' -eq '1'); instDir = '$INSTDIR'; event = 'remove-log'; message = $$message }; if ($$message -match '(^|\s)event=([^\s]+)') { $$payload.event = $$Matches[2] }; Add-Content -LiteralPath $$log -Encoding UTF8 -Value ($$payload | ConvertTo-Json -Compress -Depth 8) } \
+    function Write-InstallerLog($$message) { $$payload = [ordered]@{ schemaVersion = 1; ts = (Get-Date -Format o); session = '$QianjiSessionId'; version = '${VERSION}'; arch = '${QIANJI_TARGET_ARCH}'; updated = ('$QianjiIsUpdated' -eq '1'); instDir = '$INSTDIR'; event = 'remove-log'; message = $$message }; if ($$message -match '(^|\s)event=([^\s]+)') { $$payload.event = $$Matches[2] }; Add-Content -LiteralPath $$log -Encoding UTF8 -Value ($$payload | ConvertTo-Json -Compress -Depth 8) } \
     function Convert-LongPath($$itemPath) { if ($$itemPath.StartsWith('\\')) { return '\\?\UNC\' + $$itemPath.TrimStart('\') } return '\\?\' + $$itemPath } \
     function Remove-WithRetries($$item, $$isDir) { \
       $$delays = @(200,500,1000); \
@@ -73,123 +73,123 @@
       exit 1 \
     } \
   }"`
-  Pop $AionUiRemoveDirResult
+  Pop $QianjiRemoveDirResult
 
   ClearErrors
   SetDetailsPrint none
-  FileOpen $AionUiRemoveFirstFailedFile "$PLUGINSDIR\aionui-remove-first-failed.txt" r
+  FileOpen $QianjiRemoveFirstFailedFile "$PLUGINSDIR\qianji-remove-first-failed.txt" r
   ${IfNot} ${Errors}
-    FileRead $AionUiRemoveFirstFailedFile $AionUiRemoveFirstFailedPath
-    FileClose $AionUiRemoveFirstFailedFile
+    FileRead $QianjiRemoveFirstFailedFile $QianjiRemoveFirstFailedPath
+    FileClose $QianjiRemoveFirstFailedFile
   ${EndIf}
   SetDetailsPrint lastused
 
-  ${If} $AionUiRemoveDirResult == "error"
-    !insertmacro AIONUI_LOG_EVENT "event=remove-longpath fallback=RMDir reason=no-powershell root=$INSTDIR"
-    RMDir /r "$AionUiRemoveResidueRoot"
-    ${If} ${FileExists} "$AionUiRemoveResidueRoot\*.*"
-      StrCpy $AionUiRemoveDirResult "1"
+  ${If} $QianjiRemoveDirResult == "error"
+    !insertmacro QIANJI_LOG_EVENT "event=remove-longpath fallback=RMDir reason=no-powershell root=$INSTDIR"
+    RMDir /r "$QianjiRemoveResidueRoot"
+    ${If} ${FileExists} "$QianjiRemoveResidueRoot\*.*"
+      StrCpy $QianjiRemoveDirResult "1"
     ${Else}
-      StrCpy $AionUiRemoveDirResult "0"
+      StrCpy $QianjiRemoveDirResult "0"
     ${EndIf}
   ${EndIf}
 
-  ${If} $AionUiRemoveDirResult != 0
-    StrCpy $AionUiRemoveResidueCount $AionUiRemoveDirResult
+  ${If} $QianjiRemoveDirResult != 0
+    StrCpy $QianjiRemoveResidueCount $QianjiRemoveDirResult
   ${EndIf}
 !macroend
 
 !macro customRemoveFiles
-  !insertmacro AIONUI_LOG_EVENT "remove-start instDir=$INSTDIR"
-  Var /GLOBAL AionUiRemoveDirResult
-  Var /GLOBAL AionUiAtomicFailedPath
-  Var /GLOBAL AionUiAtomicRemoveSucceeded
-  Var /GLOBAL AionUiAtomicStagingDir
-  Var /GLOBAL AionUiRemoveResidueCount
-  Var /GLOBAL AionUiRemoveResidueRoot
-  Var /GLOBAL AionUiRemoveFirstFailedPath
-  Var /GLOBAL AionUiRemoveFirstFailedFile
-  StrCpy $AionUiAtomicFailedPath ""
-  StrCpy $AionUiAtomicRemoveSucceeded "0"
-  StrCpy $AionUiAtomicStagingDir ""
-  StrCpy $AionUiRemoveResidueCount "0"
-  StrCpy $AionUiRemoveResidueRoot "$INSTDIR"
-  StrCpy $AionUiRemoveFirstFailedPath ""
+  !insertmacro QIANJI_LOG_EVENT "remove-start instDir=$INSTDIR"
+  Var /GLOBAL QianjiRemoveDirResult
+  Var /GLOBAL QianjiAtomicFailedPath
+  Var /GLOBAL QianjiAtomicRemoveSucceeded
+  Var /GLOBAL QianjiAtomicStagingDir
+  Var /GLOBAL QianjiRemoveResidueCount
+  Var /GLOBAL QianjiRemoveResidueRoot
+  Var /GLOBAL QianjiRemoveFirstFailedPath
+  Var /GLOBAL QianjiRemoveFirstFailedFile
+  StrCpy $QianjiAtomicFailedPath ""
+  StrCpy $QianjiAtomicRemoveSucceeded "0"
+  StrCpy $QianjiAtomicStagingDir ""
+  StrCpy $QianjiRemoveResidueCount "0"
+  StrCpy $QianjiRemoveResidueRoot "$INSTDIR"
+  StrCpy $QianjiRemoveFirstFailedPath ""
 
   SetOutPath $TEMP
-  StrCpy $AionUiCurrentOutDir "$TEMP"
+  StrCpy $QianjiCurrentOutDir "$TEMP"
 
   ${if} ${isUpdated}
-    StrCpy $AionUiAtomicStagingDir "$INSTDIR.__old"
-    ${If} ${FileExists} "$AionUiAtomicStagingDir\*.*"
-      StrCpy $AionUiRemoveResidueRoot "$AionUiAtomicStagingDir"
-      !insertmacro AIONUI_LOG_EVENT "remove-stale-staging start root=$AionUiRemoveResidueRoot"
-      !insertmacro AIONUI_REMOVE_INSTALL_DIR
-      StrCpy $AionUiRemoveResidueRoot "$INSTDIR"
+    StrCpy $QianjiAtomicStagingDir "$INSTDIR.__old"
+    ${If} ${FileExists} "$QianjiAtomicStagingDir\*.*"
+      StrCpy $QianjiRemoveResidueRoot "$QianjiAtomicStagingDir"
+      !insertmacro QIANJI_LOG_EVENT "remove-stale-staging start root=$QianjiRemoveResidueRoot"
+      !insertmacro QIANJI_REMOVE_INSTALL_DIR
+      StrCpy $QianjiRemoveResidueRoot "$INSTDIR"
     ${EndIf}
 
-    aionui_retry_atomic_rename:
+    qianji_retry_atomic_rename:
       ClearErrors
-      Rename "$INSTDIR" "$AionUiAtomicStagingDir"
+      Rename "$INSTDIR" "$QianjiAtomicStagingDir"
     ${if} ${Errors}
       DetailPrint "Atomic update cleanup failed before replacing previous installation: $INSTDIR"
-      StrCpy $AionUiAtomicFailedPath "$INSTDIR"
-      !insertmacro AIONUI_LOG_ATOMIC_REMOVE_FAILURE
-      !insertmacro AIONUI_CAPTURE_FAILED_PATH_LOCKERS "$AionUiAtomicFailedPath"
+      StrCpy $QianjiAtomicFailedPath "$INSTDIR"
+      !insertmacro QIANJI_LOG_ATOMIC_REMOVE_FAILURE
+      !insertmacro QIANJI_CAPTURE_FAILED_PATH_LOCKERS "$QianjiAtomicFailedPath"
       ${IfNot} ${Silent}
-        !insertmacro AIONUI_PROMPT_FAILED_PATH_LOCKERS "$AionUiAtomicFailedPath" "atomic-failed" aionui_retry_atomic_rename aionui_cancel_atomic_rename aionui_continue_atomic_failed
-        aionui_cancel_atomic_rename:
+        !insertmacro QIANJI_PROMPT_FAILED_PATH_LOCKERS "$QianjiAtomicFailedPath" "atomic-failed" qianji_retry_atomic_rename qianji_cancel_atomic_rename qianji_continue_atomic_failed
+        qianji_cancel_atomic_rename:
       ${EndIf}
-      aionui_continue_atomic_failed:
-      !insertmacro AIONUI_LOG_REMOVE_FAILURE_JSON "atomic-failed" "1" "$AionUiAtomicFailedPath" "$$payload.atomicFailedPath = '$AionUiAtomicFailedPath'"
-      !insertmacro AIONUI_LOG_EVENT "code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=atomic-failed fatal=1 degraded=none firstFailed=$AionUiAtomicFailedPath atomicFailedPath=$AionUiAtomicFailedPath"
-      !insertmacro AIONUI_CLEAR_INSTALL_REGISTRY "remove-failed-before-quit"
-      !insertmacro AIONUI_FAIL_REPORTABLE_BILINGUAL ${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=atomic-failed fatal=1 firstFailed=$AionUiAtomicFailedPath lockers=$AionUiLockerList" "${AIONUI_MSG_REPLACE_LOCKED_EN}" "${AIONUI_MSG_REPLACE_LOCKED_ZH}" "${AIONUI_MSG_CLOSE_SHOWN_FILE_ACTION_EN}" "${AIONUI_MSG_CLOSE_SHOWN_FILE_ACTION_ZH}"
+      qianji_continue_atomic_failed:
+      !insertmacro QIANJI_LOG_REMOVE_FAILURE_JSON "atomic-failed" "1" "$QianjiAtomicFailedPath" "$$payload.atomicFailedPath = '$QianjiAtomicFailedPath'"
+      !insertmacro QIANJI_LOG_EVENT "code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=atomic-failed fatal=1 degraded=none firstFailed=$QianjiAtomicFailedPath atomicFailedPath=$QianjiAtomicFailedPath"
+      !insertmacro QIANJI_CLEAR_INSTALL_REGISTRY "remove-failed-before-quit"
+      !insertmacro QIANJI_FAIL_REPORTABLE_BILINGUAL ${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=atomic-failed fatal=1 firstFailed=$QianjiAtomicFailedPath lockers=$QianjiLockerList" "${QIANJI_MSG_REPLACE_LOCKED_EN}" "${QIANJI_MSG_REPLACE_LOCKED_ZH}" "${QIANJI_MSG_CLOSE_SHOWN_FILE_ACTION_EN}" "${QIANJI_MSG_CLOSE_SHOWN_FILE_ACTION_ZH}"
     ${else}
-      !insertmacro AIONUI_LOG_EVENT "remove-atomic result=0 staging=$AionUiAtomicStagingDir"
-      StrCpy $AionUiAtomicRemoveSucceeded "1"
-      StrCpy $AionUiRemoveResidueRoot "$AionUiAtomicStagingDir"
+      !insertmacro QIANJI_LOG_EVENT "remove-atomic result=0 staging=$QianjiAtomicStagingDir"
+      StrCpy $QianjiAtomicRemoveSucceeded "1"
+      StrCpy $QianjiRemoveResidueRoot "$QianjiAtomicStagingDir"
     ${endif}
   ${endif}
 
-  aionui_retry_remove_install_dir:
-    !insertmacro AIONUI_REMOVE_INSTALL_DIR
-  ${if} $AionUiRemoveDirResult != 0
-    !insertmacro AIONUI_CAPTURE_FAILED_PATH_LOCKERS "$AionUiRemoveFirstFailedPath"
-    ${if} $AionUiAtomicRemoveSucceeded == "1"
+  qianji_retry_remove_install_dir:
+    !insertmacro QIANJI_REMOVE_INSTALL_DIR
+  ${if} $QianjiRemoveDirResult != 0
+    !insertmacro QIANJI_CAPTURE_FAILED_PATH_LOCKERS "$QianjiRemoveFirstFailedPath"
+    ${if} $QianjiAtomicRemoveSucceeded == "1"
       ${IfNot} ${Silent}
-        !insertmacro AIONUI_PROMPT_FAILED_PATH_LOCKERS "$AionUiRemoveFirstFailedPath" "residual-delete-failed" aionui_retry_remove_install_dir aionui_cancel_remove_after_rm aionui_continue_after_rm
-        aionui_cancel_remove_after_rm:
-          !insertmacro AIONUI_LOG_REMOVE_FAILURE_JSON "residual-delete-failed" "1" "$AionUiRemoveFirstFailedPath" "$$payload.residueRoot = '$AionUiRemoveResidueRoot'; $$payload.failedCount = '$AionUiRemoveResidueCount'; $$payload.removeDirResult = '$AionUiRemoveDirResult'; $$payload.atomicSucceeded = ('$AionUiAtomicRemoveSucceeded' -eq '1')"
-          !insertmacro AIONUI_LOG_EVENT "code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed userAction=cancel fatal=1 residueRoot=$AionUiRemoveResidueRoot failedCount=$AionUiRemoveResidueCount firstFailed=$AionUiRemoveFirstFailedPath removeDirResult=$AionUiRemoveDirResult removeResidueCount=$AionUiRemoveResidueCount atomicFailedPath=$AionUiAtomicFailedPath atomicSucceeded=$AionUiAtomicRemoveSucceeded"
-          !insertmacro AIONUI_FAIL_REPORTABLE_BILINGUAL ${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed userAction=cancel fatal=1 firstFailed=$AionUiRemoveFirstFailedPath lockers=$AionUiLockerList" "${AIONUI_MSG_PREVIOUS_FILE_OPEN_EN}" "${AIONUI_MSG_PREVIOUS_FILE_OPEN_ZH}" "${AIONUI_MSG_CLOSE_SHOWN_FILE_ACTION_EN}" "${AIONUI_MSG_CLOSE_SHOWN_FILE_ACTION_ZH}"
+        !insertmacro QIANJI_PROMPT_FAILED_PATH_LOCKERS "$QianjiRemoveFirstFailedPath" "residual-delete-failed" qianji_retry_remove_install_dir qianji_cancel_remove_after_rm qianji_continue_after_rm
+        qianji_cancel_remove_after_rm:
+          !insertmacro QIANJI_LOG_REMOVE_FAILURE_JSON "residual-delete-failed" "1" "$QianjiRemoveFirstFailedPath" "$$payload.residueRoot = '$QianjiRemoveResidueRoot'; $$payload.failedCount = '$QianjiRemoveResidueCount'; $$payload.removeDirResult = '$QianjiRemoveDirResult'; $$payload.atomicSucceeded = ('$QianjiAtomicRemoveSucceeded' -eq '1')"
+          !insertmacro QIANJI_LOG_EVENT "code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed userAction=cancel fatal=1 residueRoot=$QianjiRemoveResidueRoot failedCount=$QianjiRemoveResidueCount firstFailed=$QianjiRemoveFirstFailedPath removeDirResult=$QianjiRemoveDirResult removeResidueCount=$QianjiRemoveResidueCount atomicFailedPath=$QianjiAtomicFailedPath atomicSucceeded=$QianjiAtomicRemoveSucceeded"
+          !insertmacro QIANJI_FAIL_REPORTABLE_BILINGUAL ${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed userAction=cancel fatal=1 firstFailed=$QianjiRemoveFirstFailedPath lockers=$QianjiLockerList" "${QIANJI_MSG_PREVIOUS_FILE_OPEN_EN}" "${QIANJI_MSG_PREVIOUS_FILE_OPEN_ZH}" "${QIANJI_MSG_CLOSE_SHOWN_FILE_ACTION_EN}" "${QIANJI_MSG_CLOSE_SHOWN_FILE_ACTION_ZH}"
       ${EndIf}
-      aionui_continue_after_rm:
-      DetailPrint `AionUi previous installation had locked residual files; continuing after atomic cleanup succeeded: $INSTDIR`
-      !insertmacro AIONUI_LOG_EVENT "code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed degraded=continue fatal=0 residueRoot=$AionUiRemoveResidueRoot failedCount=$AionUiRemoveResidueCount firstFailed=$AionUiRemoveFirstFailedPath removeDirResult=$AionUiRemoveDirResult removeResidueCount=$AionUiRemoveResidueCount atomicFailedPath=$AionUiAtomicFailedPath atomicSucceeded=$AionUiAtomicRemoveSucceeded"
+      qianji_continue_after_rm:
+      DetailPrint `Qianji previous installation had locked residual files; continuing after atomic cleanup succeeded: $INSTDIR`
+      !insertmacro QIANJI_LOG_EVENT "code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed degraded=continue fatal=0 residueRoot=$QianjiRemoveResidueRoot failedCount=$QianjiRemoveResidueCount firstFailed=$QianjiRemoveFirstFailedPath removeDirResult=$QianjiRemoveDirResult removeResidueCount=$QianjiRemoveResidueCount atomicFailedPath=$QianjiAtomicFailedPath atomicSucceeded=$QianjiAtomicRemoveSucceeded"
     ${else}
       DetailPrint `Can't safely remove previous installation without atomic cleanup proof: $INSTDIR`
       ${IfNot} ${Silent}
-        !insertmacro AIONUI_PROMPT_FAILED_PATH_LOCKERS "$AionUiRemoveFirstFailedPath" "residual-delete-failed-no-atomic-proof" aionui_retry_remove_install_dir aionui_cancel_remove_no_atomic aionui_continue_remove_no_atomic
-        aionui_cancel_remove_no_atomic:
+        !insertmacro QIANJI_PROMPT_FAILED_PATH_LOCKERS "$QianjiRemoveFirstFailedPath" "residual-delete-failed-no-atomic-proof" qianji_retry_remove_install_dir qianji_cancel_remove_no_atomic qianji_continue_remove_no_atomic
+        qianji_cancel_remove_no_atomic:
       ${EndIf}
-      aionui_continue_remove_no_atomic:
-      !insertmacro AIONUI_LOG_REMOVE_FAILURE_JSON "residual-delete-failed-no-atomic-proof" "1" "$AionUiRemoveFirstFailedPath" "$$payload.residueRoot = '$AionUiRemoveResidueRoot'; $$payload.failedCount = '$AionUiRemoveResidueCount'; $$payload.removeDirResult = '$AionUiRemoveDirResult'; $$payload.atomicSucceeded = ('$AionUiAtomicRemoveSucceeded' -eq '1')"
-      !insertmacro AIONUI_LOG_EVENT "code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed-no-atomic-proof degraded=none fatal=1 residueRoot=$AionUiRemoveResidueRoot failedCount=$AionUiRemoveResidueCount firstFailed=$AionUiRemoveFirstFailedPath removeDirResult=$AionUiRemoveDirResult removeResidueCount=$AionUiRemoveResidueCount atomicFailedPath=$AionUiAtomicFailedPath atomicSucceeded=$AionUiAtomicRemoveSucceeded"
-      !insertmacro AIONUI_CLEAR_INSTALL_REGISTRY "remove-failed-before-quit"
-      !insertmacro AIONUI_FAIL_REPORTABLE_BILINGUAL ${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${AIONUI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed-no-atomic-proof fatal=1 firstFailed=$AionUiRemoveFirstFailedPath removeDirResult=$AionUiRemoveDirResult lockers=$AionUiLockerList" "${AIONUI_MSG_REMOVE_PREVIOUS_DIR_EN}" "${AIONUI_MSG_REMOVE_PREVIOUS_DIR_ZH}" "${AIONUI_MSG_CLOSE_INSTALL_DIR_ACTION_EN}" "${AIONUI_MSG_CLOSE_INSTALL_DIR_ACTION_ZH}"
+      qianji_continue_remove_no_atomic:
+      !insertmacro QIANJI_LOG_REMOVE_FAILURE_JSON "residual-delete-failed-no-atomic-proof" "1" "$QianjiRemoveFirstFailedPath" "$$payload.residueRoot = '$QianjiRemoveResidueRoot'; $$payload.failedCount = '$QianjiRemoveResidueCount'; $$payload.removeDirResult = '$QianjiRemoveDirResult'; $$payload.atomicSucceeded = ('$QianjiAtomicRemoveSucceeded' -eq '1')"
+      !insertmacro QIANJI_LOG_EVENT "code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed-no-atomic-proof degraded=none fatal=1 residueRoot=$QianjiRemoveResidueRoot failedCount=$QianjiRemoveResidueCount firstFailed=$QianjiRemoveFirstFailedPath removeDirResult=$QianjiRemoveDirResult removeResidueCount=$QianjiRemoveResidueCount atomicFailedPath=$QianjiAtomicFailedPath atomicSucceeded=$QianjiAtomicRemoveSucceeded"
+      !insertmacro QIANJI_CLEAR_INSTALL_REGISTRY "remove-failed-before-quit"
+      !insertmacro QIANJI_FAIL_REPORTABLE_BILINGUAL ${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} "event=session-end result=fail code=${QIANJI_E_INSTALL_DIR_REMOVE_OR_LOCKED} phase=residual-delete-failed-no-atomic-proof fatal=1 firstFailed=$QianjiRemoveFirstFailedPath removeDirResult=$QianjiRemoveDirResult lockers=$QianjiLockerList" "${QIANJI_MSG_REMOVE_PREVIOUS_DIR_EN}" "${QIANJI_MSG_REMOVE_PREVIOUS_DIR_ZH}" "${QIANJI_MSG_CLOSE_INSTALL_DIR_ACTION_EN}" "${QIANJI_MSG_CLOSE_INSTALL_DIR_ACTION_ZH}"
     ${endif}
   ${else}
-    !insertmacro AIONUI_LOG_EVENT "remove-final errors=0 instDir=$INSTDIR removeDirResult=$AionUiRemoveDirResult removeResidueCount=$AionUiRemoveResidueCount removeResidueRoot=$AionUiRemoveResidueRoot atomicFailedPath=$AionUiAtomicFailedPath atomicSucceeded=$AionUiAtomicRemoveSucceeded"
+    !insertmacro QIANJI_LOG_EVENT "remove-final errors=0 instDir=$INSTDIR removeDirResult=$QianjiRemoveDirResult removeResidueCount=$QianjiRemoveResidueCount removeResidueRoot=$QianjiRemoveResidueRoot atomicFailedPath=$QianjiAtomicFailedPath atomicSucceeded=$QianjiAtomicRemoveSucceeded"
   ${endif}
 !macroend
 
 !macro customUnInit
-  !insertmacro AIONUI_LOG_EVENT "uninit instDir=$INSTDIR"
+  !insertmacro QIANJI_LOG_EVENT "uninit instDir=$INSTDIR"
 !macroend
 
 !macro customUnInstall
-  !insertmacro AIONUI_LOG_EVENT "uninstall-section start instDir=$INSTDIR"
+  !insertmacro QIANJI_LOG_EVENT "uninstall-section start instDir=$INSTDIR"
 !macroend
 
 !endif

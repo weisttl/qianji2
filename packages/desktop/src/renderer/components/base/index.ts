@@ -5,7 +5,7 @@
  */
 
 /**
- * AionUi 基础组件库统一导出 / AionUi base components unified exports
+ * Qianji 基础组件库统一导出 / Qianji base components unified exports
  *
  * 提供所有基础组件和类型的统一导出入口
  * Provides unified export entry for all base components and types
@@ -13,37 +13,37 @@
 
 // ==================== 组件导出 / Component Exports ====================
 
-export { default as AionModal } from './AionModal';
-export { default as AionCollapse } from './AionCollapse';
-export { default as AionSelect } from './AionSelect';
-export { default as AionScrollArea } from './AionScrollArea';
-export { default as AionSteps } from './AionSteps';
-export { default as AionSearchInput } from './AionSearchInput';
-export { default as AionInlineSearchInput } from './AionInlineSearchInput';
+export { default as QianjiModal } from './QianjiModal';
+export { default as QianjiCollapse } from './QianjiCollapse';
+export { default as QianjiSelect } from './QianjiSelect';
+export { default as QianjiScrollArea } from './QianjiScrollArea';
+export { default as QianjiSteps } from './QianjiSteps';
+export { default as QianjiSearchInput } from './QianjiSearchInput';
+export { default as QianjiInlineSearchInput } from './QianjiInlineSearchInput';
 
 // ==================== 类型导出 / Type Exports ====================
 
-// AionModal 类型 / AionModal types
+// QianjiModal 类型 / QianjiModal types
 export type {
   ModalSize,
   ModalHeaderConfig,
   ModalFooterConfig,
   ModalContentStyleConfig,
-  AionModalProps,
-} from './AionModal';
-export { MODAL_SIZES } from './AionModal';
+  QianjiModalProps,
+} from './QianjiModal';
+export { MODAL_SIZES } from './QianjiModal';
 
-// AionCollapse 类型 / AionCollapse types
-export type { AionCollapseProps, AionCollapseItemProps } from './AionCollapse';
+// QianjiCollapse 类型 / QianjiCollapse types
+export type { QianjiCollapseProps, QianjiCollapseItemProps } from './QianjiCollapse';
 
-// AionSelect 类型 / AionSelect types
-export type { AionSelectProps } from './AionSelect';
+// QianjiSelect 类型 / QianjiSelect types
+export type { QianjiSelectProps } from './QianjiSelect';
 
-// AionSteps 类型 / AionSteps types
-export type { AionStepsProps } from './AionSteps';
+// QianjiSteps 类型 / QianjiSteps types
+export type { QianjiStepsProps } from './QianjiSteps';
 
-// AionSearchInput 类型 / AionSearchInput types
-export type { AionSearchInputProps } from './AionSearchInput';
+// QianjiSearchInput 类型 / QianjiSearchInput types
+export type { QianjiSearchInputProps } from './QianjiSearchInput';
 
-// AionInlineSearchInput 类型 / AionInlineSearchInput types
-export type { AionInlineSearchInputProps } from './AionInlineSearchInput';
+// QianjiInlineSearchInput 类型 / QianjiInlineSearchInput types
+export type { QianjiInlineSearchInputProps } from './QianjiInlineSearchInput';

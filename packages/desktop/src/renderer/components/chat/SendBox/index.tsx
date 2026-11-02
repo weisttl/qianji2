@@ -581,7 +581,7 @@ const SendBox: React.FC<{
       // carries a chatRef — the Explorer tree's add-to-chat builds a project
       // ref, and a pe ROOT is a folder whose relative_path is ''. The backend
       // resolves a directory ref to its absolute path (verified in
-      // aionui-project resolve_chat_file_ref: a project ref only requires the
+      // qianji-project resolve_chat_file_ref: a project ref only requires the
       // target to exist, not to be a regular file). Only drop a non-file item
       // that has no ref identity at all.
       if (typeof item !== 'string' && !item.isFile && !item.chatRef) {
@@ -1094,9 +1094,9 @@ const SendBox: React.FC<{
     targetConversationId === undefined || targetConversationId === conversationContext?.conversation_id;
 
   useAddEventListener(
-    'aionrs.selected.file.append',
+    'qianjirs.selected.file.append',
     (items: FileSelectionItem[], targetConversationId: string | undefined) => {
-      if (conversationContext?.type === 'aionrs' && acceptsTarget(targetConversationId)) {
+      if (conversationContext?.type === 'qianjirs' && acceptsTarget(targetConversationId)) {
         handleExternalSelectionAppend(items);
       }
     },
@@ -1127,8 +1127,8 @@ const SendBox: React.FC<{
       // here, not to same-type peers on the team route.
       const targetId = conversationContext?.conversation_id;
       switch (conversationContext?.type) {
-        case 'aionrs':
-          emitter.emit('aionrs.selected.file.append', [item], targetId);
+        case 'qianjirs':
+          emitter.emit('qianjirs.selected.file.append', [item], targetId);
           break;
         case 'acp':
           emitter.emit('acp.selected.file.append', [item], targetId);
@@ -1796,7 +1796,7 @@ const SendBox: React.FC<{
    * dropdown — and only the pick attaches anything. Select-all + cut + paste is
    * the sharpest version: the reconciliation retracts the references while the
    * input is momentarily empty, the pasted text looks identical, and the message
-   * goes out with no `[[AION_FILES]]` / `[[AION_SESSIONS]]` block at all. The
+   * goes out with no `[[QIANJI_FILES]]` / `[[QIANJI_SESSIONS]]` block at all. The
    * references cannot be recovered from the pasted text (a conversation name is
    * not a unique address), so making the loss VISIBLE is the fix.
    */

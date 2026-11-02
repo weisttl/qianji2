@@ -68,59 +68,59 @@ function main() {
   }
 
   const makensis = findMakensis();
-  const root = mkdtempSync(path.join(tmpdir(), 'aionui-self-lock-'));
+  const root = mkdtempSync(path.join(tmpdir(), 'qianji-self-lock-'));
   const installDir = path.join(root, 'install-dir');
   mkdirSync(installDir, { recursive: true });
   writeFileSync(path.join(installDir, 'existing-file.txt'), 'self-lock smoke\n', 'utf8');
 
-  const nsiPath = path.join(root, 'aionui-self-lock-smoke.nsi');
-  const exePath = path.join(root, 'aionui-self-lock-smoke.exe');
+  const nsiPath = path.join(root, 'qianji-self-lock-smoke.nsi');
+  const exePath = path.join(root, 'qianji-self-lock-smoke.exe');
   const logPath = path.join(
     process.env.TEMP || tmpdir(),
-    `aionui-installer-self-lock-${new Date()
+    `qianji-installer-self-lock-${new Date()
       .toISOString()
       .replace(/[-:]/g, '')
       .replace(/\..+$/, '')
       .replace('T', '-')}-log.jsonl`
   );
-  const resultPath = path.join(process.env.TEMP || tmpdir(), `aionui-installer-self-lock-${process.pid}-result.txt`);
+  const resultPath = path.join(process.env.TEMP || tmpdir(), `qianji-installer-self-lock-${process.pid}-result.txt`);
   const processControlPath = path.join(repoRoot, 'resources', 'windows', 'installer-process-control.nsh');
 
   const nsi = `
 Unicode true
-Name "AionUi Installer Self Lock Smoke"
+Name "Qianji Installer Self Lock Smoke"
 OutFile "${nsisQuote(exePath)}"
 RequestExecutionLevel user
 SilentInstall silent
 !define VERSION "self-lock-smoke"
-!define AIONUI_TARGET_ARCH "x64"
-!define AIONUI_FALLBACK_LOG "aionui-installer-self-lock-fallback.log"
-!define AIONUI_APP_EXECUTABLE_FILENAME "AionUi.exe"
-!define UNINSTALL_FILENAME "Uninstall AionUi.exe"
+!define QIANJI_TARGET_ARCH "x64"
+!define QIANJI_FALLBACK_LOG "qianji-installer-self-lock-fallback.log"
+!define QIANJI_APP_EXECUTABLE_FILENAME "Qianji.exe"
+!define UNINSTALL_FILENAME "Uninstall Qianji.exe"
 !define PROJECT_DIR "${nsisQuote(repoRoot)}"
 !include LogicLib.nsh
 !include "${nsisQuote(processControlPath)}"
 
-Var AionUiSessionId
-Var AionUiIsUpdated
-Var AionUiSessionLogPath
+Var QianjiSessionId
+Var QianjiIsUpdated
+Var QianjiSessionLogPath
 Var ResultFile
 
 Section
   StrCpy $INSTDIR "${nsisQuote(installDir)}"
-  StrCpy $AionUiSessionId "selflock"
-  StrCpy $AionUiIsUpdated "1"
-  StrCpy $AionUiSessionLogPath "${nsisQuote(logPath)}"
+  StrCpy $QianjiSessionId "selflock"
+  StrCpy $QianjiIsUpdated "1"
+  StrCpy $QianjiSessionLogPath "${nsisQuote(logPath)}"
   StrCpy $ResultFile "${nsisQuote(resultPath)}"
   InitPluginsDir
   SetOutPath $INSTDIR
-  StrCpy $AionUiCurrentOutDir "$INSTDIR"
-  !insertmacro AIONUI_QUERY_LOCKERS "$INSTDIR" $AionUiLockerResult
+  StrCpy $QianjiCurrentOutDir "$INSTDIR"
+  !insertmacro QIANJI_QUERY_LOCKERS "$INSTDIR" $QianjiLockerResult
   FileOpen $0 "$ResultFile" w
-  FileWrite $0 "$AionUiLockerResult"
-  FileWrite $0 "|$AionUiCurrentOutDir|$AionUiSessionLogPath"
+  FileWrite $0 "$QianjiLockerResult"
+  FileWrite $0 "|$QianjiCurrentOutDir|$QianjiSessionLogPath"
   FileClose $0
-  \${If} $AionUiLockerResult != 0
+  \${If} $QianjiLockerResult != 0
     SetErrorLevel 10
     Quit
   \${EndIf}
@@ -159,8 +159,8 @@ SectionEnd
       throw new Error(`expected currentOutDir ${installDir}, got ${lockers.currentOutDir}`);
     }
     const blocking = lockers.blockingProcesses || [];
-    if (!blocking.some((process) => process.name === 'AionUi installer' && Number(process.pid) > 0)) {
-      throw new Error(`expected AionUi installer blocker, got ${JSON.stringify(blocking)}`);
+    if (!blocking.some((process) => process.name === 'Qianji installer' && Number(process.pid) > 0)) {
+      throw new Error(`expected Qianji installer blocker, got ${JSON.stringify(blocking)}`);
     }
 
     console.log(`[self-lock] ok: ${logPath}`);

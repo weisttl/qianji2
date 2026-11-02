@@ -4,6 +4,7 @@ import { initReactI18next } from 'react-i18next';
 import { configService } from '@/common/config/configService';
 import { ipcBridge } from '@/common';
 import i18nConfig from '@/common/config/i18n-config.json';
+import { PRODUCT_CONFIG } from '@/common/config/constants';
 import {
   DEFAULT_LANGUAGE,
   normalizeLanguageCode,
@@ -92,7 +93,7 @@ function getInitialLanguage(): SupportedLanguage {
   const hint = backendStartupFailed
     ? injectedLanguage || localStorageLanguage || systemLanguage
     : localStorageLanguage || injectedLanguage;
-  return normalizeLanguageCode(hint || DEFAULT_LANGUAGE);
+  return normalizeLanguageCode(hint || PRODUCT_CONFIG.defaultLanguage);
 }
 
 async function loadLocaleModules(locale: string): Promise<Record<string, unknown>> {
@@ -145,7 +146,7 @@ async function initLanguage(): Promise<void> {
   try {
     await configService.whenReady();
     const savedLanguage = configService.get('language');
-    const language = savedLanguage || normalizeLanguageCode(navigator.language || DEFAULT_LANGUAGE);
+    const language = savedLanguage || PRODUCT_CONFIG.defaultLanguage;
     await ensureAndSwitch(i18n, language, loadLocaleModules);
     // Sync to localStorage so next page load can use it as a fast hint
     if (typeof localStorage !== 'undefined') {

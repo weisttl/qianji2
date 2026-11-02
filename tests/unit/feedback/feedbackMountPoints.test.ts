@@ -55,13 +55,6 @@ describe('FeedbackButton mount points — source-level wiring', () => {
     expect(src).not.toMatch(/<FeedbackButton/);
   });
 
-  it('SystemModalContent wires module=system-settings', () => {
-    const src = read(
-      'packages/desktop/src/renderer/components/settings/SettingsModal/contents/SystemModalContent/index.tsx'
-    );
-    expect(src).toMatch(/<FeedbackButton\s+module=['"]system-settings['"]/);
-  });
-
   it('McpServerHeader wires module=mcp-tools', () => {
     const src = read('packages/desktop/src/renderer/pages/settings/ToolsSettings/McpServerHeader.tsx');
     expect(src).toMatch(/<FeedbackButton\s+module=['"]mcp-tools['"]/);

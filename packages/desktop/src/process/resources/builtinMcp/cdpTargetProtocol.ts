@@ -36,9 +36,9 @@
  */
 
 /** 伪造的稳定 id：只有一个目标，不需要真的分配。/ Fixed ids — there is only ever one target. */
-export const SINGLE_TARGET_ID = 'aionui-browser-target';
-export const SINGLE_SESSION_ID = 'aionui-browser-session';
-export const SINGLE_BROWSER_CONTEXT_ID = 'aionui-browser-context';
+export const SINGLE_TARGET_ID = 'qianji-browser-target';
+export const SINGLE_SESSION_ID = 'qianji-browser-session';
+export const SINGLE_BROWSER_CONTEXT_ID = 'qianji-browser-context';
 
 export type TargetInfo = {
   targetId: string;
@@ -88,7 +88,7 @@ export const buildTargetInfo = (title: string, url: string): TargetInfo => ({
 export const buildVersionPayload = (wsUrl: string, chromeVersion: string) => ({
   Browser: `Chrome/${chromeVersion}`,
   'Protocol-Version': '1.3',
-  'User-Agent': `AionUi in-app browser (Chrome/${chromeVersion})`,
+  'User-Agent': `Qianji in-app browser (Chrome/${chromeVersion})`,
   'V8-Version': process.versions.v8 ?? '',
   'WebKit-Version': '',
   webSocketDebuggerUrl: wsUrl,
@@ -240,19 +240,19 @@ export const decideCdpCommand = (req: CdpRequest, getTargetInfo: () => TargetInf
     case 'Target.createTarget':
       return {
         kind: 'error',
-        message: 'AionUi in-app browser exposes a single fixed tab; Target.createTarget is not supported.',
+        message: 'Qianji in-app browser exposes a single fixed tab; Target.createTarget is not supported.',
       };
 
     case 'Target.createBrowserContext':
     case 'Target.disposeBrowserContext':
-      return { kind: 'error', message: 'AionUi in-app browser does not support multiple browser contexts.' };
+      return { kind: 'error', message: 'Qianji in-app browser does not support multiple browser contexts.' };
 
     /**
      * Browser.close 会关掉整个应用 —— 绝不能让 Agent 触发。
      * Browser.close would terminate the whole app; never let the agent reach it.
      */
     case 'Browser.close':
-      return { kind: 'error', message: 'Browser.close is not permitted against the AionUi in-app browser.' };
+      return { kind: 'error', message: 'Browser.close is not permitted against the Qianji in-app browser.' };
 
     default:
       return { kind: 'forward' };

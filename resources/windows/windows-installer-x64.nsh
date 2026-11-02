@@ -2,52 +2,52 @@
 
 !include "x64.nsh"
 
-!define AIONUI_TARGET_ARCH "x64"
-!define AIONUI_RUNTIME_KEY "win32-x64"
-!define AIONUI_EXTRACT_METHOD "7z"
+!define QIANJI_TARGET_ARCH "x64"
+!define QIANJI_RUNTIME_KEY "win32-x64"
+!define QIANJI_EXTRACT_METHOD "7z"
 
 !addincludedir "${PROJECT_DIR}\resources\windows"
 !include "installer-common.nsh"
 
 !macro customHeader
-  !insertmacro AIONUI_INSTALLER_CUSTOM_HEADER
+  !insertmacro QIANJI_INSTALLER_CUSTOM_HEADER
 !macroend
 
 !macro preInit
-  !insertmacro AIONUI_INSTALLER_PREINIT
+  !insertmacro QIANJI_INSTALLER_PREINIT
 !macroend
 
 !macro customFiles_x64
-  !insertmacro AIONUI_LOG_EXTRACT_RESULT "7z"
+  !insertmacro QIANJI_LOG_EXTRACT_RESULT "7z"
 !macroend
 
-; Architecture guard. Inserted from AIONUI_INSTALLER_PREINIT (preInit) so it runs before any
+; Architecture guard. Inserted from QIANJI_INSTALLER_PREINIT (preInit) so it runs before any
 ; registry mutation, replacing the old .onVerifyInstDir placement which fired after customInit
 ; had already healed/cleared/repaired an existing install's registry. (Sentry ELECTRON-3BX)
 ; Rejection policy is unchanged: an x64 build refuses both x86 and ARM64 machines.
-!macro AIONUI_ASSERT_TARGET_ARCH
-  Var /GLOBAL AionUiActualArch
+!macro QIANJI_ASSERT_TARGET_ARCH
+  Var /GLOBAL QianjiActualArch
   ${If} ${IsNativeARM64}
-    !insertmacro AIONUI_DETECT_NATIVE_ARCH $AionUiActualArch
-    !insertmacro AIONUI_FAIL_UX \
-      "${AIONUI_E_ARCH_MISMATCH}" \
-      "target=x64 actual=$AionUiActualArch" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ZH}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_EN}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ACTION_ZH}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ACTION_EN}" \
-      "target=x64 actual=$AionUiActualArch" \
-      "target=x64 actual=$AionUiActualArch"
+    !insertmacro QIANJI_DETECT_NATIVE_ARCH $QianjiActualArch
+    !insertmacro QIANJI_FAIL_UX \
+      "${QIANJI_E_ARCH_MISMATCH}" \
+      "target=x64 actual=$QianjiActualArch" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ZH}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_EN}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ACTION_ZH}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ACTION_EN}" \
+      "target=x64 actual=$QianjiActualArch" \
+      "target=x64 actual=$QianjiActualArch"
   ${ElseIfNot} ${RunningX64}
-    !insertmacro AIONUI_DETECT_NATIVE_ARCH $AionUiActualArch
-    !insertmacro AIONUI_FAIL_UX \
-      "${AIONUI_E_ARCH_MISMATCH}" \
-      "target=x64 actual=$AionUiActualArch" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ZH}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_EN}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ACTION_ZH}" \
-      "${AIONUI_MSG_ARCH_MISMATCH_ACTION_EN}" \
-      "target=x64 actual=$AionUiActualArch" \
-      "target=x64 actual=$AionUiActualArch"
+    !insertmacro QIANJI_DETECT_NATIVE_ARCH $QianjiActualArch
+    !insertmacro QIANJI_FAIL_UX \
+      "${QIANJI_E_ARCH_MISMATCH}" \
+      "target=x64 actual=$QianjiActualArch" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ZH}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_EN}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ACTION_ZH}" \
+      "${QIANJI_MSG_ARCH_MISMATCH_ACTION_EN}" \
+      "target=x64 actual=$QianjiActualArch" \
+      "target=x64 actual=$QianjiActualArch"
   ${EndIf}
 !macroend

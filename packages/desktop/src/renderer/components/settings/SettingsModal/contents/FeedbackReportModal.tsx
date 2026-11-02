@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import AionModal from '@renderer/components/base/AionModal';
+import QianjiModal from '@renderer/components/base/QianjiModal';
 import { FEEDBACK_MODULES } from './feedbackModules';
 import { useTalkToButler } from '@/renderer/hooks/assistant/useTalkToButler';
 import { useAuth } from '@/renderer/hooks/context/AuthContext';
@@ -12,6 +12,7 @@ import { uploadFileViaHttp } from '@/renderer/services/FileService';
 import { Button, Input, Select, Message, Upload } from '@arco-design/web-react';
 import type { UploadItem } from '@arco-design/web-react/es/Upload';
 import { Info } from '@icon-park/react';
+import { PRODUCT_CONFIG } from '@/common/config/constants';
 import React, { useState, useCallback, useEffect, useRef } from 'react';
 import type { RefTextAreaType } from '@arco-design/web-react/es/Input/textarea';
 import { useTranslation } from 'react-i18next';
@@ -33,7 +34,7 @@ const DESCRIPTION_MAX_LENGTH = 2000;
 const MAX_SCREENSHOTS = 3;
 const ACCEPTED_IMAGE_TYPES = '.png,.jpg,.jpeg,.gif';
 
-// aionui's AuthUser is { id, username } and carries no email; aionpro's AuthUser
+// qianji's AuthUser is { id, username } and carries no email; qianjipro's AuthUser
 // does. Read it structurally (no AuthUser type import, no `any`) so this file
 // stays byte-identical across both repos and simply yields undefined whenever
 // the signed-in user has no email (the open-source desktop build is usually
@@ -79,7 +80,7 @@ type FeedbackReportModalProps = {
   };
 };
 
-const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
+const UpstreamFeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
   visible,
   onCancel,
   defaultModule,
@@ -220,7 +221,7 @@ const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
     feedbackDiagnosticsContext,
   ]);
 
-  // "Solve via chat": hand the report to the AionUi Butler for on-the-spot
+  // "Solve via chat": hand the report to the Qianji Butler for on-the-spot
   // diagnosis instead of submitting to the team. The typed description + module
   // become a structured prompt; screenshots are uploaded to disk so they ride
   // along in the chat input (reusing the same upload path as pasted images).
@@ -246,7 +247,7 @@ const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
       const moduleLabel = t(selectedModule?.i18nKey ?? 'settings.bugReportModuleOther');
       const prompt = t('settings.talkToButler.prompt.diagnose', {
         defaultValue:
-          'I ran into a problem with AionUi, please help me diagnose it.\n\n[Module] {{module}}\n[Description] {{description}}\n[Attachments] see the screenshots in the input.\n\nPlease diagnose the cause and tell me how to fix it.',
+          'I ran into a problem with Qianji, please help me diagnose it.\n\n[Module] {{module}}\n[Description] {{description}}\n[Attachments] see the screenshots in the input.\n\nPlease diagnose the cause and tell me how to fix it.',
         module: moduleLabel,
         description: description.trim(),
       });
@@ -339,7 +340,7 @@ const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
   }, [handlePaste, visible]);
 
   return (
-    <AionModal
+    <QianjiModal
       variant='standard'
       header={{ title: t('settings.bugReportTitle'), showClose: true }}
       visible={visible}
@@ -387,7 +388,7 @@ const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
       className='w-[min(600px,calc(100vw-32px))] max-w-600px'
       autoFocus={false}
       // The feedback modal is global and may be opened from inside another
-      // AionModal (e.g. the Agent editor). Arco's default z-index stacks
+      // QianjiModal (e.g. the Agent editor). Arco's default z-index stacks
       // modals in mount order, which leaves the feedback modal under the
       // pre-existing modal when both are open. Bump wrap+mask above the
       // standard 1001 so feedback always appears on top.
@@ -479,7 +480,17 @@ const FeedbackReportModal: React.FC<FeedbackReportModalProps> = ({
           ) : null}
         </div>
       </div>
-    </AionModal>
+    </QianjiModal>
+  );
+};
+
+const FeedbackReportModal: React.FC<FeedbackReportModalProps> = (props) => {
+  const { t } = useTranslation();
+  if (PRODUCT_CONFIG.upstreamServicesEnabled) return <UpstreamFeedbackReportModal {...props} />;
+  return (
+    <QianjiModal visible={props.visible} title={t('common.product.name')} onCancel={props.onCancel} footer={null}>
+      <p>{t('common.product.support')}</p>
+    </QianjiModal>
   );
 };
 

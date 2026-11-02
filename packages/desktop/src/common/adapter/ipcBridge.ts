@@ -8,7 +8,7 @@
  * IPC Bridge → HTTP/WS adapter.
  *
  * This file replaces the original IPC bridge calls with HTTP REST and WebSocket
- * calls routed to aioncore. Electron-native operations (window controls,
+ * calls routed to qianjicore. Electron-native operations (window controls,
  * native dialogs, auto-update, devtools, zoom, CDP, deep links) remain as IPC.
  */
 
@@ -253,7 +253,7 @@ export const auth = {
    * Which user id the backend attributes THIS client's requests to.
    *
    * Deliberately not `GET /api/auth/user`: the auth router builds its own
-   * `AuthState` whose identity mode is only ever `AionPro` or `UserSession`, so
+   * `AuthState` whose identity mode is only ever `QianjiPro` or `UserSession`, so
    * in local identity mode that endpoint answers 401 while every ordinary route
    * is happily serving an injected default user. `/api/system/current-user`
    * sits behind the ORDINARY auth middleware, so it reports the same identity
@@ -275,12 +275,12 @@ export const conversation = {
   ),
   createWithConversation: withResponseMap(
     httpPost<TChatConversation, { conversation: TChatConversation }>('/api/conversations/clone', (p) => {
-      const isAionrs = p.conversation.type === 'aionrs';
+      const isQianjirs = p.conversation.type === 'qianjirs';
       const { model: _rawModel, ...rest } = p.conversation as TChatConversation & {
         model?: TProviderWithModel;
       };
       const clonedConversation: Record<string, unknown> = { ...rest };
-      if (isAionrs) {
+      if (isQianjirs) {
         const model = toApiModelOptional(_rawModel);
         if (model) clonedConversation.model = model;
       }
@@ -681,7 +681,7 @@ export const application = {
   ),
   getPath: bridge.buildProvider<string, { name: 'desktop' | 'home' | 'downloads' }>('app.get-path'),
   // Electron-local: copies cache dir + persists to ProcessEnv, paired with restart.
-  // The backend reads AIONUI_*_DIR env vars on boot, so it does not own this config.
+  // The backend reads QIANJI_*_DIR env vars on boot, so it does not own this config.
   updateSystemInfo: bridge.buildProvider<void, { cacheDir: string; workDir: string; logDir?: string }>(
     'update-system-info'
   ),
@@ -1057,7 +1057,7 @@ export const googleAuth = {
 };
 
 // ---------------------------------------------------------------------------
-// Google subscription status (Google OAuth provider path, used by aionrs)
+// Google subscription status (Google OAuth provider path, used by qianjirs)
 // ---------------------------------------------------------------------------
 
 export const google = {
@@ -1810,7 +1810,7 @@ export interface IConfirmMessageParams {
 }
 
 export interface ICreateConversationParams {
-  type?: 'acp' | 'aionrs';
+  type?: 'acp' | 'qianjirs';
   id?: string;
   name?: string;
   model?: TProviderWithModel;

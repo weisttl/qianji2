@@ -13,14 +13,19 @@ import React from 'react';
 const COPY: Record<string, string> = {
   'common.backendStartup.pendingSlow.title': 'Starting up',
   'common.backendStartup.pendingSlow.description':
-    "AionCore is starting up, please wait. If it doesn't respond after a while, you can quit and reopen the app.",
+    "QianjiCore is starting up, please wait. If it doesn't respond after a while, you can quit and reopen the app.",
   'common.backendStartup.exited.title': "Startup didn't complete",
   'common.backendStartup.exited.description':
-    'AionCore could not finish starting and has exited. Please restart the app; if this keeps happening, please send diagnostics.',
+    'QianjiCore could not finish starting and has exited. Please restart the app; if this keeps happening, please send diagnostics.',
   'common.backendStartup.exited.sendDiagnostics': 'Send diagnostics',
   'common.backendStartup.incompleteInstallation.description':
-    'Your installation is missing required local resources. Please download and reinstall the latest AionUi; if it persists after reinstalling, check whether antivirus quarantined AionCore.',
+    'Your installation is missing required local resources. Please download and reinstall the latest Qianji; if it persists after reinstalling, check whether antivirus quarantined QianjiCore.',
 };
+
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: { upstreamServicesEnabled: true },
+}));
 
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({

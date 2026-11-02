@@ -2,8 +2,8 @@
  * WebUI static server.
  *
  * Serves out/renderer/ as the SPA and reverse-proxies /api/*, /ws, /api/stt/stream,
- * /login and /logout to aioncore. All auth goes to backend's aionui-auth crate;
- * /login and /logout are aionui-auth's top-level paths, the rest live under
+ * /login and /logout to qianjicore. All auth goes to backend's qianji-auth crate;
+ * /login and /logout are qianji-auth's top-level paths, the rest live under
  * /api/auth/*. /ws and /api/stt/stream are WebSocket/stream upgrades spliced at
  * TCP level; /api/stt/stream is the STT streaming endpoint.
  *
@@ -85,7 +85,19 @@ function forwardToBackend(req: IncomingMessage, res: ServerResponse, backendPort
     headers: { ...req.headers, host: `127.0.0.1:${backendPort}` },
   };
   const proxy = http.request(options, (proxyRes) => {
-    res.writeHead(proxyRes.statusCode ?? 502, proxyRes.headers);
+    const status = proxyRes.statusCode ?? 502;
+    const headers = { ...proxyRes.headers };
+    // The Web PDF viewer embeds an authenticated stream from this same origin.
+    // Keep the backend's frame policy for other content and failed requests.
+    if (
+      (req.method === 'GET' || req.method === 'HEAD') &&
+      req.url?.split('?')[0] === '/api/fs/stream' &&
+      (status === 200 || status === 206) &&
+      headers['content-type']?.split(';')[0].trim().toLowerCase() === 'application/pdf'
+    ) {
+      headers['x-frame-options'] = 'SAMEORIGIN';
+    }
+    res.writeHead(status, headers);
     proxyRes.pipe(res);
   });
   proxy.on('error', () => {
@@ -181,7 +193,7 @@ export async function startStaticServer(opts: StaticServerOptions): Promise<Stat
       }
 
       // /api/* — reverse proxy to backend (includes /api/auth/*).
-      // /login and /logout are aionui-auth's top-level auth endpoints: proxy them too
+      // /login and /logout are qianji-auth's top-level auth endpoints: proxy them too
       // so WebUI browser clients reach the backend without a path-rewrite.
       if (req.url.startsWith('/api/') || req.url.startsWith('/api?') || req.url === '/login' || req.url === '/logout') {
         forwardToBackend(req, res, opts.backendPort);

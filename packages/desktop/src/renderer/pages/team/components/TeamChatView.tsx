@@ -4,7 +4,7 @@ import type { IConversationMcpStatus, IProvider, TChatConversation, TProviderWit
 import { Message, Spin } from '@arco-design/web-react';
 import React, { Suspense, useCallback } from 'react';
 import { useTranslation } from 'react-i18next';
-import { useAionrsModelSelection } from '@/renderer/pages/conversation/platforms/aionrs/useAionrsModelSelection';
+import { useQianjirsModelSelection } from '@/renderer/pages/conversation/platforms/qianjirs/useQianjirsModelSelection';
 import { isLegacyReadOnlyConversationType } from '@/renderer/pages/conversation/utils/conversationRuntime';
 import type { ITeamRunAck } from '@/common/types/team/teamTypes';
 import {
@@ -21,13 +21,13 @@ import { usePresetAssistantInfo } from '@/renderer/hooks/agent/usePresetAssistan
 import { resolveConversationBackend } from '@/renderer/pages/conversation/utils/conversationAssistantIdentity';
 
 const AcpChat = React.lazy(() => import('@/renderer/pages/conversation/platforms/acp/AcpChat'));
-const AionrsChat = React.lazy(() => import('@/renderer/pages/conversation/platforms/aionrs/AionrsChat'));
+const QianjirsChat = React.lazy(() => import('@/renderer/pages/conversation/platforms/qianjirs/QianjirsChat'));
 const LegacyReadOnlyConversation = React.lazy(
   () => import('@/renderer/pages/conversation/platforms/legacy/LegacyReadOnlyConversation')
 );
 
-// Narrow to Aionrs conversations so model field is always available
-type AionrsConversation = Extract<TChatConversation, { type: 'aionrs' }>;
+// Narrow to Qianjirs conversations so model field is always available
+type QianjirsConversation = Extract<TChatConversation, { type: 'qianjirs' }>;
 type TeamSendOverride = (payload: { input: string; files: ChatFileRef[] }) => Promise<void>;
 type TeamConversationCapabilitySnapshot = {
   skills?: string[];
@@ -54,9 +54,9 @@ const resolveAssistantDisplayName = (
   return undefined;
 };
 
-/** Aionrs sub-component manages model selection state without adding a ChatLayout wrapper */
-const AionrsTeamChat: React.FC<{
-  conversation: AionrsConversation;
+/** Qianjirs sub-component manages model selection state without adding a ChatLayout wrapper */
+const QianjirsTeamChat: React.FC<{
+  conversation: QianjirsConversation;
   emptySlot?: React.ReactNode;
   assistant_name?: string;
   teamSendMessage?: TeamSendOverride;
@@ -83,10 +83,10 @@ const AionrsTeamChat: React.FC<{
     [conversation.id]
   );
 
-  const modelSelection = useAionrsModelSelection({ initialModel: conversation.model, onSelectModel });
+  const modelSelection = useQianjirsModelSelection({ initialModel: conversation.model, onSelectModel });
 
   return (
-    <AionrsChat
+    <QianjirsChat
       conversation_id={conversation.id}
       workspace={conversation.extra.workspace}
       modelSelection={modelSelection}
@@ -273,11 +273,11 @@ const TeamChatView: React.FC<TeamChatViewProps> = ({
             loadedMcpStatuses={capabilitySnapshot?.mcp_statuses}
           />
         );
-      case 'aionrs':
+      case 'qianjirs':
         return (
-          <AionrsTeamChat
+          <QianjirsTeamChat
             key={conversation.id}
-            conversation={conversation as AionrsConversation}
+            conversation={conversation as QianjirsConversation}
             emptySlot={emptySlot}
             assistant_name={resolvedAssistantName}
             teamSendMessage={teamSendMessageOverride}

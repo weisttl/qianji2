@@ -4,10 +4,12 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PRODUCT_CONFIG } from '@/common/config/constants';
+
 // Sentry must be initialized first
 // Use electron-specific renderer package only inside Electron; fall back to the
 // browser SDK when running as a web server (no window.electronAPI).
-if ((window as { electronAPI?: unknown }).electronAPI) {
+if (PRODUCT_CONFIG.upstreamServicesEnabled && (window as { electronAPI?: unknown }).electronAPI) {
   // Dynamic import avoids bundling sentry-ipc:// protocol code into the web build
   import('@sentry/electron/renderer')
     .then((Sentry) =>
@@ -153,7 +155,7 @@ const completeArcoLocale = (locale: ArcoLocaleInput): typeof enUS => ({
   ColorPicker: locale.ColorPicker ?? enUS.ColorPicker,
 });
 
-// Every language AionUi ships that Arco publishes a locale for. Arco has no
+// Every language Qianji ships that Arco publishes a locale for. Arco has no
 // uk-UA or fa-IR locale; those fall back to English component strings.
 const arcoLocales: Record<string, typeof enUS> = {
   'zh-CN': zhCN,
@@ -187,10 +189,10 @@ function captureRuntimeInstallationIntegrityFailure(event: IRuntimeStatusEvent):
   void import('@sentry/electron/renderer')
     .then((Sentry) => {
       Sentry.withScope((scope) => {
-        scope.setTag('aionui.installation_integrity', event.failure_kind ?? 'unknown');
-        scope.setTag('aionui.runtime_resource', event.resource);
-        scope.setTag('aionui.runtime_resource_id', event.resource_id ?? '');
-        scope.setTag('aionui.runtime_scope', event.scope.kind);
+        scope.setTag('qianji.installation_integrity', event.failure_kind ?? 'unknown');
+        scope.setTag('qianji.runtime_resource', event.resource);
+        scope.setTag('qianji.runtime_resource_id', event.resource_id ?? '');
+        scope.setTag('qianji.runtime_scope', event.scope.kind);
         Sentry.captureMessage('runtime-installation-integrity-failure', 'error');
       });
     })
@@ -332,11 +334,7 @@ const Config: React.FC<PropsWithChildren> = ({ children }) => {
   } = useTranslation();
   const arcoLocale = arcoLocales[language] ?? enUS;
 
-  return React.createElement(
-    ConfigProvider,
-    { theme: { primaryColor: '#4E5969' }, locale: arcoLocale, rtl: isRtlLanguage(language) },
-    children
-  );
+  return React.createElement(ConfigProvider, { locale: arcoLocale, rtl: isRtlLanguage(language) }, children);
 };
 
 const Main = () => {

@@ -5,10 +5,10 @@
  */
 
 import {
-  AIONUI_SESSION_MESSAGE_END_MARKER,
-  AIONUI_SESSION_MESSAGE_MARKER,
-  AIONUI_SESSIONS_END_MARKER,
-  AIONUI_SESSIONS_MARKER,
+  QIANJI_SESSION_MESSAGE_END_MARKER,
+  QIANJI_SESSION_MESSAGE_MARKER,
+  QIANJI_SESSIONS_END_MARKER,
+  QIANJI_SESSIONS_MARKER,
 } from '@/common/config/constants';
 
 export type SessionMentionChip = {
@@ -54,11 +54,11 @@ function extractBlock(
 }
 
 /**
- * Sender side: reverse the `[[AION_SESSIONS]]` block the backend appended to the
+ * Sender side: reverse the `[[QIANJI_SESSIONS]]` block the backend appended to the
  * user's own message so the bubble shows chips instead of raw markers.
  */
 export function parseSessionsBlock(content: string): { text: string; sessions: SessionMentionChip[] } {
-  const block = extractBlock(content, AIONUI_SESSIONS_MARKER, AIONUI_SESSIONS_END_MARKER);
+  const block = extractBlock(content, QIANJI_SESSIONS_MARKER, QIANJI_SESSIONS_END_MARKER);
   if (!block) return { text: content, sessions: [] };
 
   const sessions: SessionMentionChip[] = [];
@@ -78,12 +78,12 @@ export function parseSessionsBlock(content: string): { text: string; sessions: S
 }
 
 /**
- * Recipient side: reverse the `[[AION_SESSION_MESSAGE]]` block so the bubble can
+ * Recipient side: reverse the `[[QIANJI_SESSION_MESSAGE]]` block so the bubble can
  * show a "from conversation X" badge. Same content the agent read — one source
  * of truth, no artifact (spec §5.6).
  */
 export function parseSessionMessageBlock(content: string): { text: string; source: SessionDeliverySource | null } {
-  const block = extractBlock(content, AIONUI_SESSION_MESSAGE_MARKER, AIONUI_SESSION_MESSAGE_END_MARKER);
+  const block = extractBlock(content, QIANJI_SESSION_MESSAGE_MARKER, QIANJI_SESSION_MESSAGE_END_MARKER);
   if (!block) return { text: content, source: null };
 
   let fromName = '';

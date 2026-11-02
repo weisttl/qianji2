@@ -5,7 +5,7 @@
  */
 
 import type { SpeechToTextConfig } from '@/common/types/provider/speech';
-import AionSelect from '@/renderer/components/base/AionSelect';
+import QianjiSelect from '@/renderer/components/base/QianjiSelect';
 import { SPEECH_TO_TEXT_CONFIG_CHANGED_EVENT } from '@/renderer/services/SpeechToTextService';
 import { getClientBusinessSetting, setClientBusinessSetting } from '@/renderer/services/clientBusinessSettings';
 import { getModelStreamCapability } from '@/renderer/services/speech/speechStreamPolicy';
@@ -208,11 +208,11 @@ const VoiceInputSection: React.FC = () => {
 
           <Form layout='horizontal' labelAlign='left' className='space-y-12px'>
             <Form.Item label={t('settings.speechToTextSource')}>
-              <AionSelect value={source} onChange={handleSourceChange}>
-                <AionSelect.Option value='openai'>{t('settings.speechToTextSourceOpenAI')}</AionSelect.Option>
-                <AionSelect.Option value='deepgram'>{t('settings.speechToTextSourceDeepgram')}</AionSelect.Option>
-                <AionSelect.Option value='custom'>{t('settings.speechToTextSourceCustom')}</AionSelect.Option>
-              </AionSelect>
+              <QianjiSelect value={source} onChange={handleSourceChange}>
+                <QianjiSelect.Option value='openai'>{t('settings.speechToTextSourceOpenAI')}</QianjiSelect.Option>
+                <QianjiSelect.Option value='deepgram'>{t('settings.speechToTextSourceDeepgram')}</QianjiSelect.Option>
+                <QianjiSelect.Option value='custom'>{t('settings.speechToTextSourceCustom')}</QianjiSelect.Option>
+              </QianjiSelect>
             </Form.Item>
 
             {isCustom && (
@@ -238,7 +238,7 @@ const VoiceInputSection: React.FC = () => {
             </Form.Item>
 
             <Form.Item label={t('settings.speechToTextModel')}>
-              <AionSelect
+              <QianjiSelect
                 value={activeModel || undefined}
                 onChange={handleModelChange}
                 allowCreate={isCustom}
@@ -254,23 +254,23 @@ const VoiceInputSection: React.FC = () => {
                         ? t('settings.speechToTextWholeBadge')
                         : null;
                   return (
-                    <AionSelect.Option key={model} value={model}>
+                    <QianjiSelect.Option key={model} value={model}>
                       {model}
                       {badgeText !== null && <span className='text-12px text-t-tertiary ms-8px'>{badgeText}</span>}
-                    </AionSelect.Option>
+                    </QianjiSelect.Option>
                   );
                 })}
-              </AionSelect>
+              </QianjiSelect>
             </Form.Item>
 
             <Form.Item label={t('settings.speechToTextLanguage')}>
-              <AionSelect value={activeLanguage} onChange={handleLanguageChange}>
+              <QianjiSelect value={activeLanguage} onChange={handleLanguageChange}>
                 {SPEECH_LANGUAGE_OPTIONS.map((option) => (
-                  <AionSelect.Option key={option.value || 'auto'} value={option.value}>
+                  <QianjiSelect.Option key={option.value || 'auto'} value={option.value}>
                     {option.label ?? t('settings.speechToTextLanguageAuto')}
-                  </AionSelect.Option>
+                  </QianjiSelect.Option>
                 ))}
-              </AionSelect>
+              </QianjiSelect>
             </Form.Item>
           </Form>
           <SpeechTestPanel config={config} source={source} />

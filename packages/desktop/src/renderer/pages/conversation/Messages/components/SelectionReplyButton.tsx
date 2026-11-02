@@ -8,7 +8,7 @@ import type { TMessage } from '@/common/chat/chatLib';
 import { emitter } from '@/renderer/utils/emitter';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import { useOptionalPreviewContext } from '@/renderer/pages/conversation/Preview/context/PreviewContext';
-import { openExternalUrl } from '@/renderer/utils/platform';
+import { isElectronDesktop, openExternalUrl } from '@/renderer/utils/platform';
 import { resolveSelectionHttpUrl } from '@/renderer/utils/url';
 import { Browser, Earth, Quote } from '@icon-park/react';
 import React, { useEffect, useRef, useState } from 'react';
@@ -198,7 +198,7 @@ const SelectionReplyButton: React.FC<{ messages: TMessage[] }> = ({ messages }) 
         <Quote theme='outline' size='14' fill='currentColor' />
         <span className='text-12px font-medium'>{t('common.reply', { defaultValue: 'Reply' })}</span>
       </div>
-      {url && preview && (
+      {url && preview && isElectronDesktop() && (
         <div
           className={itemClassName}
           onMouseDown={(e) => {

@@ -1,22 +1,9 @@
 import FlexFullContainer from '@/renderer/components/layout/FlexFullContainer';
-import { isElectronDesktop, resolveExtensionAssetUrl } from '@/renderer/utils/platform';
+import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
 import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
-import {
-  Cat,
-  Communication,
-  Computer,
-  Earth,
-  Inbox,
-  Info,
-  Lightning,
-  LinkCloud,
-  Puzzle,
-  Speed,
-  System,
-  Toolkit,
-} from '@icon-park/react';
+import { Communication, Inbox, Info, Lightning, LinkCloud, Puzzle, Speed, System, Toolkit } from '@icon-park/react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -30,9 +17,7 @@ export const BUILTIN_TAB_IDS = [
   'model',
   'skills',
   'tools',
-  'appearance',
-  'webui',
-  'pet',
+  'channels',
   'system',
   'archived',
   'about',
@@ -46,7 +31,6 @@ export const BUILTIN_TAB_IDS = [
 export const LEGACY_ANCHOR_REMAP: Record<string, string> = {
   'skills-hub': 'skills',
   capabilities: 'skills',
-  display: 'appearance',
 };
 
 /**
@@ -56,7 +40,7 @@ export const LEGACY_ANCHOR_REMAP: Record<string, string> = {
  */
 const GROUP_HEADER_BEFORE: Record<string, string> = {
   agent: 'settings.groupAiCore',
-  appearance: 'settings.groupApp',
+  channels: 'settings.groupApp',
   archived: 'settings.archived.title',
   about: 'settings.groupAbout',
 };
@@ -77,7 +61,6 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
   const navigate = useNavigate();
   const { t } = useTranslation();
   const { pathname } = useLocation();
-  const isDesktop = isElectronDesktop();
 
   const extensionTabs = useExtensionSettingsTabs();
   const { resolveExtTabName } = useExtI18n();
@@ -104,14 +87,7 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         icon: <Toolkit />,
         path: 'tools',
       },
-      appearance: { id: 'appearance', label: t('settings.appearancePanel'), icon: <Computer />, path: 'appearance' },
-      webui: {
-        id: 'webui',
-        label: t('settings.webui'),
-        icon: isDesktop ? <Earth /> : <Communication />,
-        path: 'webui',
-      },
-      pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat />, path: 'pet' },
+      channels: { id: 'channels', label: t('settings.channels'), icon: <Communication />, path: 'channels' },
       system: { id: 'system', label: t('settings.system'), icon: <System />, path: 'system' },
       archived: {
         id: 'archived',
@@ -122,8 +98,8 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
       about: { id: 'about', label: t('settings.about'), icon: <Info />, path: 'about' },
     };
 
-    // Start with ordered builtin IDs, hiding desktop-only tabs in browser mode
-    const result: SiderItem[] = BUILTIN_TAB_IDS.filter((id) => isDesktop || id !== 'pet').map((id) => builtinMap[id]);
+    // Only expose settings supported by the Web product.
+    const result: SiderItem[] = BUILTIN_TAB_IDS.map((id) => builtinMap[id]);
 
     // Extension tabs with position anchoring
     const beforeMap = new Map<string, IExtensionSettingsTab[]>();
@@ -197,7 +173,7 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
     }
 
     return { menus: result, groupHeaderAt: headerAt };
-  }, [t, isDesktop, extensionTabs, resolveExtTabName]);
+  }, [t, extensionTabs, resolveExtTabName]);
 
   const siderTooltipProps = getSiderTooltipProps(tooltipEnabled);
   return (

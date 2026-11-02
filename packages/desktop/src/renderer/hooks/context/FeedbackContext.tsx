@@ -4,6 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
+import { PRODUCT_CONFIG } from '@/common/config/constants';
 import React, { createContext, useCallback, useContext, useMemo, useState } from 'react';
 import FeedbackReportModal, {
   type FeedbackEventExtra,
@@ -63,6 +64,10 @@ export const FeedbackProvider: React.FC<{ children: React.ReactNode }> = ({ chil
   >(undefined);
 
   const openFeedback = useCallback(async (options?: OpenFeedbackOptions) => {
+    if (!PRODUCT_CONFIG.upstreamServicesEnabled) {
+      setVisible(true);
+      return;
+    }
     const routeAtOpen = captureFeedbackRoute();
     const routeContext = feedbackDiagnosticsContextFromRoute(routeAtOpen);
     const explicitContext =

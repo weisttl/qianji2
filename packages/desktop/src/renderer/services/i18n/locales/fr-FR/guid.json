@@ -1,9 +1,9 @@
 {
   "promptExamplesHint": "Essayez ces exemples de prompts :",
   "defaultPrompts": {
-    "understand": "Découvre ce projet et explique-moi simplement ce qu'il fait et par où commencer",
-    "cleanup": "Trouve les fichiers en double et inutiles dans ce dossier et liste-les pour que je confirme",
-    "create": "Crée-moi une belle page personnelle et ouvre-la une fois terminée"
+    "understand": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "cleanup": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "create": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation."
   },
   "selectAssistantHint": "Sélectionnez un assistant pour démarrer une tâche",
   "workspace": {

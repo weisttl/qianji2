@@ -1,0 +1,75 @@
+{
+  "skills": [
+    "session-message",
+    "skill-creator",
+    "qianji-config",
+    "conversation-create",
+    "cron",
+    "officecli",
+    "pdf",
+    "officecli-word-form",
+    "officecli-xlsx",
+    "officecli-docx",
+    "officecli-financial-model",
+    "officecli-pitch-deck",
+    "officecli-pptx",
+    "officecli-data-dashboard",
+    "mermaid",
+    "morph-ppt",
+    "qianji-troubleshooting"
+  ],
+  "removedSkills": [
+    "xiaohongshu-recruiter",
+    "x-recruiter",
+    "story-roleplay",
+    "weixin-file-send",
+    "openclaw-setup",
+    "officecli-academic-paper",
+    "morph-ppt-3d",
+    "moltbook",
+    "qianji-webui-public",
+    "qianji-webui-setup"
+  ],
+  "removedAssistants": [
+    "academic-paper",
+    "morph-ppt-3d",
+    "story-roleplay",
+    "openclaw-setup",
+    "social-job-publisher",
+    "moltbook",
+    "game-3d",
+    "human-3-coach",
+    "ui-ux-pro-max"
+  ],
+  "sha256": "84b8fd16ee8ac2e96c61986575e79b359f6337138556101e57505265f94220f5",
+  "backendVersion": "v0.2.2",
+  "assistants": [
+    "qianji-assistant",
+    "word-creator",
+    "ppt-creator",
+    "excel-creator",
+    "morph-ppt",
+    "pitch-deck-creator",
+    "dashboard-creator",
+    "financial-model-creator",
+    "cowork",
+    "planning-with-files",
+    "beautiful-mermaid",
+    "word-form-creator"
+  ],
+  "assistantScenarios": {
+    "morph-ppt": ["presentationPrompt"],
+    "pitch-deck-creator": ["presentationPrompt"],
+    "planning-with-files": ["planningPrompt"]
+  },
+  "assistantDescriptions": {
+    "word-form-creator": "documentDescription"
+  },
+  "assistantPromptIndices": {
+    "word-creator": [0, 2],
+    "ppt-creator": [2],
+    "dashboard-creator": [2],
+    "cowork": [2],
+    "word-form-creator": [0, 1]
+  }
+}

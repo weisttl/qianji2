@@ -1,0 +1,8 @@
+.supportButton:global(.arco-btn) {
+  padding: 0;
+  color: var(--text-secondary);
+}
+.supportButton:global(.arco-btn:hover) {
+  color: var(--brand);
+  background: var(--brand-light);
+}

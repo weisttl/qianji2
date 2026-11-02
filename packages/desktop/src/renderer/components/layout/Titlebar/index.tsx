@@ -1,11 +1,21 @@
 import React, { useEffect, useMemo, useRef, useState } from 'react';
 import classNames from 'classnames';
-import { ArrowCircleLeft, ArrowLeft, ArrowRight, ExpandLeft, ExpandRight, Peoples, Search } from '@icon-park/react';
+import {
+  ArrowCircleLeft,
+  ArrowLeft,
+  ArrowRight,
+  ExpandLeft,
+  ExpandRight,
+  Peoples,
+  Search,
+  SettingTwo,
+} from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 
+import { Button } from '@arco-design/web-react';
 import { ipcBridge } from '@/common';
-import { TEAM_MODE_ENABLED } from '@/common/config/constants';
+import { PRODUCT_CONFIG, TEAM_MODE_ENABLED } from '@/common/config/constants';
 import ConversationSearchPopover from '@renderer/pages/conversation/GroupedHistory/ConversationSearchPopover';
 import MobileConversationBrand from './MobileConversationBrand';
 import WindowControls from '../WindowControls';
@@ -19,6 +29,7 @@ import { isElectronDesktop, isMacOS } from '@/renderer/utils/platform';
 import { IS_DISCONTINUED_BUILD } from '@/renderer/utils/discontinuedBuild';
 import MigrationInviteCapsule from './MigrationInviteCapsule';
 import './titlebar.css';
+import styles from './Titlebar.module.css';
 
 interface TitlebarProps {
   workspaceAvailable: boolean;
@@ -98,7 +109,7 @@ const SidebarIcon: React.FC<{ size?: number; strokeWidth?: number }> = ({ size =
 
 const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
   const { t } = useTranslation();
-  const appTitle = useMemo(() => 'AionUi', []);
+  const appTitle = t('common.product.name');
   const [workspaceCollapsed, setWorkspaceCollapsed] = useState(true);
   const [mobileCenterTitle, setMobileCenterTitle] = useState(appTitle);
   const [mobileCenterOffset, setMobileCenterOffset] = useState(0);
@@ -140,7 +151,9 @@ const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
     ? t('common.expandMore', { defaultValue: 'Expand workspace' })
     : t('common.collapse', { defaultValue: 'Collapse workspace' });
   const backToChatTooltip = t('common.back', { defaultValue: 'Back to Chat' });
-  const feedbackTooltip = t('conversation.welcome.quickActionFeedback', { defaultValue: 'Report Issue' });
+  const feedbackTooltip = PRODUCT_CONFIG.upstreamServicesEnabled
+    ? t('conversation.welcome.quickActionFeedback')
+    : t('common.product.platformSettings');
   const isSettingsRoute = location.pathname.startsWith('/settings');
   const iconSize = 18;
   // Desktop uses slimmer strokes to match macOS-native chrome aesthetics;
@@ -189,14 +202,14 @@ const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
       const path = `${location.pathname}${location.search}${location.hash}`;
       lastNonSettingsPathRef.current = path;
       try {
-        sessionStorage.setItem('aion:last-non-settings-path', path);
+        sessionStorage.setItem('qianji:last-non-settings-path', path);
       } catch {
         // ignore
       }
       return;
     }
     try {
-      const stored = sessionStorage.getItem('aion:last-non-settings-path');
+      const stored = sessionStorage.getItem('qianji:last-non-settings-path');
       if (stored) {
         lastNonSettingsPathRef.current = stored;
       }
@@ -409,16 +422,30 @@ const Titlebar: React.FC<TitlebarProps> = ({ workspaceAvailable }) => {
       </div>
       <div ref={toolbarRef} className='app-titlebar__toolbar'>
         {layout?.isMobile && <div id='app-titlebar-actions-slot' className='app-titlebar__actions-slot' />}
-        {IS_DISCONTINUED_BUILD && <MigrationInviteCapsule />}
-        <button
-          type='button'
-          className={classNames('app-titlebar__button', layout?.isMobile && 'app-titlebar__button--mobile')}
-          onClick={() => void openFeedback({ autoScreenshot: true, module: resolveFeedbackModule(location.pathname) })}
+        {PRODUCT_CONFIG.upstreamServicesEnabled && IS_DISCONTINUED_BUILD && <MigrationInviteCapsule />}
+        <Button
+          type='text'
+          className={classNames(
+            'app-titlebar__button',
+            styles.supportButton,
+            layout?.isMobile && 'app-titlebar__button--mobile'
+          )}
+          onClick={() => {
+            if (PRODUCT_CONFIG.upstreamServicesEnabled) {
+              void openFeedback({ autoScreenshot: true, module: resolveFeedbackModule(location.pathname) });
+            } else {
+              void navigate('/settings/about');
+            }
+          }}
           aria-label={feedbackTooltip}
           title={feedbackTooltip}
         >
-          <FeedbackIcon size={iconSize} strokeWidth={desktopIconStroke} />
-        </button>
+          {PRODUCT_CONFIG.upstreamServicesEnabled ? (
+            <FeedbackIcon size={iconSize} strokeWidth={desktopIconStroke} />
+          ) : (
+            <SettingTwo size={iconSize} fill='currentColor' />
+          )}
+        </Button>
         {showWorkspaceButton && (
           <button
             type='button'

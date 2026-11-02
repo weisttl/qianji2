@@ -1,9 +1,9 @@
 {
   "promptExamplesHint": "Bu talimatları deneyin",
   "defaultPrompts": {
-    "understand": "Bu projeyi incele ve ne yaptığını, nereden başlamam gerektiğini basit bir dille anlat",
-    "cleanup": "Bu klasördeki yinelenen ve gereksiz dosyaları bul, onaylamam için listele",
-    "create": "Bana şık bir kişisel ana sayfa yap ve bitince doğrudan açıp göster"
+    "understand": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "cleanup": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "create": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation."
   },
   "selectAssistantHint": "Göreve başlamak için bir asistan seçin",
   "workspace": {

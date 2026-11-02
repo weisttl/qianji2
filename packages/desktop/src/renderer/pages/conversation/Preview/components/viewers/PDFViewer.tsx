@@ -9,6 +9,7 @@ import type { ChatFileRef } from '@/common/types/chatFile';
 import { buildPdfSrc } from '../../previewUrls';
 import { registerTabReloader } from '../../context/tabReloaderRegistry';
 import { usePreviewToolbarExtras } from '../../context/PreviewToolbarExtrasContext';
+import { isElectronDesktop } from '@/renderer/utils/platform';
 import { Button, Message } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -53,6 +54,8 @@ interface ElectronWebView extends HTMLElement {
 
 const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, content, hideToolbar = false }) => {
   const { t } = useTranslation();
+  const isDesktop = isElectronDesktop();
+  const [reloadKey, setReloadKey] = useState(0);
   const [error, setError] = useState<string | null>(null);
   const [loading, setLoading] = useState(true);
   const webviewRef = useRef<ElectronWebView>(null);
@@ -64,12 +67,17 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
   useEffect(() => {
     if (!tabId) return;
     return registerTabReloader(tabId, () => {
-      webviewRef.current?.reload();
+      if (isDesktop) webviewRef.current?.reload();
+      else {
+        setLoading(true);
+        setReloadKey((key) => key + 1);
+      }
     });
-  }, [tabId]);
+  }, [tabId, isDesktop]);
   const usePortalToolbar = Boolean(toolbarExtrasContext) && !hideToolbar;
 
   const handleOpenInSystem = useCallback(async () => {
+    if (!isDesktop) return;
     if (!file_path) {
       messageApi.error(t('preview.errors.openWithoutPath'));
       return;
@@ -81,18 +89,21 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
     } catch (err) {
       messageApi.error(t('preview.openInSystemFailed'));
     }
-  }, [file_path, messageApi, t]);
+  }, [file_path, messageApi, t, isDesktop]);
 
   useEffect(() => {
     try {
       setLoading(true);
       setError(null);
 
-      if (!fileRef && !file_path && !content) {
+      if (!fileRef && !content) {
         setError(t('preview.pdf.pathMissing'));
         setLoading(false);
         return;
       }
+
+      // Browsers display the authenticated PDF stream in a native iframe viewer.
+      if (!isDesktop) return;
 
       // webview 加载成功后隐藏 loading
       // Hide loading after webview finishes loading
@@ -120,7 +131,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
       setError(`${t('preview.pdf.loadFailed')}: ${err instanceof Error ? err.message : String(err)}`);
       setLoading(false);
     }
-  }, [fileRef, file_path, content, t]);
+  }, [fileRef, content, t, isDesktop]);
 
   // 设置工具栏扩展（必须在所有条件返回之前调用）
   // Set toolbar extras (must be called before any conditional returns)
@@ -154,7 +165,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
     );
   }
 
-  if (loading) {
+  if (loading && isDesktop) {
     return (
       <div className='flex items-center justify-center h-full'>
         {messageContextHolder}
@@ -172,7 +183,7 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
             <span className='text-13px text-t-secondary'>📄 {t('preview.pdf.title')}</span>
             <span className='text-11px text-t-tertiary'>{t('preview.readOnlyLabel')}</span>
           </div>
-          {file_path && (
+          {file_path && isDesktop && (
             <Button size='mini' type='text' onClick={handleOpenInSystem} title={t('preview.openInSystemApp')}>
               <svg width='14' height='14' viewBox='0 0 24 24' fill='none' stroke='currentColor' strokeWidth='2'>
                 <path d='M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6' />
@@ -185,15 +196,30 @@ const PDFPreview: React.FC<PDFPreviewProps> = ({ tabId, fileRef, file_path, cont
         </div>
       )}
       {/* PDF 内容区域 / PDF content area */}
-      <div className='flex-1 overflow-hidden bg-bg-1'>
+      <div className='flex-1 overflow-hidden bg-bg-1 relative'>
         {/* key 确保文件路径改变时 webview 重新挂载 / key ensures webview remounts when file path changes */}
-        <webview
-          key={pdfSrc}
-          ref={webviewRef}
-          src={pdfSrc}
-          className='w-full h-full'
-          style={{ display: 'inline-flex' }}
-        />
+        {isDesktop ? (
+          <webview
+            key={pdfSrc}
+            ref={webviewRef}
+            src={pdfSrc}
+            className='w-full h-full'
+            style={{ display: 'inline-flex' }}
+          />
+        ) : (
+          <iframe
+            key={`${pdfSrc}-${reloadKey}`}
+            src={pdfSrc}
+            title={t('preview.pdf.title')}
+            className='w-full h-full border-0'
+            onLoad={() => setLoading(false)}
+          />
+        )}
+        {!isDesktop && loading && (
+          <div className='absolute inset-0 flex items-center justify-center bg-bg-1 pointer-events-none'>
+            <span className='text-14px text-t-secondary'>{t('preview.loading')}</span>
+          </div>
+        )}
       </div>
     </div>
   );

@@ -6,7 +6,6 @@ import { cleanupSiderTooltips, getSiderTooltipProps } from '@renderer/utils/ui/s
 import { useAuth } from '@renderer/hooks/context/AuthContext';
 import { useLayoutContext } from '@renderer/hooks/context/LayoutContext';
 import { blurActiveElement } from '@renderer/utils/ui/focus';
-import { useThemeContext } from '@renderer/hooks/context/ThemeContext';
 import { SiderToolbar, SiderSearchEntry, SiderScheduledEntry, SiderAssistantEntry } from './SiderNav';
 import SiderFooter from './SiderFooter';
 import TeamSiderSection from './TeamSiderSection';
@@ -29,7 +28,6 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
   const navigate = useNavigate();
   const { closePreview, clearPreviewForScope } = usePreviewContext();
   const { logout, status } = useAuth();
-  const { theme, setTheme } = useThemeContext();
   const [isBatchMode, setIsBatchMode] = useState(false);
   const isSettings = pathname.startsWith('/settings');
   const lastNonSettingsPathRef = useRef('/guid');
@@ -107,10 +105,6 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
     if (onSessionClick) {
       onSessionClick();
     }
-  };
-
-  const handleQuickThemeToggle = () => {
-    void setTheme(theme === 'dark' ? 'light' : 'dark');
   };
 
   const handleLogout = useCallback(async () => {
@@ -249,10 +243,8 @@ const Sider: React.FC<SiderProps> = ({ onSessionClick, collapsed = false }) => {
         isMobile={isMobile}
         isSettings={isSettings}
         collapsed={collapsed}
-        theme={theme}
         siderTooltipProps={siderTooltipProps}
         onSettingsClick={handleSettingsClick}
-        onThemeToggle={handleQuickThemeToggle}
         showLogout={showLogout}
         onLogoutClick={handleLogout}
       />

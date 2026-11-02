@@ -69,7 +69,7 @@ import MessageTips from '@/renderer/pages/conversation/Messages/components/Messa
 import type { AgentStreamErrorInfo, IMessageTips } from '@/common/chat/chatLib';
 
 const requiredAgentErrorCodes = [
-  'AIONUI_CONVERSATION_BUSY',
+  'QIANJI_CONVERSATION_BUSY',
   'USER_AGENT_HANDSHAKE_FAILED',
   'USER_AGENT_HANDSHAKE_TIMEOUT',
   'USER_AGENT_ACP_INIT_FAILED',
@@ -238,8 +238,8 @@ describe('MessageTips — FeedbackButton wiring', () => {
       <MessageTips
         message={buildTips('error', 'Something went wrong, please try again.', {
           message: 'Something went wrong, please try again.',
-          code: 'AIONUI_INTERNAL_ERROR',
-          ownership: 'aionui',
+          code: 'QIANJI_INTERNAL_ERROR',
+          ownership: 'qianji',
           detail: 'Something went wrong, please try again.',
           retryable: true,
           feedback_recommended: true,
@@ -547,20 +547,20 @@ describe('agent error locale copy', () => {
     }
   });
 
-  it('does not label app-side errors as direct AionUi ownership', () => {
+  it('does not label app-side errors as direct Qianji ownership', () => {
     const localeDir = path.join(process.cwd(), 'packages/desktop/src/renderer/services/i18n/locales');
 
     for (const localeName of supportedLocaleNames) {
       const locale = JSON.parse(readFileSync(path.join(localeDir, localeName, 'conversation.json'), 'utf8'));
       const agentError = locale.agentError;
 
-      expect(agentError.ownership.aionui, localeName).not.toMatch(/AionUi/);
+      expect(agentError.ownership.qianji, localeName).not.toMatch(/Qianji/);
 
       for (const [code, copy] of Object.entries<Record<string, string>>(agentError.codes)) {
-        if (!code.startsWith('AIONUI_')) continue;
+        if (!code.startsWith('QIANJI_')) continue;
 
-        expect(copy.title, `${localeName} ${code} title`).not.toMatch(/AionUi/);
-        expect(copy.body, `${localeName} ${code} body`).not.toMatch(/AionUi/);
+        expect(copy.title, `${localeName} ${code} title`).not.toMatch(/Qianji/);
+        expect(copy.body, `${localeName} ${code} body`).not.toMatch(/Qianji/);
       }
     }
   });

@@ -4,7 +4,7 @@
  * SPDX-License-Identifier: Apache-2.0
  */
 
-import { render, screen, waitFor } from '@testing-library/react';
+import { fireEvent, render, screen, waitFor } from '@testing-library/react';
 import React from 'react';
 import { beforeEach, describe, expect, it, vi } from 'vitest';
 import { LayoutContext } from '@/renderer/hooks/context/LayoutContext';
@@ -30,16 +30,16 @@ const {
     resetCurrentModel: vi.fn(),
   },
   agentSelectionMock: {
-    selectedAssistantId: 'bare-aionrs',
+    selectedAssistantId: 'bare-qianjirs',
     selectedAssistant: {
-      id: 'bare-aionrs',
+      id: 'bare-qianjirs',
       source: 'generated',
-      name: 'Aion CLI',
+      name: 'Qianji CLI',
       name_i18n: {},
       description_i18n: {},
       enabled: true,
       sort_order: 10,
-      preset_agent_type: 'aionrs',
+      preset_agent_type: 'qianjirs',
       enabled_skills: [],
       custom_skill_names: [],
       disabled_builtin_skills: [],
@@ -53,14 +53,14 @@ const {
     },
     assistants: [
       {
-        id: 'bare-aionrs',
+        id: 'bare-qianjirs',
         source: 'generated',
-        name: 'Aion CLI',
+        name: 'Qianji CLI',
         name_i18n: {},
         description_i18n: {},
         enabled: true,
         sort_order: 10,
-        preset_agent_type: 'aionrs',
+        preset_agent_type: 'qianjirs',
         enabled_skills: [],
         custom_skill_names: [],
         disabled_builtin_skills: [],
@@ -73,14 +73,14 @@ const {
         deletable: false,
       },
     ],
-    selectedAssistantBackend: 'aionrs',
+    selectedAssistantBackend: 'qianjirs',
     selectedAssistantAvailable: true,
     selectedMode: 'default',
     setSelectedMode: vi.fn(),
     selectedAcpModel: null,
     setSelectedAcpModel: vi.fn(),
     currentAcpCachedModelInfo: null,
-    defaultAssistantId: 'bare-aionrs',
+    defaultAssistantId: 'bare-qianjirs',
     setSelectedAssistantId: vi.fn(),
   },
   guidInputMock: {
@@ -279,7 +279,7 @@ vi.mock('swr', async () => {
 import GuidPage from '@/renderer/pages/guid/GuidPage';
 
 const guidInputCardProps = {
-  input: 'Existing Guid draft\nCreate with /cron in AionUi',
+  input: 'Existing Guid draft\nCreate with /cron in Qianji',
   onInputChange: vi.fn(),
   onKeyDown: vi.fn(),
   onPaste: vi.fn(),
@@ -321,19 +321,19 @@ describe('GuidPage', () => {
     modelSelectionMock.resetCurrentModel.mockReset();
     agentSelectionMock.currentAgentModeOptions = [];
     agentSelectionMock.currentAcpCachedModelInfo = null;
-    agentSelectionMock.selectedAssistantBackend = 'aionrs';
+    agentSelectionMock.selectedAssistantBackend = 'qianjirs';
     agentSelectionMock.setSelectedAcpModel.mockReset();
     agentSelectionMock.setSelectedMode.mockReset();
     agentSelectionMock.assistants = [
       {
-        id: 'bare-aionrs',
+        id: 'bare-qianjirs',
         source: 'generated',
-        name: 'Aion CLI',
+        name: 'Qianji CLI',
         name_i18n: {},
         description_i18n: {},
         enabled: true,
         sort_order: 10,
-        preset_agent_type: 'aionrs',
+        preset_agent_type: 'qianjirs',
         enabled_skills: [],
         custom_skill_names: [],
         disabled_builtin_skills: [],
@@ -380,7 +380,7 @@ describe('GuidPage', () => {
 
   it('appends a draft-preserving prefill without clearing attachments or workspace', () => {
     locationMock.state = {
-      prefillPrompt: 'Create with /cron in AionUi',
+      prefillPrompt: 'Create with /cron in Qianji',
       preservePrefillDraft: true,
       focusPrefill: true,
       returnTo: 'conversation-sidebar',
@@ -393,7 +393,7 @@ describe('GuidPage', () => {
 
     const inputUpdater = guidInputMock.setInput.mock.calls[0]?.[0];
     expect(inputUpdater).toBeTypeOf('function');
-    expect(inputUpdater('Existing Guid draft')).toBe('Existing Guid draft\nCreate with /cron in AionUi');
+    expect(inputUpdater('Existing Guid draft')).toBe('Existing Guid draft\nCreate with /cron in Qianji');
     expect(guidInputMock.setFiles).not.toHaveBeenCalled();
     expect(guidInputMock.setDir).not.toHaveBeenCalled();
     expect(capturedGuidInputCardProps.at(-1)?.focusRequestKey).toBe('guid-location');
@@ -417,7 +417,7 @@ describe('GuidPage', () => {
 
   it('removes a consumed preserved prefill even when no other navigation state remains', () => {
     locationMock.state = {
-      prefillPrompt: 'Create with /cron in AionUi',
+      prefillPrompt: 'Create with /cron in Qianji',
       preservePrefillDraft: true,
       focusPrefill: true,
     };
@@ -432,7 +432,7 @@ describe('GuidPage', () => {
 
     expect(screen.queryByLabelText('common.back')).not.toBeInTheDocument();
     expect(screen.queryByLabelText('Assistant Details')).not.toBeInTheDocument();
-    expect(screen.getByText('conversation.welcome.title')).toBeInTheDocument();
+    expect(screen.getByText('common.product.workspaceTitle')).toBeInTheDocument();
     expect(screen.getByTestId('assistant-selection-area')).toBeInTheDocument();
     const latestAssistantSelectionAreaProps = capturedAssistantSelectionAreaProps.at(-1);
     const latestGuidActionRowProps = capturedGuidActionRowProps.at(-1);
@@ -470,14 +470,14 @@ describe('GuidPage', () => {
   it('renders example prompts with wrapping text for long assistant suggestions', () => {
     agentSelectionMock.assistants = [
       {
-        id: 'bare-aionrs',
+        id: 'bare-qianjirs',
         source: 'generated',
-        name: 'Aion CLI',
+        name: 'Qianji CLI',
         name_i18n: {},
         description_i18n: {},
         enabled: true,
         sort_order: 10,
-        preset_agent_type: 'aionrs',
+        preset_agent_type: 'qianjirs',
         enabled_skills: [],
         custom_skill_names: [],
         disabled_builtin_skills: [],
@@ -514,25 +514,27 @@ describe('GuidPage', () => {
     expect(promptButton.className).toContain('!break-words');
   });
 
-  it('falls back to default instruction prompts when the selected assistant has no recommendations', () => {
+  it('offers business scenarios when the selected assistant has no recommendations', () => {
     render(<GuidPage />);
 
-    expect(screen.getByRole('button', { name: 'guid.defaultPrompts.understand' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'guid.defaultPrompts.cleanup' })).toBeInTheDocument();
-    expect(screen.getByRole('button', { name: 'guid.defaultPrompts.create' })).toBeInTheDocument();
+    for (const scenario of ['research', 'document', 'data', 'meeting']) {
+      expect(screen.getByRole('button', { name: new RegExp(`common.product.${scenario}Title`) })).toBeInTheDocument();
+    }
+    fireEvent.click(screen.getByRole('button', { name: /common.product.researchTitle/ }));
+    expect(guidInputMock.setInput).toHaveBeenCalledWith('common.product.researchPrompt');
   });
 
   it('does not seed skill defaults from the assistant list while detail is loading', async () => {
     agentSelectionMock.assistants = [
       {
-        id: 'bare-aionrs',
+        id: 'bare-qianjirs',
         source: 'generated',
-        name: 'Aion CLI',
+        name: 'Qianji CLI',
         name_i18n: {},
         description_i18n: {},
         enabled: true,
         sort_order: 10,
-        preset_agent_type: 'aionrs',
+        preset_agent_type: 'qianjirs',
         enabled_skills: ['stale-list-skill'],
         custom_skill_names: [],
         disabled_builtin_skills: ['stale-disabled-builtin'],
@@ -558,7 +560,7 @@ describe('GuidPage', () => {
     });
   });
 
-  it('applies an aionrs assistant default model after provider models load', async () => {
+  it('applies an qianjirs assistant default model after provider models load', async () => {
     swrMock.useSWRMock.mockReturnValue({ data: assistantDetailFixture });
     resolveGuidAssistantDefaultsMock.mockReturnValue({
       modelId: 'gpt-4.1',

@@ -1,6 +1,6 @@
 /**
  * HTTP/WS bridge factory — drop-in replacement for bridge.buildProvider / bridge.buildEmitter
- * that routes calls to aioncore via REST API and WebSocket.
+ * that routes calls to qianjicore via REST API and WebSocket.
  *
  * Exported helpers produce objects with the same shape as the local IPC bridge,
  * so existing renderer code works without changes.
@@ -194,7 +194,7 @@ function isAuthEndpoint(path: string): boolean {
  * which enforces no CSRF check here — accepts the request unchanged.
  *
  * It exists as the single seam every state-changing request would call for its
- * token, so restoring CSRF in M7 (and the aionpro superset, whose backend does
+ * token, so restoring CSRF in M7 (and the qianjipro superset, whose backend does
  * enforce the double-submit check) only swaps this body — no caller changes.
  *
  * Returns '' — always, for now.

@@ -1,27 +1,15 @@
 import classNames from 'classnames';
+import { Button } from '@arco-design/web-react';
 import React from 'react';
 import { useLayoutContext } from '@/renderer/hooks/context/LayoutContext';
 import {
   SettingsTabNavigateProvider,
   SettingsViewModeProvider,
 } from '@/renderer/components/settings/SettingsModal/settingsViewContext';
-import { isElectronDesktop, resolveExtensionAssetUrl } from '@/renderer/utils/platform';
+import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
 import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
-import {
-  Cat,
-  Communication,
-  Computer,
-  Earth,
-  Inbox,
-  Info,
-  Lightning,
-  LinkCloud,
-  Puzzle,
-  Robot,
-  System,
-  Toolkit,
-} from '@icon-park/react';
+import { Communication, Inbox, Info, Lightning, LinkCloud, Puzzle, Robot, System, Toolkit } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
@@ -38,7 +26,7 @@ type NavItem = { label: string; icon: React.ReactElement; path: string; id: stri
 
 type TranslateFn = (key: string, options?: { defaultValue?: string }) => string;
 
-export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): NavItem[] {
+export function getBuiltinSettingsNavItems(t: TranslateFn): NavItem[] {
   const builtinMap: Record<string, NavItem> = {
     model: { id: 'model', label: t('settings.model'), icon: <LinkCloud theme='outline' size='16' />, path: 'model' },
     assistants: {
@@ -65,19 +53,12 @@ export function getBuiltinSettingsNavItems(isDesktop: boolean, t: TranslateFn): 
       icon: <Toolkit theme='outline' size='16' />,
       path: 'tools',
     },
-    appearance: {
-      id: 'appearance',
-      label: t('settings.appearancePanel'),
-      icon: <Computer theme='outline' size='16' />,
-      path: 'appearance',
+    channels: {
+      id: 'channels',
+      label: t('settings.channels'),
+      icon: <Communication theme='outline' size='16' />,
+      path: 'channels',
     },
-    webui: {
-      id: 'webui',
-      label: t('settings.webui'),
-      icon: isDesktop ? <Earth theme='outline' size='16' /> : <Communication theme='outline' size='16' />,
-      path: 'webui',
-    },
-    pet: { id: 'pet', label: t('pet.desktopPet'), icon: <Cat theme='outline' size='16' />, path: 'pet' },
     system: { id: 'system', label: t('settings.system'), icon: <System theme='outline' size='16' />, path: 'system' },
     archived: {
       id: 'archived',
@@ -97,14 +78,13 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { t } = useTranslation();
-  const isDesktop = isElectronDesktop();
 
   const extensionTabs = useExtensionSettingsTabs();
 
   const { resolveExtTabName } = useExtI18n();
 
   const menuItems = React.useMemo(() => {
-    const builtins = getBuiltinSettingsNavItems(isDesktop, t);
+    const builtins = getBuiltinSettingsNavItems(t);
 
     // Insert extension tabs before system (unanchored default) or at anchor position
     const result = [...builtins];
@@ -161,7 +141,7 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
     }
 
     return result;
-  }, [isDesktop, t, extensionTabs, resolveExtTabName]);
+  }, [t, extensionTabs, resolveExtTabName]);
 
   // Keep only horizontal padding on the scroll container — vertical padding is
   // moved to the content layer below. A sticky header inside a scroll container
@@ -194,9 +174,9 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
               {menuItems.map((item) => {
                 const active = pathname.includes(`/settings/${item.path}`);
                 return (
-                  <button
+                  <Button
                     key={item.path}
-                    type='button'
+                    type='text'
                     className={classNames('settings-mobile-top-nav__item', {
                       'settings-mobile-top-nav__item--active': active,
                     })}
@@ -206,7 +186,7 @@ const SettingsPageWrapper: React.FC<SettingsPageWrapperProps> = ({ children, cla
                   >
                     <span className='settings-mobile-top-nav__icon'>{item.icon}</span>
                     <span className='settings-mobile-top-nav__label'>{item.label}</span>
-                  </button>
+                  </Button>
                 );
               })}
             </div>

@@ -661,6 +661,7 @@ const PreviewPanel: React.FC = () => {
   );
 
   const showOpenInSystemButton =
+    isElectronDesktop() &&
     canOpenInSystem(Boolean(metadata?.file_path), metadata?.fileRef) &&
     shouldOfferOpenInSystem(content_type, Boolean(metadata?.oversized), FILE_TYPES_WITH_BUILTIN_OPEN);
 
@@ -784,6 +785,7 @@ const PreviewPanel: React.FC = () => {
 
   // 在系统默认应用中打开文件 / Open file in system default application
   const handleOpenInSystem = useCallback(async () => {
+    if (!isElectronDesktop()) return;
     // 只接受真正指向文件的 ref —— project ref 的空 relative_path 表示 pe root
     // 本身（一个目录），送去 shell 打开就不是这个按钮承诺的行为了。
     // Only accept a ref that addresses a file: an empty relative_path on a project
@@ -1226,7 +1228,7 @@ const PreviewPanel: React.FC = () => {
           // Show the "new browser tab" plus as soon as the panel holds any tab (file or
           // browser) instead of requiring the user to open a browser first. It stays
           // hidden only while the panel is empty, so the plus never appears alone.
-          onNewBrowserTab={previewTabs.length > 0 ? handleNewBrowserTab : undefined}
+          onNewBrowserTab={isElectronDesktop() && previewTabs.length > 0 ? handleNewBrowserTab : undefined}
         />
 
         {/* 工具栏（URL / 浏览器 类型不显示工具栏，因为不需要下载/编辑等功能）

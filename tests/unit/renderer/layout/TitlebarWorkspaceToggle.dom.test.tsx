@@ -4,6 +4,12 @@ import { beforeEach, describe, expect, it, vi } from 'vitest';
 
 const platform = vi.hoisted(() => ({ desktop: true, mac: false }));
 
+const productPolicy = vi.hoisted(() => ({ upstreamServicesEnabled: true }));
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: productPolicy,
+}));
+
 vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
@@ -14,7 +20,7 @@ vi.mock('react-router-dom', () => ({
 vi.mock('@/common', () => ({
   ipcBridge: { conversation: { get: { invoke: vi.fn() } } },
 }));
-vi.mock('@/common/config/constants', () => ({ TEAM_MODE_ENABLED: false }));
+
 vi.mock('@renderer/pages/conversation/GroupedHistory/ConversationSearchPopover', () => ({ default: () => null }));
 vi.mock('@/renderer/components/layout/Titlebar/MobileConversationBrand', () => ({ default: () => null }));
 vi.mock('@/renderer/components/layout/WindowControls', () => ({

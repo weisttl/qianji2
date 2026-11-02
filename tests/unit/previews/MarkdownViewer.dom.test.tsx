@@ -239,10 +239,10 @@ describe('MarkdownViewer', () => {
   });
 
   it('keeps remote links as browser anchors', () => {
-    render(<MarkdownViewer content='[docs](https://aionui.com/docs)' />);
+    render(<MarkdownViewer content='[docs](https://qianji.com/docs)' />);
 
     const link = screen.getByRole('link', { name: 'docs' });
-    expect(link).toHaveAttribute('href', 'https://aionui.com/docs');
+    expect(link).toHaveAttribute('href', 'https://qianji.com/docs');
   });
 
   it('sanitizes raw HTML in preview mode (drops <script>, keeps benign markup)', () => {

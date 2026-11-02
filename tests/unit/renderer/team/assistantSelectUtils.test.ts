@@ -14,16 +14,16 @@ import type { Assistant } from '@/common/types/agent/assistantTypes';
 describe('assistantSelectUtils', () => {
   it('localizes assistant option names for the active locale', () => {
     const bareAssistant = makeAssistant({
-      id: 'bare-aionrs',
-      name: 'Aion CLI',
-      name_i18n: { 'zh-CN': 'Aion 命令行' },
+      id: 'bare-qianjirs',
+      name: 'Qianji CLI',
+      name_i18n: { 'zh-CN': 'Qianji 命令行' },
       source: 'generated',
-      preset_agent_type: 'aionrs',
+      preset_agent_type: 'qianjirs',
     });
 
     const option = assistantToOption(bareAssistant, 'zh-CN');
 
-    expect(option.name).toBe('Aion 命令行');
+    expect(option.name).toBe('Qianji 命令行');
   });
 
   it('preserves backend-provided team availability for selectable assistants', () => {
@@ -47,7 +47,7 @@ describe('assistantSelectUtils', () => {
       id: 'unchecked',
       name: 'Unchecked',
       source: 'generated',
-      preset_agent_type: 'aionrs',
+      preset_agent_type: 'qianjirs',
       agent_status: 'unchecked',
       team_selectable: true,
     });

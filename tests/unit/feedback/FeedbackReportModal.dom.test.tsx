@@ -14,6 +14,12 @@ import { cleanup, render, screen, waitFor } from '@testing-library/react';
 import userEvent from '@testing-library/user-event';
 import { ConfigProvider } from '@arco-design/web-react';
 
+const productPolicy = vi.hoisted(() => ({ upstreamServicesEnabled: true }));
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: productPolicy,
+}));
+
 vi.mock('@arco-design/web-react', async (importOriginal) => {
   const actual = await importOriginal<typeof import('@arco-design/web-react')>();
   return {
@@ -29,7 +35,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (k: string) => k, i18n: { language: 'en' } }),
 }));
 
-// FeedbackReportModal now renders through AionModal, which reads ThemeContext
+// FeedbackReportModal now renders through QianjiModal, which reads ThemeContext
 // for font scaling. Provide a minimal theme so the modal mounts without a full
 // ThemeProvider (which pulls in IPC-backed theme loading).
 vi.mock('@/renderer/hooks/context/ThemeContext', () => ({

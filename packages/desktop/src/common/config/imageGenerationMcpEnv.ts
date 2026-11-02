@@ -8,11 +8,11 @@ import type { ImageGenerationModelSetting } from './clientSettings';
 import type { IProvider } from './storage';
 
 export const IMAGE_GEN_ENV_KEYS = {
-  providerId: 'AIONUI_IMG_PROVIDER_ID',
-  platform: 'AIONUI_IMG_PLATFORM',
-  baseUrl: 'AIONUI_IMG_BASE_URL',
-  apiKey: 'AIONUI_IMG_API_KEY',
-  model: 'AIONUI_IMG_MODEL',
+  providerId: 'QIANJI_IMG_PROVIDER_ID',
+  platform: 'QIANJI_IMG_PLATFORM',
+  baseUrl: 'QIANJI_IMG_BASE_URL',
+  apiKey: 'QIANJI_IMG_API_KEY',
+  model: 'QIANJI_IMG_MODEL',
 } as const;
 
 type ImageGenerationSelection = Partial<ImageGenerationModelSetting>;
@@ -43,15 +43,16 @@ function normalizeBaseUrl(value?: string): string {
   return (value || '').trim().replace(/\/+$/, '');
 }
 
-function getLegacyField(
+function resolveSelectionFields(
   selection: ImageGenerationSelection | undefined,
   existingEnv: Record<string, string> | undefined
 ) {
+  const providerEnv = { ...existingEnv };
   return {
-    providerId: selection?.id || existingEnv?.[IMAGE_GEN_ENV_KEYS.providerId],
-    platform: selection?.platform || existingEnv?.[IMAGE_GEN_ENV_KEYS.platform],
-    baseUrl: selection?.base_url || existingEnv?.[IMAGE_GEN_ENV_KEYS.baseUrl],
-    model: selection?.use_model || existingEnv?.[IMAGE_GEN_ENV_KEYS.model],
+    providerId: selection?.id || providerEnv[IMAGE_GEN_ENV_KEYS.providerId],
+    platform: selection?.platform || providerEnv[IMAGE_GEN_ENV_KEYS.platform],
+    baseUrl: selection?.base_url || providerEnv[IMAGE_GEN_ENV_KEYS.baseUrl],
+    model: selection?.use_model || providerEnv[IMAGE_GEN_ENV_KEYS.model],
   };
 }
 
@@ -74,7 +75,7 @@ export function resolveImageGenerationMcpEnv(
   providers: IProvider[],
   existingEnv?: Record<string, string>
 ): ImageGenerationMcpEnvResolveResult {
-  const { providerId, platform, baseUrl, model } = getLegacyField(selection, existingEnv);
+  const { providerId, platform, baseUrl, model } = resolveSelectionFields(selection, existingEnv);
 
   if (!providerId && !platform && !baseUrl && !model) {
     return {

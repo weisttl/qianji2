@@ -28,10 +28,15 @@ vi.mock('./agent-process-registry.js', () => ({
   cleanupRegisteredAgentProcesses: vi.fn().mockResolvedValue(undefined),
 }));
 
+vi.mock('./product/resources.js', () => ({
+  prepareProductResources: vi.fn().mockResolvedValue({ skills: '/product/skills', assistants: '/product/assistants' }),
+}));
+
 import { spawn } from 'node:child_process';
 import { mkdirSync, statSync } from 'node:fs';
 import { connect, createServer } from 'node:net';
 import { cleanupRegisteredAgentProcesses } from './agent-process-registry.js';
+import { prepareProductResources } from './product/resources.js';
 import {
   buildSpawnArgs,
   buildSpawnEnv,
@@ -94,7 +99,7 @@ function makeFakeTaskkillChild(): ChildProcess {
 }
 
 function emitListening(child: ChildProcess, port: number): void {
-  child.stdout?.emit('data', Buffer.from(`AIONCORE_LISTENING {"host":"127.0.0.1","port":${port}}\n`));
+  child.stdout?.emit('data', Buffer.from(`QIANJICORE_LISTENING {"host":"127.0.0.1","port":${port}}\n`));
 }
 
 function makeFakeSocket(): Socket {
@@ -156,9 +161,9 @@ describe('buildSpawnArgs', () => {
     expect(args).not.toContain('--local');
   });
 
-  it('passes prompt dump flag in development only when AIONUI_DUMP_PROMPTS is enabled', () => {
-    const prev = process.env.AIONUI_DUMP_PROMPTS;
-    process.env.AIONUI_DUMP_PROMPTS = '1';
+  it('passes prompt dump flag in development only when QIANJI_DUMP_PROMPTS is enabled', () => {
+    const prev = process.env.QIANJI_DUMP_PROMPTS;
+    process.env.QIANJI_DUMP_PROMPTS = '1';
     try {
       const args = buildSpawnArgs({
         port: 1,
@@ -170,14 +175,14 @@ describe('buildSpawnArgs', () => {
 
       expect(args).toContain('--dump-prompts');
     } finally {
-      if (prev === undefined) delete process.env.AIONUI_DUMP_PROMPTS;
-      else process.env.AIONUI_DUMP_PROMPTS = prev;
+      if (prev === undefined) delete process.env.QIANJI_DUMP_PROMPTS;
+      else process.env.QIANJI_DUMP_PROMPTS = prev;
     }
   });
 
   it('passes bundled managed resources mode when packaged', () => {
-    const prev = process.env.AIONUI_DUMP_PROMPTS;
-    process.env.AIONUI_DUMP_PROMPTS = '1';
+    const prev = process.env.QIANJI_DUMP_PROMPTS;
+    process.env.QIANJI_DUMP_PROMPTS = '1';
     try {
       const args = buildSpawnArgs({
         port: 1,
@@ -191,8 +196,8 @@ describe('buildSpawnArgs', () => {
       expect(args).toContain('bundled');
       expect(args).not.toContain('--dump-prompts');
     } finally {
-      if (prev === undefined) delete process.env.AIONUI_DUMP_PROMPTS;
-      else process.env.AIONUI_DUMP_PROMPTS = prev;
+      if (prev === undefined) delete process.env.QIANJI_DUMP_PROMPTS;
+      else process.env.QIANJI_DUMP_PROMPTS = prev;
     }
   });
 
@@ -209,9 +214,9 @@ describe('buildSpawnArgs', () => {
     expect(args).toContain('--recover-corrupted-database');
   });
 
-  it('respects AIONUI_LOG_LEVEL override', () => {
-    const prev = process.env.AIONUI_LOG_LEVEL;
-    process.env.AIONUI_LOG_LEVEL = 'trace';
+  it('respects QIANJI_LOG_LEVEL override', () => {
+    const prev = process.env.QIANJI_LOG_LEVEL;
+    process.env.QIANJI_LOG_LEVEL = 'trace';
     try {
       const args = buildSpawnArgs({
         port: 1,
@@ -222,26 +227,26 @@ describe('buildSpawnArgs', () => {
       });
       expect(args).toContain('trace');
     } finally {
-      if (prev === undefined) delete process.env.AIONUI_LOG_LEVEL;
-      else process.env.AIONUI_LOG_LEVEL = prev;
+      if (prev === undefined) delete process.env.QIANJI_LOG_LEVEL;
+      else process.env.QIANJI_LOG_LEVEL = prev;
     }
   });
 });
 
 describe('buildSpawnEnv', () => {
-  it('merges process.env with AIONUI_* dir vars', () => {
+  it('merges process.env with QIANJI_* dir vars', () => {
     const env = buildSpawnEnv({
       cacheDir: '/c',
       workDir: '/w',
       logDir: '/l',
     });
-    expect(env.AIONUI_CACHE_DIR).toBe('/c');
-    expect(env.AIONUI_WORK_DIR).toBe('/w');
-    expect(env.AIONUI_LOG_DIR).toBe('/l');
+    expect(env.QIANJI_CACHE_DIR).toBe('/c');
+    expect(env.QIANJI_WORK_DIR).toBe('/w');
+    expect(env.QIANJI_LOG_DIR).toBe('/l');
     expect(env.PATH).toBe(process.env.PATH); // inherits
   });
 
-  it('strips PREBUILDS_ONLY so agent CLIs spawned under aioncore can load their build/Release natives (#4070)', () => {
+  it('strips PREBUILDS_ONLY so agent CLIs spawned under qianjicore can load their build/Release natives (#4070)', () => {
     const prev = process.env.PREBUILDS_ONLY;
     process.env.PREBUILDS_ONLY = '1';
     try {
@@ -258,20 +263,20 @@ describe('buildSpawnEnv', () => {
   });
 
   it('strips PREBUILDS_ONLY and injects no dir vars when no dir config is provided', () => {
-    const keys = ['PREBUILDS_ONLY', 'AIONUI_CACHE_DIR', 'AIONUI_WORK_DIR', 'AIONUI_LOG_DIR'] as const;
+    const keys = ['PREBUILDS_ONLY', 'QIANJI_CACHE_DIR', 'QIANJI_WORK_DIR', 'QIANJI_LOG_DIR'] as const;
     const saved = Object.fromEntries(keys.map((k) => [k, process.env[k]]));
     process.env.PREBUILDS_ONLY = '1';
     // Dir vars may be inherited from a dev shell; clear them so the assertion
     // below observes injection behavior, not passthrough.
-    delete process.env.AIONUI_CACHE_DIR;
-    delete process.env.AIONUI_WORK_DIR;
-    delete process.env.AIONUI_LOG_DIR;
+    delete process.env.QIANJI_CACHE_DIR;
+    delete process.env.QIANJI_WORK_DIR;
+    delete process.env.QIANJI_LOG_DIR;
     try {
       const env = buildSpawnEnv();
       expect(env).not.toHaveProperty('PREBUILDS_ONLY');
-      expect(env).not.toHaveProperty('AIONUI_CACHE_DIR');
-      expect(env).not.toHaveProperty('AIONUI_WORK_DIR');
-      expect(env).not.toHaveProperty('AIONUI_LOG_DIR');
+      expect(env).not.toHaveProperty('QIANJI_CACHE_DIR');
+      expect(env).not.toHaveProperty('QIANJI_WORK_DIR');
+      expect(env).not.toHaveProperty('QIANJI_LOG_DIR');
       expect(env.PATH).toBe(process.env.PATH); // inherits
     } finally {
       for (const k of keys) {
@@ -316,8 +321,8 @@ describe('findAvailablePort', () => {
 
       expect(port).toBe(40404);
       expect(createServer).toHaveBeenCalledTimes(2);
-      expect(infoSpy).toHaveBeenCalledWith('[aioncore] skipped fetch-blocked backend port 1720');
-      expect(infoSpy).toHaveBeenCalledWith('[aioncore] selected backend port 40404 after 2 attempts');
+      expect(infoSpy).toHaveBeenCalledWith('[qianjicore] skipped fetch-blocked backend port 1720');
+      expect(infoSpy).toHaveBeenCalledWith('[qianjicore] selected backend port 40404 after 2 attempts');
     } finally {
       infoSpy.mockRestore();
     }
@@ -348,8 +353,43 @@ describe('findAvailablePort', () => {
   });
 });
 
+describe('BackendLifecycleManager product resources', () => {
+  it('selects the reviewed product corpus before reporting readiness', async () => {
+    const child = makeFakeChild();
+    vi.mocked(spawn).mockReturnValue(child);
+    const fetchSpy = vi.spyOn(globalThis, 'fetch').mockResolvedValue(new Response('ok'));
+    const manager = new BackendLifecycleManager(
+      { ...APP_META, productAssetsPath: '/reviewed/assets' },
+      () => '/backend'
+    );
+    try {
+      const starting = manager.start('/db');
+      await vi.waitFor(() => expect(spawn).toHaveBeenCalled());
+      emitListening(child, 55555);
+      await starting;
+      expect(vi.mocked(spawn).mock.calls[0][2]?.env).toMatchObject({
+        QIANJI_BUILTIN_SKILLS_PATH: '/product/skills',
+        QIANJI_BUILTIN_ASSISTANTS_PATH: '/product/assistants',
+      });
+    } finally {
+      fetchSpy.mockRestore();
+    }
+  });
+
+  it('refuses to start the backend when product assets cannot be verified', async () => {
+    vi.mocked(prepareProductResources).mockRejectedValueOnce(new Error('checksum mismatch'));
+    const manager = new BackendLifecycleManager(
+      { ...APP_META, productAssetsPath: '/reviewed/assets' },
+      () => '/backend'
+    );
+    await expect(manager.start('/db')).rejects.toThrow('checksum mismatch');
+    expect(spawn).not.toHaveBeenCalled();
+    expect(manager.status).toBe('error');
+  });
+});
+
 describe('BackendLifecycleManager.start (success path)', () => {
-  it('lets aioncore choose the backend port and waits for the reported listening event', async () => {
+  it('lets qianjicore choose the backend port and waits for the reported listening event', async () => {
     vi.mocked(createServer).mockImplementation(() => {
       throw new Error('launcher must not pre-bind backend ports');
     });
@@ -360,7 +400,7 @@ describe('BackendLifecycleManager.start (success path)', () => {
       .spyOn(globalThis, 'fetch')
       .mockResolvedValue(new Response('ok', { status: 200 }) as unknown as Response);
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', {
       cacheDir: '/c',
       workDir: '/w',
@@ -368,7 +408,7 @@ describe('BackendLifecycleManager.start (success path)', () => {
     });
 
     await Promise.resolve();
-    child.stdout?.emit('data', Buffer.from('AIONCORE_LISTENING {"host":"127.0.0.1","port":55555}\n'));
+    child.stdout?.emit('data', Buffer.from('QIANJICORE_LISTENING {"host":"127.0.0.1","port":55555}\n'));
 
     const port = await startPromise;
 
@@ -408,7 +448,7 @@ describe('BackendLifecycleManager.start (success path)', () => {
       .mockResolvedValue(new Response('ok', { status: 200 }) as unknown as Response);
     const infoSpy = vi.spyOn(console, 'info').mockImplementation(() => {});
 
-    const resolveBackend = vi.fn(() => '/abs/path/aioncore');
+    const resolveBackend = vi.fn(() => '/abs/path/qianjicore');
     const mgr = new BackendLifecycleManager(APP_META_PACKAGED, resolveBackend);
 
     try {
@@ -429,7 +469,7 @@ describe('BackendLifecycleManager.start (success path)', () => {
       expect(spawn).toHaveBeenCalledTimes(1);
 
       const spawnCall = vi.mocked(spawn).mock.calls[0];
-      expect(spawnCall[0]).toBe('/abs/path/aioncore');
+      expect(spawnCall[0]).toBe('/abs/path/qianjicore');
       expect(spawnCall[1]).toEqual([
         '--port',
         '0',
@@ -451,9 +491,9 @@ describe('BackendLifecycleManager.start (success path)', () => {
       ]);
       const opts = spawnCall[2] as { cwd?: string; env: NodeJS.ProcessEnv };
       expect(opts.cwd).toBe('/w');
-      expect(opts.env.AIONUI_CACHE_DIR).toBe('/c');
-      expect(opts.env.AIONUI_WORK_DIR).toBe('/w');
-      expect(opts.env.AIONUI_LOG_DIR).toBe('/l');
+      expect(opts.env.QIANJI_CACHE_DIR).toBe('/c');
+      expect(opts.env.QIANJI_WORK_DIR).toBe('/w');
+      expect(opts.env.QIANJI_LOG_DIR).toBe('/l');
       expect((spawnCall[2] as { detached?: boolean }).detached).toBe(process.platform !== 'win32');
       expect(mkdirSync).toHaveBeenCalledWith('/db/path', { recursive: true });
       expect(mkdirSync).toHaveBeenCalledWith('/log/dir', { recursive: true });
@@ -462,7 +502,7 @@ describe('BackendLifecycleManager.start (success path)', () => {
 
       expect(fetchSpy).toHaveBeenCalled();
       expect(infoSpy).toHaveBeenCalledWith(
-        expect.stringContaining('[aioncore] health ready on port 55555 after 1 attempts, elapsed_ms=')
+        expect.stringContaining('[qianjicore] health ready on port 55555 after 1 attempts, elapsed_ms=')
       );
     } finally {
       fetchSpy.mockRestore();
@@ -477,7 +517,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
       throw new Error('EPERM: operation not permitted, mkdir /db/path');
     });
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
 
     await expect(
       mgr.start('/db/path', '/log/dir', {
@@ -515,7 +555,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     });
 
     try {
-      const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+      const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
       const error = await mgr
         .start('/db/path', '/log/dir', { cacheDir: '/cache', workDir: 'D:\\', logDir: '/log' })
         .catch((e: unknown) => e as Error);
@@ -543,7 +583,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     const child = makeFakeChild();
     vi.mocked(spawn).mockReturnValue(child as unknown as ChildProcess);
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', {
       cacheDir: '/cache',
       workDir: '/work',
@@ -554,7 +594,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     child.stderr?.emit(
       'data',
       Buffer.from(
-        'BOOTSTRAP_DATA_INIT_FAILED stage=database.open databasePath=/db/path/aionui-backend.db: failed to initialize application data\n'
+        'BOOTSTRAP_DATA_INIT_FAILED stage=database.open databasePath=/db/path/qianji-backend.db: failed to initialize application data\n'
       )
     );
     child.emit('exit', 1, null);
@@ -577,7 +617,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     const child = makeFakeChild();
     vi.mocked(spawn).mockReturnValue(child as unknown as ChildProcess);
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', {
       cacheDir: '/cache',
       workDir: '/work',
@@ -589,7 +629,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     child.stderr?.emit(
       'data',
       Buffer.from(
-        'BOOTSTRAP_DATA_INIT_FAILED stage=database.migration databasePath=/db/path/aionui-backend.db: failed to initialize application data\n'
+        'BOOTSTRAP_DATA_INIT_FAILED stage=database.migration databasePath=/db/path/qianji-backend.db: failed to initialize application data\n'
       )
     );
     child.emit('close', 1, null);
@@ -603,14 +643,14 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     });
   });
 
-  it('kills child and reports listen_timeout when aioncore never reports a port', async () => {
+  it('kills child and reports listen_timeout when qianjicore never reports a port', async () => {
     vi.useFakeTimers();
     const platformSpy = vi.spyOn(process, 'platform', 'get').mockReturnValue('darwin');
     const child = makeFakeChild();
     vi.mocked(spawn).mockReturnValue(child as unknown as ChildProcess);
     const killSpy = vi.spyOn(process, 'kill').mockImplementation(() => true);
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       name: 'BackendStartupError',
@@ -674,7 +714,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
 
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('ECONNREFUSED'));
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', {
       cacheDir: '/cache',
       workDir: '/work',
@@ -684,7 +724,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
       name: 'BackendStartupError',
       details: expect.objectContaining({
         stage: 'health_timeout',
-        binaryPath: '/abs/path/aioncore',
+        binaryPath: '/abs/path/qianjicore',
         port: 33334,
         healthCheckAttempts: expect.any(Number),
         healthCheckLastError: 'ECONNREFUSED',
@@ -716,7 +756,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
       .spyOn(globalThis, 'fetch')
       .mockImplementation(() => Promise.resolve(new Response('starting', { status: 503 })));
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       name: 'BackendStartupError',
@@ -747,7 +787,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
 
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('fetch failed'));
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       name: 'BackendStartupError',
@@ -757,7 +797,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
         healthCheckLastError: 'fetch failed',
         serverListeningObserved: true,
         serverListeningObservedAfterMs: expect.any(Number),
-        serverListeningLine: expect.stringContaining('AIONCORE_LISTENING'),
+        serverListeningLine: expect.stringContaining('QIANJICORE_LISTENING'),
       }),
     });
 
@@ -790,7 +830,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     });
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(fetchError);
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       details: expect.objectContaining({
@@ -851,7 +891,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
         })
     );
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       details: expect.objectContaining({
@@ -893,7 +933,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
 
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('fetch failed'));
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path');
     const expectedRejection = expect(startPromise).rejects.toMatchObject({
       details: expect.objectContaining({
@@ -929,7 +969,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     const onHealthTimeout = vi.fn();
     const onReady = vi.fn();
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', undefined, {
       allowPendingOnHealthTimeout: true,
       onHealthTimeout,
@@ -974,7 +1014,7 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('ECONNREFUSED'));
     const onHealthTimeout = vi.fn();
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', undefined, {
       allowPendingOnHealthTimeout: true,
       onHealthTimeout,
@@ -999,8 +1039,8 @@ describe('BackendLifecycleManager.start (health timeout)', () => {
   }, 15_000);
 });
 
-describe('BackendLifecycleManager.start (AIONCORE_READY consumption)', () => {
-  it('AC-7: treats an AIONCORE_READY marker as ready without /health passing', async () => {
+describe('BackendLifecycleManager.start (QIANJICORE_READY consumption)', () => {
+  it('AC-7: treats an QIANJICORE_READY marker as ready without /health passing', async () => {
     vi.useFakeTimers();
     vi.mocked(createServer).mockImplementation(
       () => makeSyncFakeServer(33343) as unknown as ReturnType<typeof createServer>
@@ -1011,7 +1051,7 @@ describe('BackendLifecycleManager.start (AIONCORE_READY consumption)', () => {
     // /health never returns ok — readiness must come solely from the marker.
     const fetchSpy = vi.spyOn(globalThis, 'fetch').mockRejectedValue(new Error('ECONNREFUSED'));
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', undefined, {
       allowPendingOnHealthTimeout: true,
     });
@@ -1019,17 +1059,17 @@ describe('BackendLifecycleManager.start (AIONCORE_READY consumption)', () => {
     await Promise.resolve();
     emitListening(child, 33343);
     await Promise.resolve();
-    child.stdout?.emit('data', Buffer.from('AIONCORE_READY\n'));
+    child.stdout?.emit('data', Buffer.from('QIANJICORE_READY\n'));
 
     await expect(startPromise).resolves.toBe(33343);
     expect(mgr.status).toBe('running');
     // /health was polled but never returned ok; readiness came from the marker.
-    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('AIONCORE_READY'));
+    expect(fetchSpy).not.toHaveBeenCalledWith(expect.stringContaining('QIANJICORE_READY'));
 
     fetchSpy.mockRestore();
   }, 15_000);
 
-  it('AC-7: a late AIONCORE_READY marker resolves the pending state and fires onReady', async () => {
+  it('AC-7: a late QIANJICORE_READY marker resolves the pending state and fires onReady', async () => {
     vi.useFakeTimers();
     vi.mocked(createServer).mockImplementation(
       () => makeSyncFakeServer(33344) as unknown as ReturnType<typeof createServer>
@@ -1041,7 +1081,7 @@ describe('BackendLifecycleManager.start (AIONCORE_READY consumption)', () => {
     const onHealthTimeout = vi.fn();
     const onReady = vi.fn();
 
-    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META_PACKAGED, () => '/abs/path/qianjicore');
     const startPromise = mgr.start('/db/path', '/log/dir', undefined, {
       allowPendingOnHealthTimeout: true,
       onHealthTimeout,
@@ -1057,7 +1097,7 @@ describe('BackendLifecycleManager.start (AIONCORE_READY consumption)', () => {
     expect(onHealthTimeout).toHaveBeenCalled();
 
     // A late readiness marker deterministically resolves the pending state.
-    child.stdout?.emit('data', Buffer.from('AIONCORE_READY\n'));
+    child.stdout?.emit('data', Buffer.from('QIANJICORE_READY\n'));
     await vi.advanceTimersByTimeAsync(0);
     await Promise.resolve();
 
@@ -1304,7 +1344,7 @@ describe('BackendLifecycleManager crash restart', () => {
     (child1 as unknown as EventEmitter).emit('exit', 1, 'SIGABRT');
     await new Promise((r) => setTimeout(r, 1_200));
 
-    expect(warnSpy).toHaveBeenCalledWith('[aioncore] child exited unexpectedly; scheduling restart', {
+    expect(warnSpy).toHaveBeenCalledWith('[qianjicore] child exited unexpectedly; scheduling restart', {
       exitCode: 1,
       signal: 'SIGABRT',
       port: 65303,
@@ -1361,7 +1401,7 @@ describe('BackendLifecycleManager crash restart', () => {
     mgr.handleCrash(1, 'SIGABRT');
 
     expect(mgr.status).toBe('error');
-    expect(errorSpy).toHaveBeenCalledWith('[aioncore] child exited unexpectedly; restart limit exceeded', {
+    expect(errorSpy).toHaveBeenCalledWith('[qianjicore] child exited unexpectedly; restart limit exceeded', {
       exitCode: 1,
       signal: 'SIGABRT',
       port: 0,
@@ -1377,7 +1417,7 @@ describe('BackendLifecycleManager crash restart', () => {
 type AttemptStartSpyTarget = { attemptStart: (...args: unknown[]) => Promise<number> };
 
 function makePeerAlreadyRunningError(): BackendStartupError {
-  return new BackendStartupError('aioncore exited before health check passed', {
+  return new BackendStartupError('qianjicore exited before health check passed', {
     stage: 'early_exit',
     appVersion: APP_META.version,
     backendBoundaryCode: 'BOOTSTRAP_PEER_ALREADY_RUNNING',
@@ -1389,14 +1429,14 @@ describe('BackendLifecycleManager.start peer retry', () => {
   it('retries with bounded backoff and succeeds once the peer releases the data dir', async () => {
     vi.useFakeTimers();
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/qianjicore');
     const attemptStart = vi
       .spyOn(mgr as unknown as AttemptStartSpyTarget, 'attemptStart')
       .mockRejectedValueOnce(makePeerAlreadyRunningError())
       .mockRejectedValueOnce(makePeerAlreadyRunningError())
       .mockResolvedValueOnce(58672);
 
-    const started = mgr.start('/data/aionui-backend.db');
+    const started = mgr.start('/data/qianji-backend.db');
     await vi.runAllTimersAsync();
 
     await expect(started).resolves.toBe(58672);
@@ -1408,12 +1448,12 @@ describe('BackendLifecycleManager.start peer retry', () => {
   it('throws the peer boundary error after exhausting the retry budget', async () => {
     vi.useFakeTimers();
     const warnSpy = vi.spyOn(console, 'warn').mockImplementation(() => {});
-    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/qianjicore');
     const attemptStart = vi
       .spyOn(mgr as unknown as AttemptStartSpyTarget, 'attemptStart')
       .mockRejectedValue(makePeerAlreadyRunningError());
 
-    const started = mgr.start('/data/aionui-backend.db');
+    const started = mgr.start('/data/qianji-backend.db');
     const assertion = expect(started).rejects.toMatchObject({
       details: { backendBoundaryCode: 'BOOTSTRAP_PEER_ALREADY_RUNNING' },
     });
@@ -1427,7 +1467,7 @@ describe('BackendLifecycleManager.start peer retry', () => {
   });
 
   it('does not retry a non-peer startup failure', async () => {
-    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/aioncore');
+    const mgr = new BackendLifecycleManager(APP_META, () => '/abs/path/qianjicore');
     const nonPeerError = new BackendStartupError('assistant storage bootstrap failed', {
       stage: 'early_exit',
       appVersion: APP_META.version,
@@ -1438,7 +1478,7 @@ describe('BackendLifecycleManager.start peer retry', () => {
       .spyOn(mgr as unknown as AttemptStartSpyTarget, 'attemptStart')
       .mockRejectedValue(nonPeerError);
 
-    await expect(mgr.start('/data/aionui-backend.db')).rejects.toBe(nonPeerError);
+    await expect(mgr.start('/data/qianji-backend.db')).rejects.toBe(nonPeerError);
     expect(attemptStart).toHaveBeenCalledTimes(1);
   });
 });

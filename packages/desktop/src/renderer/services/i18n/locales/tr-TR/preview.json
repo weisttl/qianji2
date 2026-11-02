@@ -61,13 +61,13 @@
   "wavedromTitle": "WaveDrom Diyagramı",
   "oversized": {
     "title": "Dosya önizleme için çok büyük",
-    "detail": "Dosya boyutu {{size}}, {{threshold}} sınırını aşıyor. Lütfen bir sistem düzenleyicisinde açın.",
-    "downloadUnavailable": "Bu dosya burada indirilemeyecek kadar büyük. Bunun yerine “Sistemde aç”ı kullanın."
+    "detail": "{{size}} dosya boyutu {{threshold}} sınırını aşıyor. Görüntülemek için dosyayı indirin.",
+    "downloadUnavailable": "Bu dosya buradan indirilemiyor. Dosyayı almak için yöneticinize başvurun."
   },
   "unsupported": {
     "title": "Bu biçim için önizleme desteklenmiyor",
-    "detail": "{{format}} dosyaları burada önizlenemez. Bir sistem uygulamasında açın.",
-    "downloadUnavailable": "Bu dosya burada indirilemez. Bunun yerine “Sistemde aç”ı kullanın."
+    "detail": "{{format}} dosyaları çevrimiçi önizlenemiyor. Görüntülemek için dosyayı indirin.",
+    "downloadUnavailable": "Bu dosya buradan indirilemiyor. Dosyayı almak için yöneticinize başvurun."
   },
   "aiWriting": "Yapay zeka yazıyor…",
   "errors": {
@@ -85,7 +85,7 @@
       "outsideSandbox": "Bu dosya geçerli çalışma alanı sandbox'ının dışında."
     },
     "serverInstall": {
-      "hint": "AionUi bir sunucuda çalışıyor. Önizleme bileşeni o sunucuya kurulmalıdır. Aşağıdaki komutu sunucuda çalıştırıp yeniden deneyin:",
+      "hint": "千机 bir sunucuda çalışıyor. Önizleme bileşeni o sunucuya kurulmalıdır. Aşağıdaki komutu sunucuda çalıştırıp yeniden deneyin:",
       "icuNote": "Yine de başlamazsa sunucuya ICU kitaplığını kurun (Debian/Ubuntu: apt-get install -y libicu-dev)."
     }
   },

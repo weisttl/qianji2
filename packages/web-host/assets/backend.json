@@ -1,0 +1,13 @@
+{
+  "product": "qianji",
+  "name": "qianjicore",
+  "version": "v0.2.2",
+  "toolchain": "1.95.0",
+  "sourceSha256": "126f70227993c1f8867687089d69897963ad738e84dcd01ff364198474181d97",
+  "protocol": {
+    "engine": "qianjirs",
+    "environmentPrefix": "QIANJI_",
+    "readyMarker": "QIANJICORE_READY",
+    "database": "qianji-backend.db"
+  }
+}

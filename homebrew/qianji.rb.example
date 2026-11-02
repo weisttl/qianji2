@@ -1,0 +1,12 @@
+# Internal distribution template. Configure version, checksums and the release mirror explicitly.
+cask "qianji" do
+  arch arm: "arm64", intel: "x64"
+  version ENV.fetch("QIANJI_VERSION")
+  sha256 arm: ENV.fetch("QIANJI_SHA256_ARM64"), intel: ENV.fetch("QIANJI_SHA256_X64")
+  url "#{ENV.fetch('QIANJI_RELEASE_BASE_URL')}/v#{version}/Qianji-#{version}-mac-#{arch}.dmg"
+  name "Qianji"
+  desc "千机 · 国泰海通内部 AI 工作平台"
+  homepage "https://www.gtht.com/"
+  depends_on macos: ">= :big_sur"
+  app "Qianji.app"
+end

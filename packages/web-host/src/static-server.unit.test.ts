@@ -88,12 +88,40 @@ describe('static-server', () => {
     expect(json.path).toBe('/api/anything');
   });
 
+  it.each([
+    ['/api/fs/stream?kind=upload&path=report.pdf', 200, 'application/pdf', 'SAMEORIGIN'],
+    ['/api/fs/stream?kind=project', 206, 'application/pdf; charset=binary', 'SAMEORIGIN'],
+    ['/api/fs/stream', 200, 'text/html', 'DENY'],
+    ['/api/fs/stream', 401, 'application/pdf', 'DENY'],
+    ['/api/fs/stream', 404, 'application/pdf', 'DENY'],
+    ['/api/other', 200, 'application/pdf', 'DENY'],
+  ] as const)(
+    'preserves framing restrictions except successful PDF streams: %s %i %s',
+    async (url, status, contentType, framePolicy) => {
+      const backend = await startMockBackend((_req, res) => {
+        res.writeHead(status, {
+          'content-type': contentType,
+          'x-frame-options': 'DENY',
+          ...(status === 206 ? { 'content-range': 'bytes 0-3/8' } : {}),
+        });
+        res.end('test');
+      });
+      stopBackend = backend.close;
+      handle = await startStaticServer({ staticDir, backendPort: backend.port, port: 0 });
+      const response = await fetch(`${handle.localUrl}${url}`);
+      expect(response.headers.get('x-frame-options')).toBe(framePolicy);
+      expect(response.status).toBe(status);
+      if (status === 206) expect(response.headers.get('content-range')).toBe('bytes 0-3/8');
+      expect(await response.text()).toBe('test');
+    }
+  );
+
   it('/login reverse-proxies to backend (no local handler)', async () => {
     const backend = await startMockBackend((req, res) => {
       if (req.url === '/login' && req.method === 'POST') {
         res.writeHead(200, {
           'content-type': 'application/json',
-          'set-cookie': 'aionui-session=backend-token; Path=/; HttpOnly',
+          'set-cookie': 'qianji-session=backend-token; Path=/; HttpOnly',
         });
         res.end(JSON.stringify({ success: true, proxied: true }));
         return;
@@ -109,7 +137,7 @@ describe('static-server', () => {
       body: JSON.stringify({ username: 'admin', password: 'anything' }),
     });
     expect(r.status).toBe(200);
-    expect(r.headers.get('set-cookie')).toMatch(/aionui-session=backend-token/);
+    expect(r.headers.get('set-cookie')).toMatch(/qianji-session=backend-token/);
     const json = (await r.json()) as { proxied: boolean };
     expect(json.proxied).toBe(true);
   });
@@ -137,7 +165,7 @@ describe('static-server', () => {
       if (req.url === '/logout' && req.method === 'POST') {
         res.writeHead(200, {
           'content-type': 'application/json',
-          'set-cookie': 'aionui-session=; Path=/; Max-Age=0',
+          'set-cookie': 'qianji-session=; Path=/; Max-Age=0',
         });
         res.end(JSON.stringify({ success: true, proxied: true }));
         return;

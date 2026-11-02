@@ -34,7 +34,7 @@ describe('CdnGenericProvider', () => {
     const provider = new CdnGenericProvider(
       {
         provider: 'custom',
-        url: 'https://static.aionui.com/releases',
+        url: 'https://static.qianji.com/releases',
       },
       {} as AppUpdater,
       makeRuntimeOptions()
@@ -44,15 +44,15 @@ describe('CdnGenericProvider', () => {
       version: '2.1.14',
       files: [
         {
-          url: 'AionUi-2.1.14-mac-arm64.dmg',
+          url: 'Qianji-2.1.14-mac-arm64.dmg',
           sha512: 'sha512-value',
         },
       ],
-      path: 'AionUi-2.1.14-mac-arm64.dmg',
+      path: 'Qianji-2.1.14-mac-arm64.dmg',
       sha512: 'sha512-value',
       releaseDate: '2026-06-08T00:00:00.000Z',
     } satisfies UpdateInfo);
 
-    expect(files[0]?.url.href).toBe('https://static.aionui.com/releases/2.1.14/AionUi-2.1.14-mac-arm64.dmg');
+    expect(files[0]?.url.href).toBe('https://static.qianji.com/releases/2.1.14/Qianji-2.1.14-mac-arm64.dmg');
   });
 });

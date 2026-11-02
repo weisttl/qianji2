@@ -61,13 +61,13 @@
   "wavedromTitle": "WaveDrom Diagram",
   "oversized": {
     "title": "File too large to preview",
-    "detail": "File size {{size}} exceeds the {{threshold}} limit. Please open it in a system editor.",
-    "downloadUnavailable": "This file is too large to download here. Use “Open in system” instead."
+    "detail": "File size {{size}} exceeds the {{threshold}} limit. Download the file to view it.",
+    "downloadUnavailable": "This file cannot be downloaded here. Contact your administrator to obtain it."
   },
   "unsupported": {
     "title": "Preview not supported for this format",
-    "detail": "{{format}} files cannot be previewed here. Open it in a system application instead.",
-    "downloadUnavailable": "This file cannot be downloaded here. Use “Open in system” instead."
+    "detail": "{{format}} files cannot be previewed online. Download the file to view it.",
+    "downloadUnavailable": "This file cannot be downloaded here. Contact your administrator to obtain it."
   },
   "aiWriting": "AI is writing…",
   "errors": {
@@ -85,7 +85,7 @@
       "outsideSandbox": "This file is outside the current project sandbox."
     },
     "serverInstall": {
-      "hint": "AionUi is running on a server. Install the preview component on that server, then retry:",
+      "hint": "千机 is running on a server. Install the preview component on that server, then retry:",
       "icuNote": "If it still fails to start, install the ICU library on the server (Debian/Ubuntu: apt-get install -y libicu-dev)."
     }
   },

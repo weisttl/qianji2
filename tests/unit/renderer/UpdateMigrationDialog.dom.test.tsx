@@ -10,6 +10,12 @@ import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
 const mocks = vi.hoisted(() => ({
   openExternalUrl: vi.fn(() => Promise.resolve()),
+  messageInfo: vi.fn(),
+}));
+
+vi.mock('@arco-design/web-react', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@arco-design/web-react')>()),
+  Message: { info: mocks.messageInfo },
 }));
 
 vi.mock('@/renderer/utils/platform', () => ({
@@ -20,7 +26,7 @@ vi.mock('react-i18next', () => ({
   useTranslation: () => ({ t: (key: string) => key }),
 }));
 
-// AionModal reads ThemeContext for font scaling; provide a minimal theme so it mounts.
+// QianjiModal reads ThemeContext for font scaling; provide a minimal theme so it mounts.
 vi.mock('@/renderer/hooks/context/ThemeContext', () => ({
   useThemeContext: () => ({ theme: 'light', fontScale: 1 }),
 }));
@@ -33,7 +39,7 @@ const openDialog = () => {
   fireEvent(window, new CustomEvent(OPEN_MIGRATION_DIALOG_EVENT));
 };
 
-const INVITE_SHOWN_KEY = 'aionui.migration-invite-shown';
+const INVITE_SHOWN_KEY = 'qianji.migration-invite-shown';
 
 describe('UpdateMigrationDialog', () => {
   beforeEach(() => {
@@ -72,11 +78,12 @@ describe('UpdateMigrationDialog', () => {
     expect(screen.getByText('update.migration.letter.introBold')).toBeTruthy();
   });
 
-  it('opens the official website when the primary button is clicked', async () => {
+  it('offers internal support without opening a public product website', async () => {
     render(<UpdateMigrationDialog />);
     openDialog();
     await waitFor(() => expect(screen.getByText('update.migration.letter.downloadNew')).toBeTruthy());
     fireEvent.click(screen.getByText('update.migration.letter.downloadNew'));
-    expect(mocks.openExternalUrl).toHaveBeenCalledWith('https://www.aionui.com/');
+    expect(mocks.openExternalUrl).not.toHaveBeenCalled();
+    expect(mocks.messageInfo).toHaveBeenCalledWith('common.product.support');
   });
 });

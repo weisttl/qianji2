@@ -14,14 +14,12 @@ import type { AssistantDetail } from '@/common/types/agent/assistantTypes';
 import { useInputFocusRing } from '@/renderer/hooks/chat/useInputFocusRing';
 import { appendPromptToDraft } from '@/renderer/hooks/chat/useSendBoxDraft';
 import { getFuzzyMatchIndices, useSlashCommandController } from '@/renderer/hooks/chat/useSlashCommandController';
-import { openExternalUrl } from '@/renderer/utils/platform';
 import SlashCommandMenu, { type SlashCommandMenuItem } from '@/renderer/components/chat/SlashCommandMenu';
 import AssistantSelectionArea from './components/AssistantSelectionArea';
 import GuidActionRow from './components/GuidActionRow';
 import GuidInputCard from './components/GuidInputCard';
 import GuidModelSelector from './components/GuidModelSelector';
 import QuickActionButtons from './components/QuickActionButtons';
-import FeedbackReportModal from '@/renderer/components/settings/SettingsModal/contents/FeedbackReportModal';
 import { useGuidAssistantSelection } from './hooks/useGuidAssistantSelection';
 import { useGuidInput } from './hooks/useGuidInput';
 import { useGuidModelSelection } from './hooks/useGuidModelSelection';
@@ -34,7 +32,8 @@ import { chatFileRefPath, uploadFileRef } from '@/common/types/chatFile';
 import { useOpenFileSelector } from '@/renderer/hooks/file/useOpenFileSelector';
 import { appendSpeechTranscript } from '@/renderer/hooks/system/useSpeechInput';
 import { useLiveTranscriptInsertion } from '@/renderer/hooks/system/useLiveTranscriptInsertion';
-import { ArrowRightUp } from '@icon-park/react';
+import { ArrowRightUp, ChartLine, FileText, TableFile, Notes } from '@icon-park/react';
+import brandMark from '@renderer/assets/logos/brand/qianji-mark.svg';
 import { Button, ConfigProvider } from '@arco-design/web-react';
 import React, { useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -61,17 +60,6 @@ const GuidPage: React.FC = () => {
   const { activeBorderColor, inactiveBorderColor, activeShadow } = useInputFocusRing();
 
   const localeKey = resolveLocaleKey(i18n.language);
-  const [showFeedbackModal, setShowFeedbackModal] = useState(false);
-
-  // Open external link
-  const openLink = useCallback(async (url: string) => {
-    try {
-      await openExternalUrl(url);
-    } catch (error) {
-      console.error('Failed to open external link:', error);
-    }
-  }, []);
-
   // --- Skills state ---
   // Skill metadata comes from the database-backed catalog. Built-in auto-inject
   // skills default checked; the rest are opt-in per conversation or pre-checked
@@ -130,9 +118,9 @@ const GuidPage: React.FC = () => {
   }, []);
 
   // --- Hooks ---
-  // Only aionrs uses this provider-based model picker now (Gemini runs as a
+  // Only qianjirs uses this provider-based model picker now (Gemini runs as a
   // regular ACP backend with its own model selector).
-  const modelSelection = useGuidModelSelection('aionrs');
+  const modelSelection = useGuidModelSelection('qianjirs');
 
   const navState = location.state as GuidNavigationState | null;
   const resetAssistantRequested = navState?.resetAssistant === true;
@@ -342,7 +330,7 @@ const GuidPage: React.FC = () => {
       return resolvedPrompts;
     }
 
-    return [t('guid.defaultPrompts.understand'), t('guid.defaultPrompts.cleanup'), t('guid.defaultPrompts.create')];
+    return [];
   }, [localeKey, selectedAssistantDetail, selectedAssistantRecord, selectedAssistantId, t]);
 
   // Sync disabledBuiltinSkills + enabledSkills from assistant detail defaults.
@@ -381,7 +369,7 @@ const GuidPage: React.FC = () => {
       },
       availableModels: {
         acp: agentSelection.currentAcpCachedModelInfo?.available_models.map((model) => model.id) ?? [],
-        aionrs: modelSelection.modelList.map((provider) => ({
+        qianjirs: modelSelection.modelList.map((provider) => ({
           id: provider.id,
           models: provider.models,
         })),
@@ -400,7 +388,7 @@ const GuidPage: React.FC = () => {
       const shouldApplyDefaultModel = manualModelSelectionAssistantRef.current !== selectedAssistantId;
       const shouldApplyDefaultThoughtLevel = manualThoughtLevelSelectionAssistantRef.current !== selectedAssistantId;
 
-      if (shouldApplyDefaultModel && effectiveBackend === 'aionrs') {
+      if (shouldApplyDefaultModel && effectiveBackend === 'qianjirs') {
         if (resolvedDefaults.modelId) {
           const matchedProvider = modelSelection.modelList.find((provider) =>
             provider.models.includes(resolvedDefaults.modelId!)
@@ -583,8 +571,8 @@ const GuidPage: React.FC = () => {
   }, [resetAssistantRequested, preselectAssistantId, location.pathname, location.search, location.hash, navigate]);
 
   // Agents that use configured model providers instead of ACP probe-based models.
-  // Only aionrs now — Gemini runs as a regular ACP backend with ACP-cached models.
-  const PROVIDER_BASED_AGENTS = new Set(['aionrs']);
+  // Only qianjirs now — Gemini runs as a regular ACP backend with ACP-cached models.
+  const PROVIDER_BASED_AGENTS = new Set(['qianjirs']);
   const isGeminiMode = PROVIDER_BASED_AGENTS.has(agentSelection.selectedAssistantBackend);
 
   // Build the mention dropdown node
@@ -668,9 +656,15 @@ const GuidPage: React.FC = () => {
     <ConfigProvider getPopupContainer={() => guidContainerRef.current || document.body}>
       <div ref={guidContainerRef} className={styles.guidContainer}>
         <div className={styles.guidLayout}>
-          <div className={styles.heroHeader}>
-            <p className='text-2xl font-semibold mb-0 text-t-primary text-center'>{t('conversation.welcome.title')}</p>
-          </div>
+          <header className={styles.enterpriseHeader}>
+            <div className={styles.enterpriseEyebrow}>
+              <img src={brandMark} alt='' width={26} height={26} />
+              <span>{t('common.product.name')}</span>
+              <span className={styles.enterpriseEdition}>{t('common.product.edition')}</span>
+            </div>
+            <h1>{t('common.product.workspaceTitle')}</h1>
+            <p>{t('common.product.workspaceSubtitle')}</p>
+          </header>
 
           <AssistantSelectionArea
             selectedAssistantId={agentSelection.selectedAssistantId}
@@ -703,6 +697,41 @@ const GuidPage: React.FC = () => {
             onClearWorkspace={() => guidInput.setDir('')}
           />
 
+          <section className={styles.scenarioSection} aria-labelledby='scenario-heading'>
+            <div className={styles.scenarioHeading}>
+              <h2 id='scenario-heading'>{t('common.product.scenariosTitle')}</h2>
+              <span>{t('common.product.scenariosHint')}</span>
+            </div>
+            <div className={styles.scenarioGrid}>
+              {(
+                [
+                  { key: 'research', Icon: ChartLine },
+                  { key: 'document', Icon: FileText },
+                  { key: 'data', Icon: TableFile },
+                  { key: 'meeting', Icon: Notes },
+                ] as const
+              ).map(({ key, Icon }) => (
+                <Button
+                  key={key}
+                  className={styles.scenarioCard}
+                  onClick={() => {
+                    guidInput.setInput(t(`common.product.${key}Prompt`));
+                    guidInput.handleTextareaFocus();
+                  }}
+                >
+                  <span className={styles.scenarioIcon}>
+                    <Icon size={21} fill='currentColor' />
+                  </span>
+                  <span className={styles.scenarioText}>
+                    <span className={styles.scenarioTitle}>{t(`common.product.${key}Title`)}</span>
+                    <span className={styles.scenarioDescription}>{t(`common.product.${key}Description`)}</span>
+                  </span>
+                  <ArrowRightUp size={15} className={styles.scenarioArrow} />
+                </Button>
+              ))}
+            </div>
+          </section>
+
           {selectedAssistantPrompts.length > 0 ? (
             <div className='mt-18px w-full animate-fade-in ps-20px'>
               <div className={`${styles.assistantPromptHint} mb-10px text-start`}>
@@ -732,13 +761,7 @@ const GuidPage: React.FC = () => {
           ) : null}
         </div>
 
-        <QuickActionButtons
-          onOpenLink={openLink}
-          onOpenBugReport={() => setShowFeedbackModal(true)}
-          inactiveBorderColor={inactiveBorderColor}
-          activeShadow={activeShadow}
-        />
-        <FeedbackReportModal visible={showFeedbackModal} onCancel={() => setShowFeedbackModal(false)} />
+        <QuickActionButtons />
       </div>
     </ConfigProvider>
   );

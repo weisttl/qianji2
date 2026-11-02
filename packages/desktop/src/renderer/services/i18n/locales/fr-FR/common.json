@@ -65,10 +65,10 @@
   "more": "Plus",
   "refresh": "Actualiser",
   "readOnly": "Lecture seule",
-  "tray.showWindow": "Afficher AionUi",
+  "tray.showWindow": "Afficher 千机",
   "tray.newChat": "Nouveau chat",
   "tray.closeToTray": "Réduire dans la barre système",
-  "tray.about": "À propos d'AionUi",
+  "tray.about": "À propos d'千机",
   "tray.restart": "Redémarrer l'application",
   "tray.quit": "Quitter",
   "tray.runningTasks": "Tâches en cours",
@@ -79,39 +79,39 @@
   "backendStartup": {
     "incompatibleRuntime": {
       "title": "Ce système n'est pas pris en charge par le backend fourni",
-      "description": "AionUi s'est ouvert, mais le backend local AionCore ne peut pas fonctionner sur cette version de Linux. Veuillez effectuer une mise à niveau vers une distribution Linux prise en charge et redémarrer AionUi.",
+      "description": "千机 s'est ouvert, mais le backend local Qianji Engine ne peut pas fonctionner sur cette version de Linux. Veuillez effectuer une mise à niveau vers une distribution Linux prise en charge et redémarrer 千机.",
       "requiredVersions": "Symboles d'exécution requis : {{versions}}"
     },
     "incompleteInstallation": {
-      "title": "L'installation d'AionUi est incomplète",
-      "description": "Cette installation ne dispose pas des ressources locales requises, AionCore ne peut donc pas démarrer. Veuillez télécharger et réinstaller la dernière version d'AionUi. Si le problème réapparaît après la réinstallation, vérifiez si un logiciel de sécurité ou antivirus a mis AionCore en quarantaine.",
+      "title": "L'installation d'千机 est incomplète",
+      "description": "Cette installation ne dispose pas des ressources locales requises, Qianji Engine ne peut donc pas démarrer. Veuillez télécharger et réinstaller la dernière version d'千机. Si le problème réapparaît après la réinstallation, vérifiez si un logiciel de sécurité ou antivirus a mis Qianji Engine en quarantaine.",
       "downloadLatest": "Télécharger le dernier",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsSent": "Diagnostics envoyés",
       "diagnosticsReportSuccess": "Rapport de diagnostic envoyé",
       "diagnosticsReportFailed": "Échec de l'envoi du rapport de diagnostic",
-      "runtimeComponentDescription": "Il manque les composants d'exécution groupés requis dans cette installation, donc {{resource}} ne peut pas démarrer. Réinstallez le dernier package AionUi. Si cela se produit toujours après la réinstallation, vérifiez si un logiciel de sécurité ou un antivirus a mis en quarantaine les composants AionUi."
+      "runtimeComponentDescription": "Il manque les composants d'exécution groupés requis dans cette installation, donc {{resource}} ne peut pas démarrer. Réinstallez le dernier package 千机. Si cela se produit toujours après la réinstallation, vérifiez si un logiciel de sécurité ou un antivirus a mis en quarantaine les composants 千机."
     },
     "packageArchitectureMismatch": {
-      "title": "Inadéquation de l'architecture du package AionUi",
-      "description": "Ce package AionUi est pour {{packageArch}}, mais ce Mac est {{deviceArch}}. Vous avez peut-être téléchargé le mauvais package. Veuillez télécharger et installer le package {{expectedArch}}."
+      "title": "Inadéquation de l'architecture du package 千机",
+      "description": "Ce package 千机 est pour {{packageArch}}, mais ce Mac est {{deviceArch}}. Vous avez peut-être téléchargé le mauvais package. Veuillez télécharger et installer le package {{expectedArch}}."
     },
     "dataMigration": {
       "title": "Échec de la migration des données locales",
-      "description": "AionUi s'est ouvert, mais AionCore s'est arrêté lors de l'initialisation des données locales. La réinstallation d'AionUi ne résoudra peut-être pas ce problème. Envoyez un rapport de diagnostic ou contactez le support afin que la migration de la base de données locale puisse être inspectée.",
+      "description": "千机 s'est ouvert, mais Qianji Engine s'est arrêté lors de l'initialisation des données locales. La réinstallation d'千机 ne résoudra peut-être pas ce problème. Envoyez un rapport de diagnostic ou contactez le support afin que la migration de la base de données locale puisse être inspectée.",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsSent": "Diagnostics envoyés",
       "diagnosticsReportSuccess": "Rapport de diagnostic envoyé",
       "diagnosticsReportFailed": "Échec de l'envoi du rapport de diagnostic"
     },
     "databaseNewerThanApp": {
-      "title": "Une version plus récente d'AionUi est requise",
-      "description": "Vos données locales ont été créées par une version plus récente d'AionUi et cette version ne peut pas les ouvrir. Mettez à jour AionUi vers la dernière version pour continuer : vos données sont intactes, aucune réinstallation ni réinitialisation n'est nécessaire.",
-      "descriptionWithVersion": "Vos données locales ont été créées par une version d'AionUi plus récente que celle installée actuellement (v{{currentVersion}}), cette version ne peut donc pas les ouvrir. Mettez à jour AionUi vers la dernière version pour continuer : vos données sont intactes, aucune réinstallation ni réinitialisation n'est nécessaire."
+      "title": "Une version plus récente d'千机 est requise",
+      "description": "Vos données locales ont été créées par une version plus récente d'千机 et cette version ne peut pas les ouvrir. Mettez à jour 千机 vers la dernière version pour continuer : vos données sont intactes, aucune réinstallation ni réinitialisation n'est nécessaire.",
+      "descriptionWithVersion": "Vos données locales ont été créées par une version d'千机 plus récente que celle installée actuellement (v{{currentVersion}}), cette version ne peut donc pas les ouvrir. Mettez à jour 千机 vers la dernière version pour continuer : vos données sont intactes, aucune réinstallation ni réinitialisation n'est nécessaire."
     },
     "localDataRepair": {
       "title": "La réparation des données locales a échoué",
-      "description": "AionUi s'est ouvert, mais AionCore s'est arrêté lors de la préparation des données locales de démarrage, comme les enregistrements d'assistants ou d'agents. La réinstallation d'AionUi ne résoudra peut-être pas ce problème. Envoyez un rapport de diagnostic ou contactez l'assistance afin que la base de données locale puisse être inspectée.",
+      "description": "千机 s'est ouvert, mais Qianji Engine s'est arrêté lors de la préparation des données locales de démarrage, comme les enregistrements d'assistants ou d'agents. La réinstallation d'千机 ne résoudra peut-être pas ce problème. Envoyez un rapport de diagnostic ou contactez l'assistance afin que la base de données locale puisse être inspectée.",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsSent": "Diagnostics envoyés",
       "diagnosticsReportSuccess": "Rapport de diagnostic envoyé",
@@ -119,7 +119,7 @@
     },
     "startupDirectory": {
       "title": "Le répertoire de démarrage n'est pas disponible",
-      "description": "AionUi s'est ouvert, mais AionCore n'a pas pu démarrer car le répertoire de travail ou de journal configuré est manquant, indisponible ou bloqué par les autorisations. Vérifiez que les répertoires configurés existent et sont accessibles en écriture, puis redémarrez AionUi.",
+      "description": "千机 s'est ouvert, mais Qianji Engine n'a pas pu démarrer car le répertoire de travail ou de journal configuré est manquant, indisponible ou bloqué par les autorisations. Vérifiez que les répertoires configurés existent et sont accessibles en écriture, puis redémarrez 千机.",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsSent": "Diagnostics envoyés",
       "diagnosticsReportSuccess": "Rapport de diagnostic envoyé",
@@ -127,7 +127,7 @@
     },
     "recoverableDatabaseCorruption": {
       "title": "Les données locales sont corrompues",
-      "description": "AionUi a détecté que la base de données locale est corrompue et ne peut pas continuer le démarrage. Après confirmation, AionUi sauvegardera l'ancienne base de données et créera une nouvelle base de données locale pour continuer le démarrage. Les conversations passées ne seront plus affichées et l'ancienne base de données sera conservée comme fichier de sauvegarde.",
+      "description": "千机 a détecté que la base de données locale est corrompue et ne peut pas continuer le démarrage. Après confirmation, 千机 sauvegardera l'ancienne base de données et créera une nouvelle base de données locale pour continuer le démarrage. Les conversations passées ne seront plus affichées et l'ancienne base de données sera conservée comme fichier de sauvegarde.",
       "confirmRebuild": "Sauvegarder l'ancienne base de données et reconstruire la nouvelle base de données",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsHint": "L'envoi de diagnostics ne modifiera pas la base de données locale.",
@@ -143,8 +143,8 @@
       }
     },
     "transientConcurrentStartup": {
-      "title": "AionUi démarre",
-      "description": "À l'ouverture de cette fenêtre, un autre démarrage d'AionUi utilisait encore les données locales. C'est temporaire et vos données sont en sécurité — aucune réinstallation n'est nécessaire. Veuillez patienter un instant et réessayer, ou redémarrer AionUi.",
+      "title": "千机 démarre",
+      "description": "À l'ouverture de cette fenêtre, un autre démarrage d'千机 utilisait encore les données locales. C'est temporaire et vos données sont en sécurité — aucune réinstallation n'est nécessaire. Veuillez patienter un instant et réessayer, ou redémarrer 千机.",
       "sendDiagnostics": "Envoyer des diagnostics",
       "diagnosticsSent": "Diagnostics envoyés",
       "diagnosticsReportSuccess": "Rapport de diagnostic envoyé",
@@ -153,11 +153,11 @@
     },
     "pendingSlow": {
       "title": "Démarrage",
-      "description": "AionCore est en cours de démarrage, veuillez patienter. S'il ne répond pas au bout d'un moment, vous pouvez quitter l'application et la rouvrir."
+      "description": "Qianji Engine est en cours de démarrage, veuillez patienter. S'il ne répond pas au bout d'un moment, vous pouvez quitter l'application et la rouvrir."
     },
     "exited": {
       "title": "Le démarrage ne s'est pas terminé",
-      "description": "AionCore n'a pas pu terminer son démarrage et s'est fermé. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
+      "description": "Qianji Engine n'a pas pu terminer son démarrage et s'est fermé. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
       "sendDiagnostics": "Envoyer le diagnostic",
       "diagnosticsSent": "Diagnostic envoyé",
       "diagnosticsReportSuccess": "Diagnostic envoyé",
@@ -165,7 +165,7 @@
     },
     "portReportTimeout": {
       "title": "Délai de démarrage dépassé",
-      "description": "AionCore n'a pas terminé son démarrage dans le délai prévu. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
+      "description": "Qianji Engine n'a pas terminé son démarrage dans le délai prévu. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
       "sendDiagnostics": "Envoyer le diagnostic",
       "diagnosticsSent": "Diagnostic envoyé",
       "diagnosticsReportSuccess": "Diagnostic envoyé",
@@ -173,7 +173,7 @@
     },
     "startupFailed": {
       "title": "Échec du démarrage",
-      "description": "AionCore n'a pas pu démarrer. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
+      "description": "Qianji Engine n'a pas pu démarrer. Veuillez redémarrer l'application ; si le problème persiste, envoyez un diagnostic.",
       "sendDiagnostics": "Envoyer le diagnostic",
       "diagnosticsSent": "Diagnostic envoyé",
       "diagnosticsReportSuccess": "Diagnostic envoyé",
@@ -202,5 +202,52 @@
   },
   "selectedCount": "{{count}} sélectionné(s)",
   "selectedSkills": "Compétences sélectionnées",
-  "aiAssistant": "Assistant IA"
+  "aiAssistant": "Assistant IA",
+  "product": {
+    "name": "千机",
+    "organization": "Guotai Haitong",
+    "edition": "Internal workspace",
+    "tagline": "Professional insight. Intelligent possibilities.",
+    "description": "An AI workspace for Guotai Haitong, supporting research, documents, data analysis, and everyday work.",
+    "internalOnly": "For internal use at Guotai Haitong",
+    "support": "For account or access issues, contact your internal system administrator.",
+    "usageNotice": "Follow company data policies. Verify AI-generated content before use.",
+    "upstreamNotice": "Contient des logiciels libres. Consultez les licences et les mentions de sources fournies.",
+    "updatesNotice": "Product releases are managed by your internal administrator.",
+    "connectionNotice": "Model connections are configured by administrators or users. Verify service endpoints and permitted data use before proceeding.",
+    "capabilityResearch": "Research",
+    "capabilityResearchDesc": "Organize source material and extract key insights",
+    "capabilityDocuments": "Documents",
+    "capabilityDocumentsDesc": "Draft, review, and organize business documents",
+    "capabilityData": "Data insights",
+    "capabilityDataDesc": "Analyze data and communicate clear findings",
+    "loginEyebrow": "Professional focus · Connected work",
+    "loginHeadline": "More possibilities.\nFor every professional.",
+    "loginIntro": "Connect knowledge with action.\nBring a fresh perspective to everyday work.",
+    "loginTitle": "Sign in to your workspace",
+    "loginDescription": "Use your platform account to get started.",
+    "workspaceTitle": "What shall we work on today?",
+    "workspaceSubtitle": "Start with a document, a question, or a task.",
+    "scenariosTitle": "Start with a work scenario",
+    "scenariosHint": "Choose a scenario, then add your context",
+    "researchTitle": "Research review",
+    "researchDescription": "Key insights · Source references · Open questions",
+    "researchPrompt": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "documentTitle": "Business writing",
+    "documentDescription": "Clear structure · Accurate language · Ready to review",
+    "documentPrompt": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation.",
+    "dataTitle": "Spreadsheet analysis",
+    "dataDescription": "Define metrics · Compare trends · Identify signals",
+    "dataPrompt": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "meetingTitle": "Meeting notes",
+    "meetingDescription": "Capture decisions · Clarify actions · Track follow-up",
+    "meetingPrompt": "Organize my meeting notes into topics, discussion points, confirmed decisions, and action items. Only assign owners and deadlines explicitly recorded in the source; mark other details as unconfirmed.",
+    "modelSettings": "Model settings",
+    "assistantSettings": "Manage assistants",
+    "platformSettings": "Platform settings",
+    "contactSupport": "Contact internal support",
+    "componentShowcase": "Custom component styles",
+    "presentationPrompt": "Créez une présentation professionnelle à partir des documents fournis. Mettez en avant les conclusions, les données justificatives et les prochaines actions. Signalez les informations manquantes comme étant à confirmer.",
+    "planningPrompt": "Transformez la tâche professionnelle fournie en un plan d’exécution avec étapes, dépendances, jalons et questions ouvertes. Indiquez les responsables et les échéances uniquement lorsqu’ils figurent explicitement dans les documents."
+  }
 }

@@ -61,13 +61,13 @@
   "wavedromTitle": "WaveDrom 波形图",
   "oversized": {
     "title": "文件过大，无法预览",
-    "detail": "文件尺寸 {{size}} 超过 {{threshold}}，请用系统编辑器打开。",
-    "downloadUnavailable": "文件过大，无法在此下载。请改用「在系统中打开」。"
+    "detail": "文件尺寸 {{size}} 超过 {{threshold}}，请下载后查看。",
+    "downloadUnavailable": "当前无法下载此文件，请联系管理员获取。"
   },
   "unsupported": {
     "title": "暂不支持预览此格式",
-    "detail": "{{format}} 文件无法在此预览，请用系统应用打开。",
-    "downloadUnavailable": "该文件无法在此下载。请改用「在系统中打开」。"
+    "detail": "{{format}} 文件无法在线预览，请下载后查看。",
+    "downloadUnavailable": "当前无法下载此文件，请联系管理员获取。"
   },
   "aiWriting": "AI 正在写入…",
   "errors": {
@@ -85,7 +85,7 @@
       "outsideSandbox": "该文件不在当前项目沙箱范围内。"
     },
     "serverInstall": {
-      "hint": "AionUi 运行在服务器上，预览组件需要安装在该服务器上。请在服务器执行以下命令后重试：",
+      "hint": "千机 运行在服务器上，预览组件需要安装在该服务器上。请在服务器执行以下命令后重试：",
       "icuNote": "若安装后仍无法启动，请在服务器安装 ICU 库（Debian/Ubuntu：apt-get install -y libicu-dev）。"
     }
   },

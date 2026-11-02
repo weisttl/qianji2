@@ -31,7 +31,7 @@ export type LegacyDatabaseMigrationResult = {
 };
 
 export function resolveLegacyDatabasePath(dataDir = getDataPath()): string {
-  return path.join(dataDir, 'aionui.db');
+  return path.join(dataDir, 'qianji.db');
 }
 
 function ensureSystemUser(db: ISqliteDriver): void {

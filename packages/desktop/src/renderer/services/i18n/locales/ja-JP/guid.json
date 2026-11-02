@@ -1,9 +1,9 @@
 {
   "promptExamplesHint": "これらの指示を試す",
   "defaultPrompts": {
-    "understand": "このプロジェクトを調べて、何をするものか、どこから手を付ければいいかを分かりやすく教えて",
-    "cleanup": "このフォルダ内の重複ファイルや不要なファイルを見つけて、確認できるようにリストにして",
-    "create": "おしゃれな個人ホームページを作って、完成したらそのまま開いて見せて"
+    "understand": "Review the research material I provide. Summarize the key insights, data, and risks, cite the supplied sources, and clearly mark missing or unverified information. Do not invent data.",
+    "cleanup": "Analyze the spreadsheet I provide. Confirm the fields, date range, and metric definitions first. Summarize trends and anomalies, distinguish facts from hypotheses, and list items needing further verification.",
+    "create": "Help me draft a business document. First confirm the audience, purpose, key points, and format. Then prepare a structured draft, marking facts, figures, and commitments that require confirmation."
   },
   "selectAssistantHint": "アシスタントを選択してタスクを開始",
   "workspace": {

@@ -8,7 +8,7 @@ import { ipcBridge } from '@/common';
 import type { IMcpServer, IProvider, TProviderWithModel } from '@/common/config/storage';
 import AgentModeSelector from '@/renderer/components/agent/AgentModeSelector';
 import { DROPDOWN_SEARCH_THRESHOLD } from '@/renderer/components/agent/runtimeSelectorOptions';
-import AionInlineSearchInput from '@/renderer/components/base/AionInlineSearchInput';
+import QianjiInlineSearchInput from '@/renderer/components/base/QianjiInlineSearchInput';
 import MobileActionSheet from '@/renderer/components/chat/MobileActionSheet';
 import type {
   MobileActionSheetEntry,
@@ -57,7 +57,7 @@ const SubmenuSearchList: React.FC<{
   <>
     {showSearch ? (
       <div className='px-6px pt-4px pb-6px' style={{ background: 'var(--color-bg-popup)' }}>
-        <AionInlineSearchInput
+        <QianjiInlineSearchInput
           value={query}
           onChange={onQueryChange}
           placeholder={placeholder}
@@ -228,7 +228,7 @@ const GuidActionRow: React.FC<GuidActionRowProps> = ({
     if (!isMobile) return [];
     const entries: MobileActionSheetEntry[] = [];
 
-    // Model — aionrs is provider-grouped, ACP is a flat cached list.
+    // Model — qianjirs is provider-grouped, ACP is a flat cached list.
     let modelOptions: MobileActionSheetOption[] = [];
     let currentModelLabel = '';
     let onModelSelect: (key: string) => void = () => {};

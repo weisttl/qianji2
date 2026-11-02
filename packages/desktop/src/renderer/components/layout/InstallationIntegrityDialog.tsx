@@ -1,10 +1,11 @@
+import { PRODUCT_CONFIG } from '@/common/config/constants';
 import { Button, Message, Modal, Space, Typography } from '@arco-design/web-react';
 import type { TFunction } from 'i18next';
 import React, { useEffect, useRef, useState } from 'react';
 import { useTranslation } from 'react-i18next';
 import { type FeedbackEventTags, submitFeedbackReport } from '@/renderer/services/feedback/submitFeedbackReport';
 
-const AIONUI_DOWNLOAD_URL = 'https://www.aionui.com/';
+const QIANJI_DOWNLOAD_URL = '';
 const INSTALLATION_INTEGRITY_REPORT_FLUSH_TIMEOUT_MS = 2000;
 
 type InstallationIntegrityDialogKind =
@@ -35,7 +36,8 @@ export type InstallationIntegrityDiagnostics = {
 };
 
 export function openDownloadLatest(): void {
-  window.open(AIONUI_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
+  if (!PRODUCT_CONFIG.upstreamServicesEnabled) return;
+  window.open(QIANJI_DOWNLOAD_URL, '_blank', 'noopener,noreferrer');
 }
 
 /**
@@ -98,7 +100,9 @@ export function getRuntimeComponentInstallationDescription(t: TFunction, resourc
 }
 
 export function getInstallationIntegrityDownloadText(t: TFunction): string {
-  return t('common.backendStartup.incompleteInstallation.downloadLatest');
+  return PRODUCT_CONFIG.upstreamServicesEnabled
+    ? t('common.backendStartup.incompleteInstallation.downloadLatest')
+    : t('common.product.contactSupport');
 }
 
 export function getInstallationIntegrityDiagnosticsSentText(
@@ -113,34 +117,34 @@ export function getInstallationIntegrityDiagnosticsSentText(
 
 function buildInstallationIntegrityTags(diagnostics: InstallationIntegrityDiagnostics): FeedbackEventTags {
   const tags: FeedbackEventTags = {
-    'aionui.installation_integrity.user_report': 'true',
-    'aionui.installation_integrity.report_source': diagnostics.source,
+    'qianji.installation_integrity.user_report': 'true',
+    'qianji.installation_integrity.report_source': diagnostics.source,
   };
 
   if (diagnostics.runtime?.failureKind) {
-    tags['aionui.installation_integrity.failure_kind'] = diagnostics.runtime.failureKind;
+    tags['qianji.installation_integrity.failure_kind'] = diagnostics.runtime.failureKind;
   }
   if (diagnostics.runtime?.resource) {
-    tags['aionui.runtime_resource'] = diagnostics.runtime.resource;
+    tags['qianji.runtime_resource'] = diagnostics.runtime.resource;
   }
   if (diagnostics.runtime?.resourceId) {
-    tags['aionui.runtime_resource_id'] = diagnostics.runtime.resourceId;
+    tags['qianji.runtime_resource_id'] = diagnostics.runtime.resourceId;
   }
   if (diagnostics.runtime?.scopeKind) {
-    tags['aionui.runtime_scope'] = diagnostics.runtime.scopeKind;
+    tags['qianji.runtime_scope'] = diagnostics.runtime.scopeKind;
   }
 
   const reason = diagnostics.backendStartupFailure?.reason;
   if (typeof reason === 'string') {
-    tags['aionui.backend_startup_failure.reason'] = reason;
+    tags['qianji.backend_startup_failure.reason'] = reason;
   }
   const backendBoundaryCode = diagnostics.backendStartupFailure?.backendBoundaryCode;
   if (typeof backendBoundaryCode === 'string') {
-    tags['aionui.backend_startup_failure.backend_boundary_code'] = backendBoundaryCode;
+    tags['qianji.backend_startup_failure.backend_boundary_code'] = backendBoundaryCode;
   }
   const backendBoundaryStage = diagnostics.backendStartupFailure?.backendBoundaryStage;
   if (typeof backendBoundaryStage === 'string') {
-    tags['aionui.backend_startup_failure.backend_boundary_stage'] = backendBoundaryStage;
+    tags['qianji.backend_startup_failure.backend_boundary_stage'] = backendBoundaryStage;
   }
 
   return tags;
@@ -163,7 +167,7 @@ export async function reportInstallationIntegrityDiagnostics(
     tags: buildInstallationIntegrityTags(diagnostics),
   });
 
-  if (typeof window !== 'undefined' && window.__aionuiE2ETest) {
+  if (typeof window !== 'undefined' && window.__qianjiE2ETest) {
     window.__installationIntegrityReportCount = (window.__installationIntegrityReportCount ?? 0) + 1;
     window.__lastInstallationIntegrityReportMessage = 'installation-integrity-user-report';
   }
@@ -188,12 +192,22 @@ export function getInstallationIntegrityModalActions(
   const diagnosticsKind = options.diagnosticsKind ?? 'incomplete_installation';
   const config = DIALOG_KIND_CONFIG[diagnosticsKind];
   return {
-    downloadText: config.showDownloadLatest ? getInstallationIntegrityDownloadText(t) : undefined,
-    onDownloadLatest: options.onDownloadLatest ?? openDownloadLatest,
+    downloadText:
+      !PRODUCT_CONFIG.upstreamServicesEnabled || config.showDownloadLatest
+        ? getInstallationIntegrityDownloadText(t)
+        : undefined,
+    onDownloadLatest: PRODUCT_CONFIG.upstreamServicesEnabled
+      ? (options.onDownloadLatest ?? openDownloadLatest)
+      : () => {
+          Message.info(t('common.product.support'));
+        },
     onRecoverCorruptedDatabase: options.onRecoverCorruptedDatabase ?? (() => Promise.resolve()),
     onReportDiagnostics: options.onReportDiagnostics ?? (() => Promise.resolve()),
     recoverText: config.showRecover ? dialogKindText(t, diagnosticsKind, 'confirmRebuild') : undefined,
-    reportText: config.showDiagnostics ? dialogKindText(t, diagnosticsKind, 'sendDiagnostics') : undefined,
+    reportText:
+      PRODUCT_CONFIG.upstreamServicesEnabled && config.showDiagnostics
+        ? dialogKindText(t, diagnosticsKind, 'sendDiagnostics')
+        : undefined,
   };
 }
 
@@ -208,7 +222,11 @@ export function getDownloadLatestModalActionProps(t: TFunction): {
 } {
   return {
     okText: getInstallationIntegrityDownloadText(t),
-    onOk: openDownloadLatest,
+    onOk: PRODUCT_CONFIG.upstreamServicesEnabled
+      ? openDownloadLatest
+      : () => {
+          Message.info(t('common.product.support'));
+        },
     cancelButtonProps: {
       style: {
         display: 'none',

@@ -5,6 +5,7 @@
  */
 
 import React from 'react';
+import { MemoryRouter } from 'react-router-dom';
 import { cleanup, fireEvent, render, screen } from '@testing-library/react';
 import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest';
 
@@ -15,6 +16,12 @@ const mocks = vi.hoisted(() => ({
   getIncludePrerelease: vi.fn(() => false),
   isElectronDesktop: vi.fn(() => true),
   openExternalUrl: vi.fn(() => Promise.resolve()),
+}));
+
+const productPolicy = vi.hoisted(() => ({ upstreamServicesEnabled: true }));
+vi.mock('@/common/config/constants', async (importOriginal) => ({
+  ...(await importOriginal<typeof import('@/common/config/constants')>()),
+  PRODUCT_CONFIG: productPolicy,
 }));
 
 vi.mock('@/renderer/components/settings/checkForUpdatesShared', () => ({
@@ -54,7 +61,7 @@ vi.mock('@/renderer/components/settings/updateReadyState', () => ({
 }));
 
 vi.mock('@/renderer/components/settings/useUpdateNotificationController', () => ({
-  UPDATE_AVAILABLE_EVENT: 'aionui-update-available',
+  UPDATE_AVAILABLE_EVENT: 'qianji-update-available',
 }));
 
 vi.mock('@/renderer/components/settings/SettingsModal/contents/FeedbackReportModal', () => ({ default: () => null }));
@@ -73,14 +80,17 @@ describe('About panel check-update in discontinued build', () => {
     vi.unstubAllGlobals();
   });
 
-  it('dispatches migration event and skips version detection', () => {
+  it('keeps internal product information available in a discontinued upstream build', () => {
     const listener = vi.fn();
     window.addEventListener(OPEN_MIGRATION_DIALOG_EVENT, listener);
 
-    render(<AboutModalContent />);
-    fireEvent.click(screen.getByText('settings.checkForUpdates'));
-
-    expect(listener).toHaveBeenCalledTimes(1);
+    render(
+      <MemoryRouter>
+        <AboutModalContent />
+      </MemoryRouter>
+    );
+    expect(screen.queryByText('settings.checkForUpdates')).toBeNull();
+    expect(listener).not.toHaveBeenCalled();
     expect(mocks.runUpdateCheck).not.toHaveBeenCalled();
 
     window.removeEventListener(OPEN_MIGRATION_DIALOG_EVENT, listener);

@@ -2,7 +2,7 @@
  * Assistant Settings Migration — phase-1 governance E2E coverage.
  *
  * These tests exercise a real upgrade path:
- * 1. seed a legacy `aionui.db` using the pre-unification assistants schema
+ * 1. seed a legacy `qianji.db` using the pre-unification assistants schema
  * 2. start the current backend against that data dir
  * 3. verify phase-1 assistant fields and overlays are materialized correctly
  */
@@ -70,9 +70,9 @@ type AssistantDetail = {
 function resolveBackendBinary(): string {
   const projectRoot = process.cwd();
   const candidates = [
-    process.env.AIONUI_BACKEND_BINARY,
-    path.join(projectRoot, '../aionCore/target/debug/aioncore'),
-    path.join(os.homedir(), '.cargo', 'bin', 'aioncore'),
+    process.env.QIANJI_BACKEND_BINARY,
+    path.join(projectRoot, '../qianjiCore/target/debug/qianjicore'),
+    path.join(os.homedir(), '.cargo', 'bin', 'qianjicore'),
   ].filter((value): value is string => Boolean(value));
 
   for (const candidate of candidates) {
@@ -81,20 +81,20 @@ function resolveBackendBinary(): string {
     }
   }
 
-  throw new Error('aioncore binary not found for migration e2e');
+  throw new Error('qianjicore binary not found for migration e2e');
 }
 
 function schemaPath(): string {
-  return path.join(process.cwd(), '../aionCore/crates/aionui-db/migrations/001_initial_schema.sql');
+  return path.join(process.cwd(), '../qianjiCore/crates/qianji-db/migrations/001_initial_schema.sql');
 }
 
 function querySqliteValue(dataDir: string, sql: string): string {
-  const dbPath = path.join(dataDir, 'aionui-backend.db');
+  const dbPath = path.join(dataDir, 'qianji-backend.db');
   return execFileSync('sqlite3', ['-readonly', dbPath, sql], { encoding: 'utf8' }).trim();
 }
 
 function seedLegacyDatabase(dataDir: string): void {
-  const legacyDbPath = path.join(dataDir, 'aionui.db');
+  const legacyDbPath = path.join(dataDir, 'qianji.db');
   const schemaSql = fs.readFileSync(schemaPath(), 'utf8');
   execFileSync('sqlite3', [legacyDbPath], { input: schemaSql, encoding: 'utf8' });
 
@@ -109,7 +109,7 @@ function seedLegacyDatabase(dataDir: string): void {
       'Legacy Writer',
       'Migrated from legacy schema',
       '✍️',
-      'aionrs',
+      'qianjirs',
       '["officecli-data-dashboard","officecli"]',
       '[]',
       '["cron"]',
@@ -198,7 +198,7 @@ test.describe('Assistant Settings Migration', () => {
       env: {
         ...process.env,
         RUST_LOG: 'warn',
-        AIONUI_EXTENSIONS_PATH: path.join(process.cwd(), 'examples'),
+        QIANJI_EXTENSIONS_PATH: path.join(process.cwd(), 'examples'),
       },
     });
     try {
@@ -210,7 +210,7 @@ test.describe('Assistant Settings Migration', () => {
   }
 
   test.beforeEach(async () => {
-    dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'aionui-assistant-migration-'));
+    dataDir = fs.mkdtempSync(path.join(os.tmpdir(), 'qianji-assistant-migration-'));
     seedLegacyDatabase(dataDir);
     await startBackend();
   });
@@ -231,14 +231,14 @@ test.describe('Assistant Settings Migration', () => {
     expect(migrated?.description).toBe('Migrated from legacy schema');
     expect(migrated?.enabled).toBe(false);
     expect(migrated?.sort_order).toBe(7);
-    expect(migrated?.preset_agent_type).toBe('aionrs');
+    expect(migrated?.preset_agent_type).toBe('qianjirs');
 
     const detail = await httpJson<AssistantDetail>(baseUrl, 'GET', `/api/assistants/${LEGACY_USER_ID}?locale=en-US`);
     expect(detail.profile.name).toBe('Legacy Writer');
     expect(detail.profile.description).toBe('Migrated from legacy schema');
     expect(detail.state.enabled).toBe(false);
     expect(detail.state.sort_order).toBe(7);
-    expect(detail.engine.agent_backend).toBe('aionrs');
+    expect(detail.engine.agent_backend).toBe('qianjirs');
     expect(detail.rules.content).toBe(LEGACY_RULE);
     expect(detail.prompts.recommended).toEqual([LEGACY_PROMPT]);
     expect(detail.defaults.model.mode).toBe('auto');
