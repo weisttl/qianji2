@@ -10,7 +10,7 @@ import SiderFooter from '@/renderer/components/layout/Sider/SiderFooter';
 const environment = vi.hoisted(() => ({
   isMobile: false,
   extensionTabs: [
-    { id: 'ext-channel', label: 'Enterprise channel', position: { relativeTo: 'appearance', placement: 'after' } },
+    { id: 'ext-business', label: 'Business extension', position: { relativeTo: 'channels', placement: 'after' } },
   ],
 }));
 
@@ -42,20 +42,17 @@ vi.mock('@/renderer/components/settings/SettingsModal/contents/SystemModalConten
   default: () => <div>System settings content</div>,
 }));
 vi.mock('@/renderer/components/settings/SettingsModal/contents/AboutModalContent', () => ({ default: () => null }));
-vi.mock('@/renderer/components/settings/SettingsModal/contents/ChannelsModalContent', () => ({
-  default: () => <div>Channel settings content</div>,
-}));
 vi.mock('@/renderer/components/settings/SettingsModal/contents/ExtensionSettingsTabContent', () => ({
   default: () => <div>Extension settings content</div>,
 }));
 
 const Location = () => <output data-testid='location'>{useLocation().pathname}</output>;
 const expectWebNavigation = () => {
-  for (const key of ['settings.appearancePanel', 'settings.webui', 'pet.desktopPet']) {
+  for (const key of ['settings.appearancePanel', 'settings.webui', 'pet.desktopPet', 'settings.channels']) {
     expect(screen.queryByText(key)).not.toBeInTheDocument();
   }
   expect(screen.getByText('settings.model')).toBeInTheDocument();
-  expect(screen.getByText('settings.channels')).toBeInTheDocument();
+  expect(screen.getByText('settings.system')).toBeInTheDocument();
 };
 
 describe('Web settings navigation', () => {
@@ -63,7 +60,7 @@ describe('Web settings navigation', () => {
     environment.isMobile = false;
   });
 
-  it('removes appearance and desktop tabs from the sidebar while retaining channels', () => {
+  it('hides channels, appearance and desktop tabs while retaining system settings', () => {
     render(
       <MemoryRouter>
         <SettingsSider />
@@ -71,8 +68,8 @@ describe('Web settings navigation', () => {
       </MemoryRouter>
     );
     expectWebNavigation();
-    fireEvent.click(screen.getByText('settings.channels'));
-    expect(screen.getByTestId('location')).toHaveTextContent('/settings/channels');
+    fireEvent.click(screen.getByText('settings.system'));
+    expect(screen.getByTestId('location')).toHaveTextContent('/settings/system');
   });
 
   it('uses the same Web settings on small screens', () => {
@@ -93,11 +90,11 @@ describe('Web settings navigation', () => {
         <Location />
       </MemoryRouter>
     );
-    fireEvent.click(screen.getByText('Enterprise channel'));
-    expect(screen.getByTestId('location')).toHaveTextContent('/settings/ext/ext-channel');
+    fireEvent.click(screen.getByText('Business extension'));
+    expect(screen.getByTestId('location')).toHaveTextContent('/settings/ext/ext-business');
   });
 
-  it.each(['appearance', 'display', 'pet', 'webui', 'unknown'])(
+  it.each(['appearance', 'display', 'pet', 'webui', 'channels', 'unknown'])(
     'falls back to model settings for removed or invalid modal tab %s',
     (tab) => {
       render(

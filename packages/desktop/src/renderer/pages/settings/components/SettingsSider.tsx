@@ -3,7 +3,7 @@ import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
 import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
-import { Communication, Inbox, Info, Lightning, LinkCloud, Puzzle, Speed, System, Toolkit } from '@icon-park/react';
+import { Inbox, Info, Lightning, LinkCloud, Puzzle, Speed, System, Toolkit } from '@icon-park/react';
 import classNames from 'classnames';
 import React, { useMemo } from 'react';
 import { useTranslation } from 'react-i18next';
@@ -12,16 +12,7 @@ import { Tooltip } from '@arco-design/web-react';
 import { getSiderTooltipProps } from '@/renderer/utils/ui/siderTooltip';
 
 /** Builtin settings tab IDs in display order (must match router paths). */
-export const BUILTIN_TAB_IDS = [
-  'agent',
-  'model',
-  'skills',
-  'tools',
-  'channels',
-  'system',
-  'archived',
-  'about',
-] as const;
+export const BUILTIN_TAB_IDS = ['agent', 'model', 'skills', 'tools', 'system', 'archived', 'about'] as const;
 
 /**
  * Legacy anchor IDs that have been merged into other tabs.
@@ -40,7 +31,7 @@ export const LEGACY_ANCHOR_REMAP: Record<string, string> = {
  */
 const GROUP_HEADER_BEFORE: Record<string, string> = {
   agent: 'settings.groupAiCore',
-  channels: 'settings.groupApp',
+  system: 'settings.groupApp',
   archived: 'settings.archived.title',
   about: 'settings.groupAbout',
 };
@@ -87,7 +78,6 @@ const SettingsSider: React.FC<{ collapsed?: boolean; tooltipEnabled?: boolean }>
         icon: <Toolkit />,
         path: 'tools',
       },
-      channels: { id: 'channels', label: t('settings.channels'), icon: <Communication />, path: 'channels' },
       system: { id: 'system', label: t('settings.system'), icon: <System />, path: 'system' },
       archived: {
         id: 'archived',

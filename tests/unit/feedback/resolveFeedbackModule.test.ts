@@ -28,7 +28,7 @@ describe('resolveFeedbackModule', () => {
     ['/settings/skills/detail/my-skill', 'skills-plugin'],
     ['/settings/skills/import-history', 'skills-plugin'],
     ['/settings/tools', 'mcp-tools'],
-    ['/settings/channels', 'channel'],
+    ['/settings/channels', 'system-settings'],
     ['/settings/ext/telegram', 'channel'],
     ['/settings/system', 'system-settings'],
     ['/settings/about', 'system-settings'],

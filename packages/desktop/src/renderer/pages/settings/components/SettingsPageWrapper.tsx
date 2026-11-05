@@ -9,7 +9,7 @@ import {
 import { resolveExtensionAssetUrl } from '@/renderer/utils/platform';
 import { type IExtensionSettingsTab } from '@/common/adapter/ipcBridge';
 import { useExtensionSettingsTabs } from '@/renderer/hooks/system/useExtensionSettingsTabs';
-import { Communication, Inbox, Info, Lightning, LinkCloud, Puzzle, Robot, System, Toolkit } from '@icon-park/react';
+import { Inbox, Info, Lightning, LinkCloud, Puzzle, Robot, System, Toolkit } from '@icon-park/react';
 import { useTranslation } from 'react-i18next';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { useExtI18n } from '@/renderer/hooks/system/useExtI18n';
@@ -52,12 +52,6 @@ export function getBuiltinSettingsNavItems(t: TranslateFn): NavItem[] {
       label: t('settings.tools', { defaultValue: 'Tools' }),
       icon: <Toolkit theme='outline' size='16' />,
       path: 'tools',
-    },
-    channels: {
-      id: 'channels',
-      label: t('settings.channels'),
-      icon: <Communication theme='outline' size='16' />,
-      path: 'channels',
     },
     system: { id: 'system', label: t('settings.system'), icon: <System theme='outline' size='16' />, path: 'system' },
     archived: {
